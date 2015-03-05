@@ -18,8 +18,10 @@ TEMPLATE = app
 
 SOURCES += main.cc \
     signal.cc \
-    signalparser.cc
+    signalparser.cc \
+    scriptbank.cc
 
 HEADERS += \
     signal.hh \
-    signalparser.hh
+    signalparser.hh \
+    scriptbank.hh
