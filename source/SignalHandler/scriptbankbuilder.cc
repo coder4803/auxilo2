@@ -16,13 +16,13 @@
 namespace SignalHandler
 {
 
-const QChar ScriptBankBuilder::CLAUSE_SEPERATOR = QChar(';');
+const QChar ScriptBankBuilder::SCRIPT_SEPERATOR = QChar(';');
 const QChar ScriptBankBuilder::FIELD_SEPERATOR = QChar(':');
 
 
 ScriptBank* ScriptBankBuilder::createScriptBank(const QString& conf_msg)
 {
-    QStringList clauses = conf_msg.split(CLAUSE_SEPERATOR);
+    QStringList clauses = conf_msg.split(SCRIPT_SEPERATOR);
     ScriptBank::ScriptData scripts;
     
     try

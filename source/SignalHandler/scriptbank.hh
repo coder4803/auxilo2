@@ -7,7 +7,7 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 05-Mar-2015
- * Last Modified: 05-Mar-2015
+ * Last Modified: 07-Mar-2015
  */
 
 
@@ -16,19 +16,18 @@
 
 #include <map>
 #include <QString>
-#include <exception>
-
+#include "scriptlibrary.hh"
+#include "scriptprioritylibrary.hh"
 
 namespace SignalHandler
 {
-
 
 /*!
  * \brief The ScriptBank class
  * Holds information about supported scripts. Once created, objects of this
  * class are immutabe, and therefore thread safe.
  */
-class ScriptBank
+class ScriptBank : public ScriptLibrary, public ScriptPriorityLibrary
 {
 public:
     
@@ -70,84 +69,16 @@ public:
      */
     bool isValidID(unsigned int scriptID) const;
     
-    /*!
-     * \brief getScript Retrieves script-string corresponding given ID-number.
-     * \param scriptID ID-number.
-     * \return Corresponding script as a QString.
-     * \pre -
-     * \exception UnknownScript is thrown, if scriptID is unknown.
-     */
-    QString getScript(unsigned int scriptID) const;
+    // ScriptLibrary methods (see documentation in scriptlibrary.hh):
+    virtual QString getScript(unsigned int scriptID) const;
     
-    /*!
-     * \brief getPriorityOf Retrieves priority of given script.
-     * \param scriptID Script's ID-number
-     * \return Script's priority number.
-     * \pre -
-     * \exception UnknownScript is thrown, if scriptID is unknown.
-     */
-    unsigned int getPriorityOf(unsigned int scriptID) const;
-    
-    /*!
-     * \brief at Get all script properties at once.
-     * \param scriptID Script's ID number.
-     * \return ScriptInfo object holding script's properties.
-     * \pre -
-     * \exception UnknownScript is thrown, if scriptID is unknown.
-     */
-    ScriptInfo at(unsigned int scriptID) const;
-    
-    /*!
-     * \brief operator [] Get all script properties at once.
-     * \param scriptID Script's ID-number.
-     * \return ScriptInfo object holding script's properties.
-     * \pre scriptID is known.
-     */
-    ScriptInfo operator[](unsigned int scriptID) const;
+    // ScriptPriorityLibrary methods 
+    // (see documentation in scriptprioritylibrary.hh):
+    virtual unsigned int getPriorityOf(unsigned int scriptID) const;
     
     
 private:
     ScriptData scripts_;
-};
-
-
-
-/*!
- * \brief The UnknownScript class
- * Exception class to signal attempt to retrieve script with unknown ID.
- * Class implements std::exception interface.
- */
-class UnknownScript : std::exception
-{
-public:
-    
-    /*!
-     * \brief UnknownScript Constructor.
-     * \param scriptID Unknown ID that caused exception.
-     * \pre -
-     */
-    UnknownScript(unsigned int scriptID);
-    
-    //! Destructor
-    virtual ~UnknownScript() noexcept;
-    
-    /*!
-     * \brief what Reimplements std::exception interface.
-     * \return Exception class name.
-     * \pre -
-     */
-    virtual const char* what() const noexcept;
-    
-    /*!
-     * \brief getUnknownID Get unknown script ID-number.
-     * \return ID-number that caused the exception.
-     * \pre -
-     */
-    unsigned int getUnknownID() const noexcept;
-    
-    
-private:
-    unsigned int scriptID_;
 };
 
 } // Namespace SignalHandler
