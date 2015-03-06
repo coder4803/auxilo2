@@ -91,8 +91,7 @@ void SignalTest::invalidParseTest()
     }
     catch(SignalHandler::BadMessage& e){
         QCOMPARE(e.what(), "SignalHandler::BadMessage");
-        std::string msg = e.getInvalidMessage();
-        QCOMPARE(msg, message.toStdString());
+        QCOMPARE(e.getInvalidMessage(), message);
     }
     catch(...){
         QFAIL("Exception is of a wrong type");

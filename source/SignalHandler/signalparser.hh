@@ -70,7 +70,7 @@ public:
      * \param invalid_message Message that caused the exception.
      * \pre -
      */
-    BadMessage(std::string invalid_message);
+    BadMessage(QString invalid_message);
     
     //! Destructor
     virtual ~BadMessage() noexcept;
@@ -87,10 +87,10 @@ public:
      * \return Reference to the invalid message.
      * \pre -
      */
-    const std::string& getInvalidMessage() const noexcept;
+    QString getInvalidMessage() const;
     
 private:
-    std::string invalid_msg_;
+    QString invalid_msg_;
 };
 
 } // Namespace SignalHandler

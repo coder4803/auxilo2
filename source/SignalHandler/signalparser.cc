@@ -23,7 +23,7 @@ Signal SignalParser::parse(const QString& message)
     QStringList fields = message.split(';');
     if (fields.size() < 2){
         // too few fields.
-        throw BadMessage( message.toStdString() );
+        throw BadMessage(message);
     }    
     
     // Get priority number
@@ -31,14 +31,14 @@ Signal SignalParser::parse(const QString& message)
     unsigned int priority = fields.at(0).toUInt(&ok);
     if (!ok){
         // priority field is not an unsigned integer.
-        throw BadMessage( message.toStdString() );
+        throw BadMessage(message);
     }
     
     // Get scriptID
     unsigned int scriptID = fields.at(1).toUInt(&ok);
     if (!ok){
         // scriptID field is not an unsigned integer.
-        throw BadMessage( message.toStdString() );
+        throw BadMessage(message);
     }
     
     // Get additional parameters
@@ -54,7 +54,7 @@ Signal SignalParser::parse(const QString& message)
 // BadMessage methods
 // ----------------------------------------------------------------------------
 
-BadMessage::BadMessage(std::string invalid_message):
+BadMessage::BadMessage(QString invalid_message):
     std::exception(), invalid_msg_(invalid_message)
 {
 }
@@ -71,7 +71,7 @@ const char* BadMessage::what() const noexcept
 }
 
 
-const std::string& BadMessage::getInvalidMessage() const noexcept
+QString BadMessage::getInvalidMessage() const
 {
     return invalid_msg_;
 }
