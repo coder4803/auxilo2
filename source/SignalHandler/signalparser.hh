@@ -1,97 +1,85 @@
 
 /* signalparser.hh
  * 
- * This header file declares the SignalParser class and its exception class
- * BadMessage.
+ * This header file declares the SignalParser class.
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 04-Mar-2015
- * Last Modified: 04-Mar-2015
+ * Last Modified: 07-Mar-2015
  */
 
 #ifndef SIGNALPARSER_HH
 #define SIGNALPARSER_HH
 
 #include "signal.hh"
+#include "priorityupdateobserver.hh"
+#include "badmessage.hh"
 #include <QString>
 #include <exception>
+#include <mutex>
+#include <QDebug>
 
 
 namespace SignalHandler
 {
 
+class PriorityUpdateSubject;
+
 /*!
  * \brief The SignalParser class
  * Class that converts incoming messages into Signal objects.
  */
-class SignalParser
-{
+class SignalParser : public PriorityUpdateObserver
+{   
 public:
     
-    //! Default constructor
-    SignalParser() = default;
+    /*!
+     * \brief SignalParser Constructor
+     * \param lib Script priority source.
+     * \param subject Subjet to be observed.
+     * \pre lib != nullptr.
+     * \post Object uses lib as script priority source. If subject was not 
+     *  null-pointer, subject is observed.
+     */
+    SignalParser(const ScriptPriorityLibrary* lib,
+                 PriorityUpdateSubject* subject);
     
-    //! Default destructor
-    ~SignalParser() = default;
+    //! Destructor
+    virtual ~SignalParser();
     
-    //! Default copy-constructor
-    SignalParser(const SignalParser&) = default;
+    //! Copy-construction is forbidden.
+    SignalParser(const SignalParser&) = delete;
     
-    //! Default copy-assignment operator.
-    SignalParser& operator = (const SignalParser&) = default;
+    //! Copy-assignment is forbidden.
+    SignalParser& operator = (const SignalParser&) = delete;
+    
+    // PriorityUpdateObserver methods (see priorityupdateobserver.hh):
+    virtual void notyfyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib);
     
     /*!
      * \brief parse Converts given message into a Signal object.
      * \param message Message to be converted.
      * \return Converted Signal.
      * \pre -
-     * \exception BadMessage is thrown, if message is invalid.
+     * \exception BadMessage is thrown, if message is invalid. If scriptID in
+     *  message is unknown, UnknownScript is thrown.
      * 
      * Valid Messages are of form:
-     * priority;scriptID; ...arbitary number of arguments seperated with ';'
-     * Where priority and scriptID are non-negative integers.
+     * scriptID[; ...arbitary number of arguments seperated with ';']
+     * Where scriptID is a non-negative integer.
      */
-    static Signal parse(const QString& message);
-};
-
-
-
-
-/*!
- * \brief The BadMessage class
- * Exception class for signaling an invalid message. Extends std::exception.
- */
-class BadMessage : std::exception
-{
-public:
-    
-    /*!
-     * \brief BadMessage Constructor
-     * \param invalid_message Message that caused the exception.
-     * \pre -
-     */
-    BadMessage(QString invalid_message);
-    
-    //! Destructor
-    virtual ~BadMessage() noexcept;
-    
-    /*!
-     * \brief what Implements std::exception interface.
-     * \return Exception class name as c-string.
-     * \pre -
-     */
-    virtual const char* what() const noexcept;
-    
-    /*!
-     * \brief getInvalidMessage Get message that caused the exception.
-     * \return Reference to the invalid message.
-     * \pre -
-     */
-    QString getInvalidMessage() const;
+    Signal parse(const QString& message);
     
 private:
-    QString invalid_msg_;
+    
+    const ScriptPriorityLibrary* lib_;
+    PriorityUpdateSubject* subject_;
+    std::mutex update_mutex_;
+    static const QChar FIELD_SEPERATOR_;
+    
+    friend class SignalTest;
 };
+
 
 } // Namespace SignalHandler
 

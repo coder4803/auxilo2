@@ -14,7 +14,6 @@
 
 #include "priorityupdateobserver.hh"
 
-
 namespace SignalHandler
 {
 
@@ -45,7 +44,7 @@ public:
      * unregister before being destroyed.
      * \post Observer is notified every time script priorities are changed.
      */
-    virtual void registerClient(PriorityUpdateSubject* client) = 0;
+    virtual void registerClient(PriorityUpdateObserver* client) = 0;
     
     /*!
      * \brief unregisterClient Unregisters previously registered observer.

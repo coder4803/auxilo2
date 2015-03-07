@@ -21,7 +21,8 @@ SOURCES += main.cc \
     signalparser.cc \
     scriptbank.cc \
     scriptbankbuilder.cc \
-    unknownscript.cc
+    unknownscript.cc \
+    badmessage.cc
 
 HEADERS += \
     signal.hh \
@@ -34,4 +35,5 @@ HEADERS += \
     priorityupdateobserver.hh \
     scriptupdateobserver.hh \
     scriptupdatesubject.hh \
-    priorityupdatesubject.hh
+    priorityupdatesubject.hh \
+    badmessage.hh
