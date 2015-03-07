@@ -30,4 +30,8 @@ HEADERS += \
     scriptbankbuilder.hh \
     scriptprioritylibrary.hh \
     scriptlibrary.hh \
-    unknownscript.hh
+    unknownscript.hh \
+    priorityupdateobserver.hh \
+    scriptupdateobserver.hh \
+    scriptupdatesubject.hh \
+    priorityupdatesubject.hh
