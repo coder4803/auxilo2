@@ -14,13 +14,12 @@
 
 #include "scriptprioritylibrary.hh"
 
-
 namespace SignalHandler
 {
 
 /*!
  * \brief The PriorityUpdateObserver class
- * Observer interface for updates on ScriptPriorityLibrary objects.
+ * Observer class for updates on ScriptPriorityLibrary objects.
  */
 class PriorityUpdateObserver
 {
@@ -39,14 +38,14 @@ public:
     PriorityUpdateObserver& operator=(const PriorityUpdateObserver&) = delete;
     
     /*!
-     * \brief notyfyOnPriorityUpdate Notifies observer on priority updates.
+     * \brief notify Notifies observer on script priority updates.
      * \param new_lib Updated script priority library.
      * \pre new_lib is not a null-pointer.
      * \post Observer uses new_lib for quering script priorities from this on.
      */
-    virtual void notyfyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib)=0;
+    virtual void notifyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib)=0;
 };
 
-} // Namespace SignalHandler
+}
 
 #endif // PRIORITYUPDATEOBSERVER_HH

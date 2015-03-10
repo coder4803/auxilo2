@@ -41,8 +41,8 @@ public:
      * \post Object uses lib as script priority source. If subject was not 
      *  null-pointer, subject is observed.
      */
-    SignalParser(const ScriptPriorityLibrary* lib,
-                 PriorityUpdateSubject* subject);
+    explicit SignalParser(const ScriptPriorityLibrary* lib,
+                          PriorityUpdateSubject* subject = nullptr);
     
     //! Destructor
     virtual ~SignalParser();
@@ -54,7 +54,7 @@ public:
     SignalParser& operator = (const SignalParser&) = delete;
     
     // PriorityUpdateObserver methods (see priorityupdateobserver.hh):
-    virtual void notyfyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib);
+    virtual void notifyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib);
     
     /*!
      * \brief parse Converts given message into a Signal object.

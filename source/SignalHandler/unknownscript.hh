@@ -30,7 +30,7 @@ public:
      * \param scriptID Unknown ID that caused exception.
      * \pre -
      */
-    UnknownScript(unsigned int scriptID);
+    explicit UnknownScript(unsigned int scriptID);
     
     //! Destructor
     virtual ~UnknownScript() noexcept;

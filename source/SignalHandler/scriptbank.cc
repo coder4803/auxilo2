@@ -13,19 +13,13 @@
 namespace SignalHandler {
 
 ScriptBank::ScriptBank(const ScriptBank::ScriptData& scripts):
-    ScriptLibrary(), ScriptPriorityLibrary(), scripts_(scripts)
+    ScriptBankInterface(), scripts_(scripts)
 {
 }
 
 
 ScriptBank::~ScriptBank()
 {
-}
-
-
-bool ScriptBank::isValidID(unsigned int scriptID) const
-{
-    return scripts_.find(scriptID) != scripts_.end();
 }
 
 

@@ -32,8 +32,9 @@ HEADERS += \
     scriptprioritylibrary.hh \
     scriptlibrary.hh \
     unknownscript.hh \
-    priorityupdateobserver.hh \
     scriptupdateobserver.hh \
     scriptupdatesubject.hh \
-    priorityupdatesubject.hh \
-    badmessage.hh
+    badmessage.hh \
+    scriptbankinterface.hh \
+    priorityupdateobserver.hh \
+    priorityupdatesubject.hh

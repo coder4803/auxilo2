@@ -1,8 +1,8 @@
 
 /* priorityupdatesubject.hh
  * 
- * This header file defines abstract interface for subjects of updates on
- * ScriptPriorityLibrary objects.
+ * This header file defines abstract interface for subjects of script priority
+ * library updates.
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 07-Mar-2015
@@ -14,12 +14,13 @@
 
 #include "priorityupdateobserver.hh"
 
+
 namespace SignalHandler
 {
 
 /*!
  * \brief The PriorityUpdateSubject class
- * Abstract interface for subjects of updates on script priorities.
+ * Abstract interface for subjects of script priority library updates.
  */
 class PriorityUpdateSubject
 {
@@ -38,22 +39,24 @@ public:
     PriorityUpdateSubject& operator=(const PriorityUpdateSubject&) = delete;
     
     /*!
-     * \brief registerClient Registeres new observer on this subject.
+     * \brief registerObserver Registers a new observer on subject.
      * \param client Observer to be registered.
-     * \pre client is not a null-pointer. If client registers itself, it has to
-     * unregister before being destroyed.
-     * \post Observer is notified every time script priorities are changed.
+     * \pre client is not a null-pointer. If observer registers itself, it has
+     *  to unregister before being destroyed.
+     * \post Observer is notified every time script library is changed.
      */
     virtual void registerClient(PriorityUpdateObserver* client) = 0;
     
     /*!
-     * \brief unregisterClient Unregisters previously registered observer.
+     * \brief unregisterClient Unregisters an observer.
      * \param client Observer to be unregistered.
-     * \pre Client has been registered earlier.
-     * \post Client is no more notified on script priority updates.
+     * \pre Observer has been registered to this subject earlier.
+     * \post Unregistered observer is no more notified on script updates. 
      */
     virtual void unregisterClient(PriorityUpdateObserver* client) = 0;
 };
 
-}
+} // Namespace SignalHandler
+
+
 #endif // PRIORITYUPDATESUBJECT_HH

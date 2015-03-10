@@ -40,7 +40,7 @@ SignalParser::~SignalParser()
 }
 
 
-void SignalParser::notyfyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib)
+void SignalParser::notifyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib)
 {
     Q_ASSERT(new_lib != nullptr);
     

@@ -9,8 +9,11 @@
  */
 
 #include "scriptbankbuilder.hh"
+#include "scriptbank.hh"
 #include <QStringList>
 #include <QFile>
+#include <QDir>
+#include <QDebug>
 
 
 namespace SignalHandler
@@ -20,10 +23,10 @@ const QChar ScriptBankBuilder::SCRIPT_SEPERATOR = QChar(';');
 const QChar ScriptBankBuilder::FIELD_SEPERATOR = QChar(':');
 
 
-ScriptBank* ScriptBankBuilder::createScriptBank(const QString& conf_msg)
+ScriptBankInterface* ScriptBankBuilder::createScriptBank(const QString& conf_msg)
 {
     QStringList clauses = conf_msg.split(SCRIPT_SEPERATOR);
-    ScriptBank::ScriptData scripts;
+    ScriptBankInterface::ScriptData scripts;
     
     try
     {
@@ -43,7 +46,7 @@ ScriptBank* ScriptBankBuilder::createScriptBank(const QString& conf_msg)
 // Reads individual script's properties from QString and inserts them in 
 // Scriptdata
 void ScriptBankBuilder::getScriptProperties(const QString& input, 
-                                            ScriptBank::ScriptData& scripts)
+                                            ScriptBankInterface::ScriptData& scripts)
 {
     QStringList fields = input.split(FIELD_SEPERATOR);
     if (fields.size() != 3){
@@ -81,7 +84,17 @@ void ScriptBankBuilder::getScriptProperties(const QString& input,
 // Reads and returns script from given file.
 QString ScriptBankBuilder::readScriptFile(const QString& file_name)
 {
+    /*
+    QStringList seperated = file_name.split('/');
+    QString path = QDir::currentPath();
+    for (int i=0; i<seperated.size(); ++i){
+        path.append("/");
+        path.append(seperated.at(i));
+    }
+    */
+    
     QFile file(file_name);
+    qDebug() << "Does exist?" << file.exists() << file.fileName();
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text) ){
         // Could not open the file
         throw ScriptBankBuilderFileError(file_name);

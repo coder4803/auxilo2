@@ -16,8 +16,7 @@
 
 #include <map>
 #include <QString>
-#include "scriptlibrary.hh"
-#include "scriptprioritylibrary.hh"
+#include "scriptbankinterface.hh"
 
 namespace SignalHandler
 {
@@ -27,23 +26,9 @@ namespace SignalHandler
  * Holds information about supported scripts. Once created, objects of this
  * class are immutabe, and therefore thread safe.
  */
-class ScriptBank : public ScriptLibrary, public ScriptPriorityLibrary
+class ScriptBank : public ScriptBankInterface
 {
 public:
-    
-    /*!
-     * \brief The ScriptInfo struct
-     * Auxiliary data structure to hold individual script's properties.
-     */
-    struct ScriptInfo
-    {
-        QString script;         // Python script as a QString.
-        unsigned int priority;  // Script priority number (0 == highest).
-    };
-    
-    //! Convenience type defifinition.
-    typedef std::map<unsigned int, ScriptInfo> ScriptData;
-    
     
     /*!
      * \brief ScriptBank Constructor
@@ -51,7 +36,7 @@ public:
      * \pre -
      * \post ScriptBank object holds all given scripts and their properties.
      */
-    ScriptBank(const ScriptData& scripts);
+    explicit ScriptBank(const ScriptData& scripts);
     
     //! Destructor.
     ~ScriptBank();
@@ -61,13 +46,6 @@ public:
     
     //! Copy-assignment is forbidden.
     ScriptBank& operator=(const ScriptBank&) = delete;
-    
-    /*!
-     * \brief isValidID Checks if scriptID is known.
-     * \param scriptID Tested ID-number.
-     * \return True, if scriptID is known, else returns false.
-     */
-    bool isValidID(unsigned int scriptID) const;
     
     // ScriptLibrary methods (see documentation in scriptlibrary.hh):
     virtual QString getScript(unsigned int scriptID) const;

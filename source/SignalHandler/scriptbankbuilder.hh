@@ -13,8 +13,8 @@
 #ifndef SCRIPTBANKBUILDER_HH
 #define SCRIPTBANKBUILDER_HH
 
-#include "scriptbank.hh"
-#include "signalparser.hh" // BadMessage-exception.
+#include "scriptbankinterface.hh"
+#include "badmessage.hh"
 #include <exception>
 #include <QString>
 
@@ -71,13 +71,13 @@ public:
      * 
      * where ScriptID and ScriptPriority are unsigned integers.
      */
-    static ScriptBank* createScriptBank(const QString& conf_msg);
+    static ScriptBankInterface* createScriptBank(const QString& conf_msg);
     
     
 private:
     
     static void getScriptProperties(const QString& input, 
-                                    ScriptBank::ScriptData& scripts);
+                                    ScriptBankInterface::ScriptData& scripts);
     
     static QString readScriptFile(const QString& file_name);
 };

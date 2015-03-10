@@ -23,6 +23,8 @@ namespace SignalHandler
  */
 class ScriptUpdateObserver
 {
+public:
+    
     //! Constructor
     ScriptUpdateObserver() = default;
     
@@ -36,7 +38,7 @@ class ScriptUpdateObserver
     ScriptUpdateObserver& operator=(const ScriptUpdateObserver&) = delete;
     
     /*!
-     * \brief notifyOnScriptUpdate Notifies observer on script updates.
+     * \brief notify Notifies observer on script updates.
      * \param new_lib Updated script library.
      * \pre new_lib is not a null-pointer.
      * \post Observer uses new_lib for quering scripts from this on.

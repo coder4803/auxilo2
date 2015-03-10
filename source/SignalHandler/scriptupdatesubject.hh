@@ -24,6 +24,8 @@ namespace SignalHandler
  */
 class ScriptUpdateSubject
 {
+public:
+    
     //! Constructor
     ScriptUpdateSubject() = default;
     
