@@ -22,7 +22,8 @@ SOURCES += main.cc \
     scriptbank.cc \
     scriptbankbuilder.cc \
     unknownscript.cc \
-    badmessage.cc
+    badmessage.cc \
+    signalqueue.cc
 
 HEADERS += \
     signal.hh \
@@ -37,4 +38,5 @@ HEADERS += \
     badmessage.hh \
     scriptbankinterface.hh \
     priorityupdateobserver.hh \
-    priorityupdatesubject.hh
+    priorityupdatesubject.hh \
+    signalqueue.hh

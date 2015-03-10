@@ -71,10 +71,10 @@ public:
     
     /*!
      * \brief operator < Comparison operator defines relative priority order.
-     * This is equivalent to lhs.getPriority() < rhs.getPriority();
+     * This is equivalent to lhs.getPriority() > rhs.getPriority();
      * 
      * \param rhs Righ-hand-side value.
-     * \return True, if this has higher priority than rhs. Else false.
+     * \return True, if this has lower priority than rhs. Else false.
      */
     bool operator<(const Signal& rhs) const;
     

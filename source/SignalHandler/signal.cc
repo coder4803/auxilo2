@@ -47,7 +47,7 @@ std::vector<QString> Signal::getParameters() const
 bool Signal::operator<(const Signal& rhs) const
 {
     // Compare priorities
-    return this->getPriority() < rhs.getPriority();
+    return this->getPriority() > rhs.getPriority();
 }
 
 } // Namespace SignalHandler
