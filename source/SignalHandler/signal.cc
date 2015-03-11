@@ -12,6 +12,11 @@ namespace SignalHandler
 {
 
 
+Signal::Signal() : priority_(0), scriptID_(0), parameters_()
+{
+}
+
+
 Signal::Signal(unsigned int priority,
                unsigned int scriptID,
                std::vector<QString> parameters):

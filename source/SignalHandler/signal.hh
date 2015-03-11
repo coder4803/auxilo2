@@ -29,6 +29,14 @@ class Signal
 public:
     
     /*!
+     * \brief Signal Default constructor is defined, so that Signals can be
+     * stored in stl-containers such as vector.
+     * \pre-
+     * \post Signal priority = 0, scriptID = 0, and there are no parameters.
+     */
+    Signal();
+    
+    /*!
      * \brief Signal Constructor
      * 
      * \param priority Task priority
