@@ -1,19 +1,14 @@
 #include "connection.h"
 
-namespace System {
+namespace Utils {
 
-const QString ADDRESS("localhost:5672");
-const int RETRY_INTERVAL = 10000; // 10s
+const int DEFAULT_RETRY_INTERVAL = 5000; // 5s
 
 Connection* Connection::m_instance = NULL;
 
 QAMQP::Client* Connection::getClient()
 {
-   if (!m_instance) {
-      m_instance = new Connection;
-   }
-
-   return m_instance->client();
+   return instance()->client();
 }
 
 Connection::~Connection()
@@ -21,26 +16,53 @@ Connection::~Connection()
    m_instance = NULL;
 }
 
+void Connection::setHost(QString host,
+                         quint16 port)
+{
+   if (instanceExists()) {
+      qCritical("Connection: host addres must be "
+                "set before creating groups!");
+      return;
+   }
+
+   instance(host, port);
+}
+
+bool Connection::isConnected()
+{
+   if (instanceExists()) {
+      return instance()->getClient()->isConnected();
+   }
+
+   return false;
+}
+
 void Connection::connectToBeam()
 {
-   m_client->open(QUrl(ADDRESS));
-   m_connectionTimer.start(RETRY_INTERVAL);
+   m_client->open();
+   m_connectionTimer.start(m_retryInterval);
 }
 
 void Connection::onConnected()
 {
    m_connectionTimer.stop();
-   emit connected();
 }
 
 void Connection::onDisconnected()
 {
-   m_connectionTimer.start(RETRY_INTERVAL);
+   m_connectionTimer.start(m_retryInterval);
 }
 
-Connection::Connection()
+Connection::Connection(QString host,
+                       quint16 port) :
+   m_host(host),
+   m_port(port),
+   m_retryInterval(DEFAULT_RETRY_INTERVAL)
 {
    m_client = new QAMQP::Client(this);
+   m_client->setHost(host);
+   m_client->setPort(DEFAULT_PORT);
+
    connect(m_client, SIGNAL(connected()), this, SLOT(onConnected()));
    connect(m_client, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 
@@ -48,9 +70,28 @@ Connection::Connection()
    connectToBeam();
 }
 
+Connection* Connection::instance(QString host,
+                                 quint16 port)
+{
+    if (!m_instance) {
+       m_instance = new Connection(host, port);
+    }
+
+    return m_instance;
+}
+
+bool Connection::instanceExists()
+{
+   if (m_instance) {
+      return true;
+   }
+
+   return false;
+}
+
 QAMQP::Client* Connection::client()
 {
    return m_client;
 }
 
-} // System
+} // Utils
