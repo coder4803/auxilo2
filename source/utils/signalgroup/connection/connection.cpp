@@ -2,7 +2,9 @@
 
 namespace Utils {
 
-const int DEFAULT_RETRY_INTERVAL = 5000; // 5s
+const QString Connection::DEFAULT_ADDRESS = "127.0.0.1";
+const quint16 Connection::DEFAULT_PORT = 5672;
+const quint16 Connection::DEFAULT_RETRY_INTERVAL = 5000; // 5s
 
 Connection* Connection::m_instance = NULL;
 
@@ -16,7 +18,7 @@ Connection::~Connection()
    m_instance = NULL;
 }
 
-void Connection::setHost(QString host,
+void Connection::setHost(QString address,
                          quint16 port)
 {
    if (instanceExists()) {
@@ -25,7 +27,7 @@ void Connection::setHost(QString host,
       return;
    }
 
-   instance(host, port);
+   instance(address, port);
 }
 
 bool Connection::isConnected()
@@ -53,15 +55,13 @@ void Connection::onDisconnected()
    m_connectionTimer.start(m_retryInterval);
 }
 
-Connection::Connection(QString host,
+Connection::Connection(QString address,
                        quint16 port) :
-   m_host(host),
-   m_port(port),
    m_retryInterval(DEFAULT_RETRY_INTERVAL)
 {
    m_client = new QAMQP::Client(this);
-   m_client->setHost(host);
-   m_client->setPort(DEFAULT_PORT);
+   m_client->setHost(address);
+   m_client->setPort(port);
 
    connect(m_client, SIGNAL(connected()), this, SLOT(onConnected()));
    connect(m_client, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
@@ -70,11 +70,11 @@ Connection::Connection(QString host,
    connectToBeam();
 }
 
-Connection* Connection::instance(QString host,
+Connection* Connection::instance(QString address,
                                  quint16 port)
 {
     if (!m_instance) {
-       m_instance = new Connection(host, port);
+       m_instance = new Connection(address, port);
     }
 
     return m_instance;

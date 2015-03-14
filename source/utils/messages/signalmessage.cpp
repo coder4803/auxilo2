@@ -3,6 +3,8 @@
 
 #include "signalmessage.h"
 
+namespace Utils {
+
 SignalMessage::SignalMessage(QString signalName,
                              QStringList parameters,
                              QObject* parent) :
@@ -40,13 +42,15 @@ QString SignalMessage::signalName() const
    return m_signalName;
 }
 
+quint32 SignalMessage::numberOfParameters() const
+{
+   return m_parameters.size();
+}
+
 QString SignalMessage::parameter(quint8 index) const
 {
-   if (m_parameters.size() > index) {
-      return m_parameters.at(index);
-   } else {
-      return QString();
-   }
+   Q_ASSERT(m_parameters.size() > index);
+   return m_parameters.at(index);
 }
 
 QStringList SignalMessage::parameters() const
@@ -77,3 +81,5 @@ QString SignalMessage::string() const
 
    return message;
 }
+
+} // Utils

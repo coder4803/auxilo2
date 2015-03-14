@@ -8,20 +8,37 @@
 
 namespace Utils {
 
-const QString DEFAULT_ADDRESS = "127.0.0.1";
-const quint16 DEFAULT_PORT = 5672;
-
+/*!
+ * \brief The Connection class
+ * Class handles connection to RabbitMQ beam.
+ */
 class Connection : public QObject
 {
    Q_OBJECT
    Q_DISABLE_COPY(Connection)
 public:
+   /*!
+    * \brief getClient returns pointer to QAMQP::Client object.
+    * This method should be used only by SignalGroup class!
+    * \return Pointer to QAMQP::Client.
+    */
    static QAMQP::Client* getClient();
-   ~Connection();
 
-   static void setHost(QString host,
+   /*!
+    * \brief setHost can be used to define RabbitMQ server address and port.
+    * Note that this method must be called before creating SigalGroups.
+    * Calling this function will create instance of Connection and connect
+    * to RabbitMQ server.
+    * \param address RabbitMQ server address
+    * \param port RabbitMQ server port
+    */
+   static void setHost(QString address,
                        quint16 port = DEFAULT_PORT);
 
+   /*!
+    * \brief isConnected can be used to check if connection exists.
+    * \return True if connection is ok, otherwise false.
+    */
    static bool isConnected();
 
 private slots:
@@ -30,12 +47,17 @@ private slots:
    void onDisconnected();
 
 private:
+   static const QString DEFAULT_ADDRESS;
+   static const quint16 DEFAULT_PORT;
+   static const quint16 DEFAULT_RETRY_INTERVAL;
+
    // Singleton, private constructor
-   Connection(QString host,
+   Connection(QString address,
               quint16 port);
+   ~Connection();
 
    static bool instanceExists();
-   static Connection* instance(QString host = DEFAULT_ADDRESS,
+   static Connection* instance(QString address = DEFAULT_ADDRESS,
                                quint16 port = DEFAULT_PORT);
 
    QAMQP::Client* client();
@@ -43,8 +65,6 @@ private:
    static Connection* m_instance;
    QAMQP::Client* m_client;
 
-   QString m_host;
-   quint16 m_port;
    quint32 m_retryInterval;
    QTimer m_connectionTimer;
 };
