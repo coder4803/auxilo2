@@ -8,7 +8,9 @@ SOURCES     += message.cpp \
                setstatemessage.cpp \
                setstateackmessage.cpp \
                requeststatemessage.cpp \
-               stateresponsemessage.cpp
+               stateresponsemessage.cpp \
+               statechangedmessage.cpp \
+               statechangedackmessage.cpp
 
 HEADERS     += message.h \
                signalmessage.h \
@@ -16,7 +18,9 @@ HEADERS     += message.h \
                setstatemessage.h \
                setstateackmessage.h \
                requeststatemessage.h \
-               stateresponsemessage.h
+               stateresponsemessage.h \
+               statechangedmessage.h \
+               statechangedackmessage.h
 
 INCLUDEPATH += ../../../externals/include/
 
