@@ -6,13 +6,17 @@ SOURCES     += message.cpp \
                signalmessage.cpp \
                signalackmessage.cpp \
                setstatemessage.cpp \
-               setstateackmessage.cpp
+               setstateackmessage.cpp \
+               requeststatemessage.cpp \
+               stateresponsemessage.cpp
 
 HEADERS     += message.h \
                signalmessage.h \
                signalackmessage.h \
                setstatemessage.h \
-               setstateackmessage.h
+               setstateackmessage.h \
+               requeststatemessage.h \
+               stateresponsemessage.h
 
 INCLUDEPATH += ../../../externals/include/
 
