@@ -9,7 +9,7 @@ SOURCES     += connection/connection.cpp
 HEADERS     += signalgroup.h
 HEADERS     += connection/connection.h
 
-INCLUDEPATH += ../../../externals/include/ \
+INCLUDEPATH += ../../../externals/include/
 
 LIBS        += -L$$PWD/../../../externals/lib/ -lqamqp
 

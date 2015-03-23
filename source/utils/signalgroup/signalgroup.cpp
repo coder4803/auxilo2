@@ -37,7 +37,7 @@ SignalGroup::~SignalGroup()
 {
 }
 
-bool SignalGroup::publish(QByteArray data)
+bool SignalGroup::publish(const QByteArray data)
 {
    if (!m_exchange) {
       return false;
@@ -46,6 +46,23 @@ bool SignalGroup::publish(QByteArray data)
    m_exchange->publish(data, "", "application/octet-stream");
 
    return false;
+}
+
+bool SignalGroup::publish(const Message& message)
+{
+   return publish(message.data());
+}
+
+void SignalGroup::publish(const QByteArray data, QString group)
+{
+   SignalGroup* signalGroup = new SignalGroup(group, Publisher);
+   signalGroup->publish(data);
+   signalGroup->deleteLater();
+}
+
+void SignalGroup::publish(const Message &message, QString group)
+{
+   publish(message.data(), group);
 }
 
 void SignalGroup::onQueueDeclared()

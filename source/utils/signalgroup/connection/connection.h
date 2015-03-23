@@ -27,6 +27,8 @@ public:
    /*!
     * \brief setHost can be used to define RabbitMQ server address and port.
     * Note that this method must be called before creating SigalGroups.
+    * However it is not necessary to call this function at all if default
+    * values are fine (5672@127.0.0.1).
     * Calling this function will create instance of Connection and connect
     * to RabbitMQ server.
     * \param address RabbitMQ server address
@@ -51,7 +53,7 @@ private:
    static const quint16 DEFAULT_PORT;
    static const quint16 DEFAULT_RETRY_INTERVAL;
 
-   // Singleton, private constructor
+   // Singleton class
    Connection(QString address,
               quint16 port);
    ~Connection();

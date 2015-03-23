@@ -6,6 +6,8 @@
 #include "amqp/amqp_exchange.h"
 #include "amqp/amqp_queue.h"
 
+#include "../messages/message.h"
+
 #include "connection/connection.h"
 
 #ifndef UTILS_SIGNALGROUP_H
@@ -39,16 +41,50 @@ public:
     * \param type Group's type (publisher, subscriber or both)
     * \param parent Parent object.
     */
-   SignalGroup(QString name, GroupType type, QObject* parent = NULL);
+   SignalGroup(QString name,
+               GroupType type,
+               QObject* parent = NULL);
+
+   /*!
+    * Destructor.
+    */
    ~SignalGroup();
 
    /*!
-    * \brief publish writes data to group.
+    * \brief Writes data to group.
     * \param data Data to write.
     * \return Returns true if group is ready (ready-signal is emitted),
-    * otherwis false.
+    * otherwise false.
     */
-   bool publish(QByteArray data);
+   bool publish(const QByteArray data);
+
+   /*!
+    * \brief Writes message to group
+    * \param message Message to write
+    * \return Returns true if group is ready (ready-signal is emitted),
+    * otherwise false.
+    */
+   bool publish(const Message& message);
+
+   /*!
+    * \brief Writes data to specified group
+    * This method can be used send data to temporary group
+    * (i.e. reply and ack).
+    * \param message Data to write
+    * \param group Target group name
+    */
+   static void publish(const QByteArray data,
+                       const QString group);
+
+   /*!
+    * \brief Writes message to specified group
+    * This method can be used send message to temporary group
+    * (i.e. reply and ack).
+    * \param message Message to write
+    * \param group Target group name
+    */
+   static void publish(const Message& message,
+                       const QString group);
 
 signals:
    /*!
@@ -57,7 +93,8 @@ signals:
     * \param group Group name. This is useful if one slot handles
     * multiple signal groups.
     */
-   void messageReceived(QByteArray data, QString group);
+   void messageReceived(QByteArray data,
+                        QString group);
 
    /*!
     * \brief ready is emitted when group is ready to publis and/or subscribe.
