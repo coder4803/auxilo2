@@ -2,9 +2,14 @@ TEMPLATE    = lib
 CONFIG      += staticlib
 QT          -= gui
 
-SOURCES     += signalmessage.cpp
+SOURCES     += message.cpp \
+               signalmessage.cpp \
+               signalackmessage.cpp
 
-HEADERS     += message.h
-HEADERS     += signalmessage.h
+HEADERS     += message.h \
+               signalmessage.h \
+               signalackmessage.h
+
+INCLUDEPATH += ../../../externals/include/
 
 DESTDIR     = ../../../build/lib/

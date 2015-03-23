@@ -1,6 +1,7 @@
 #include <QStringList>
 
 #include "message.h"
+#include "signalackmessage.h"
 
 #ifndef UTILS_SIGNALMESSAGE_H
 #define UTILS_SIGNALMESSAGE_H
@@ -9,7 +10,7 @@ namespace Utils {
 
 /*!
  * \brief The SignalMessage class
- * This class can be used to create and parse Signal messages.
+ * This class can be used to create and parse signal messages.
  */
 class SignalMessage : public Message
 {
@@ -18,49 +19,44 @@ public:
     * \brief Constructor to create message from scratch.
     * \param signalName Signal's name.
     * \param parameters List of parameters.
-    * \param parent Parent object.
+    * \param ackGroup Name of group to send ack message.
     */
-   SignalMessage(QString signalName = QString(),
+   SignalMessage(QString signalName,
                  QStringList parameters = QStringList(),
-                 QObject* parent = NULL);
+                 QString ackGroup = QString());
 
    /*!
     * \brief Constructor to create message from binary data.
     * \param data Binary data.
-    * \param parent Parent object.
     */
-   SignalMessage(QByteArray data,
-                 QObject* parent = NULL);
-
-   //! Destructor.
-   ~SignalMessage();
-
-   /*!
-    * \brief Set signal name.
-    * \param name Signal's name.
-    */
-   void setSignalName(QString name);
+   SignalMessage(QByteArray data);
 
    /*!
     * \brief Append parameter to parameter list.
     * \param value Parameter's value.
     */
-   void appendParameter(QString value);
+   void appendParameter(QString value) { m_parameters.append(value); }
+
+   /*!
+    * \brief Set acknowledge group.
+    * \param group Group's name.
+    */
+   void setAckGroup(QString group) { m_ackGroup = group; }
 
    /*!
     * \brief Returns signal name.
     * \return Signal name.
     */
-   QString signalName() const;
+   QString signalName() const { return m_signalName; }
 
    /*!
-    * \brief Return number of parameters.
+    * \brief Returns number of parameters.
     * \return Number of parameters.
     */
-   quint32 numberOfParameters() const;
+   quint32 numberOfParameters() const { return m_parameters.size(); }
 
    /*!
-    * \brief Return value of specified parameter.
+    * \brief Returns value of specified parameter.
     * \param index Parameter index on list.
     * \return Parameter value.
     * \pre index is less than number of parameters.
@@ -71,7 +67,22 @@ public:
     * \brief Return list of parameter values.
     * \return List of parameter values.
     */
-   QStringList parameters() const;
+   QStringList parameters() const { return m_parameters; }
+
+   /*!
+    * \brief Returns acknowledge group name.
+    * \return Name of acknowledge group.
+    */
+   QString ackGroup() const { return m_ackGroup; }
+
+   /*!
+    * \brief Creates acknowledge message for this message.
+    * It is highly recommended to use this method to create acknowledge
+    * messages.
+    * \param result Result of handling this message (ack status).
+    * \return Acknowledge message for SignalMessage.
+    */
+   SignalAckMessage createAckMessage(SignalAckMessage::Result result) const;
 
    /*!
     * \brief Returns message in binary format.
@@ -81,7 +92,7 @@ public:
 
    /*!
     * \brief Returns message in string format.
-    * This is usefull when debugging.
+    * This is useful when debugging.
     * \return Message in string format.
     */
    QString string() const;
@@ -89,6 +100,8 @@ public:
 private:
    QString m_signalName;
    QStringList m_parameters;
+   QString m_ackGroup;
+   quint32 m_ackId;
 };
 
 } // Utils

@@ -7,44 +7,29 @@ namespace Utils {
 
 SignalMessage::SignalMessage(QString signalName,
                              QStringList parameters,
-                             QObject* parent) :
-   Message(parent),
+                             QString ackGroup) :
+   Message(),
    m_signalName(signalName),
-   m_parameters(parameters)
+   m_parameters(parameters),
+   m_ackGroup(ackGroup),
+   m_ackId(0)
 {
+   if (!ackGroup.isEmpty()) {
+      m_ackId = this->nextAckId();
+   }
 }
 
-SignalMessage::SignalMessage(QByteArray data,
-                             QObject* parent) :
-   Message(parent)
+SignalMessage::SignalMessage(QByteArray data) :
+   Message()
 {
    QDataStream stream(data);
    stream >> m_signalName;
    stream >> m_parameters;
-}
+   stream >> m_ackGroup;
 
-SignalMessage::~SignalMessage()
-{
-}
-
-void SignalMessage::setSignalName(QString name)
-{
-   m_signalName = name;
-}
-
-void SignalMessage::appendParameter(QString value)
-{
-   m_parameters.append(value);
-}
-
-QString SignalMessage::signalName() const
-{
-   return m_signalName;
-}
-
-quint32 SignalMessage::numberOfParameters() const
-{
-   return m_parameters.size();
+   if (!m_ackGroup.isEmpty()) {
+      stream >> m_ackId;
+   }
 }
 
 QString SignalMessage::parameter(quint8 index) const
@@ -53,9 +38,10 @@ QString SignalMessage::parameter(quint8 index) const
    return m_parameters.at(index);
 }
 
-QStringList SignalMessage::parameters() const
+SignalAckMessage SignalMessage::createAckMessage(
+      SignalAckMessage::Result result) const
 {
-   return m_parameters;
+   return SignalAckMessage(m_ackId, result);
 }
 
 QByteArray SignalMessage::data() const
@@ -65,6 +51,11 @@ QByteArray SignalMessage::data() const
 
    stream << m_signalName;
    stream << m_parameters;
+   stream << m_ackGroup;
+
+   if (!m_ackGroup.isEmpty()) {
+      stream << m_ackId;
+   }
 
    return message;
 }
@@ -72,11 +63,16 @@ QByteArray SignalMessage::data() const
 QString SignalMessage::string() const
 {
    QString message("SignalMessage:\n");
-   message.append(QString("- Name: %1\n").arg(m_signalName));
+   message += QString("- Name: %1\n").arg(m_signalName);
+
+   if (!m_ackGroup.isEmpty()) {
+      message +=(QString("- AckGroup: %1\n")).arg(m_ackGroup);
+      message += QString("- Ack id: %1\n").arg(m_ackId);
+   }
 
    for (int i = 0; i < m_parameters.size(); ++i) {
-      message.append(QString("- Param %1: %2\n").
-                     arg(i+1).arg(m_parameters.at(i)));
+      message += (QString("- Param %1: %2\n").arg(i+1)
+                                             .arg(m_parameters.at(i)));
    }
 
    return message;
