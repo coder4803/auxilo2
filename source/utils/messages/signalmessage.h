@@ -76,6 +76,12 @@ public:
    QString ackGroup() const { return m_ackGroup; }
 
    /*!
+    * \brief Returns acknowledge id.
+    * \return Acknowledge id.
+    */
+   quint32 ackId() const { return m_ackId; }
+
+   /*!
     * \brief Creates acknowledge message for this message.
     * It is highly recommended to use this method to create acknowledge
     * messages.
