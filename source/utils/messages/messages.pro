@@ -10,7 +10,8 @@ SOURCES     += message.cpp \
                requeststatemessage.cpp \
                stateresponsemessage.cpp \
                statechangedmessage.cpp \
-               statechangedackmessage.cpp
+               statechangedackmessage.cpp \
+               logmessage.cpp
 
 HEADERS     += message.h \
                signalmessage.h \
@@ -20,7 +21,8 @@ HEADERS     += message.h \
                requeststatemessage.h \
                stateresponsemessage.h \
                statechangedmessage.h \
-               statechangedackmessage.h
+               statechangedackmessage.h \
+               logmessage.h
 
 INCLUDEPATH += ../../../externals/include/
 
