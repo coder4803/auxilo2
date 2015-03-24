@@ -20,9 +20,6 @@ SignalGroup::SignalGroup(QString name, GroupType type, QObject* parent) :
       enableEmitting();
       break;
    case Subscriber:
-      m_exchangeReady = true;
-      enableReceiving();
-      break;
    case Both:
       enableEmitting();
       enableReceiving();
@@ -50,6 +47,10 @@ bool SignalGroup::publish(const QByteArray data)
 
 bool SignalGroup::publish(const Message& message)
 {
+   if (m_type == Subscriber) {
+      return false;
+   }
+
    return publish(message.data());
 }
 
