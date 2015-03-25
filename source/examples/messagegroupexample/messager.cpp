@@ -13,7 +13,7 @@ Messager::Messager(QString mode,
    // Initialize selected mode
    if (mode == "-p") {
       // Create publish type group
-      m_group = new Utils::SignalGroup("examplegroup", Utils::SignalGroup::Publisher, this);
+      m_group = new Utils::MessageGroup("examplegroup", Utils::MessageGroup::Publisher, this);
 
       // ready-signal is emitted when group is ready for publishing and/or receiving
       connect(m_group, SIGNAL(ready()), this, SLOT(onGroupReady()));
@@ -24,9 +24,9 @@ Messager::Messager(QString mode,
       qCritical("Running in publisher mode...");
    } else {
        // Create subscribe type group
-       m_group = new Utils::SignalGroup("examplegroup", Utils::SignalGroup::Subscriber, this);
+       m_group = new Utils::MessageGroup("examplegroup", Utils::MessageGroup::Subscriber, this);
 
-       // SignalGroup emits messageReceived every time it receives a message
+       // MessageGroup emits messageReceived every time it receives a message
        connect(m_group, SIGNAL(messageReceived(QByteArray, QString)),
                this, SLOT(onMessageReceived(QByteArray)));
 

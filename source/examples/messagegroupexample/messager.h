@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "signalgroup.h"
+#include "messagegroup.h"
 
 class Messager : public QObject
 {
@@ -18,7 +18,7 @@ private slots:
    void onGroupReady();
 
 private:
-   Utils::SignalGroup* m_group;
+   Utils::MessageGroup* m_group;
    QTimer m_timer;
    int m_counter;
 };

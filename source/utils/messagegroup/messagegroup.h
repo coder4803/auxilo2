@@ -10,21 +10,21 @@
 
 #include "connection/connection.h"
 
-#ifndef UTILS_SIGNALGROUP_H
-#define UTILS_SIGNALGROUP_H
+#ifndef UTILS_MESSAGEGROUP_H
+#define UTILS_MESSAGEGROUP_H
 
 namespace Utils {
 
 /*!
- * \brief The SignalGroup class
- * Each instance of SignalGroup Class represents one group in RabbitMQ
+ * \brief The MessageGroup class
+ * Each instance of MessageGroup Class represents one group in RabbitMQ
  * communication system. Group can be initialized either publish or
  * subscribe messages. It can also do both at same time.
  */
-class SignalGroup : public QObject
+class MessageGroup : public QObject
 {
    Q_OBJECT
-   Q_DISABLE_COPY(SignalGroup)
+   Q_DISABLE_COPY(MessageGroup)
 public:
    /*!
     * \brief The GroupType enum
@@ -36,19 +36,19 @@ public:
    };
 
    /*!
-    * \brief SignalGroup
+    * \brief MessageGroup
     * \param name Group's name.
     * \param type Group's type (publisher, subscriber or both)
     * \param parent Parent object.
     */
-   SignalGroup(QString name,
+   MessageGroup(QString name,
                GroupType type,
                QObject* parent = NULL);
 
    /*!
     * Destructor.
     */
-   ~SignalGroup();
+   ~MessageGroup();
 
    /*!
     * \brief Writes data to group.

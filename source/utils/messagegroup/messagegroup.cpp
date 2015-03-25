@@ -1,8 +1,8 @@
-#include "signalgroup.h"
+#include "messagegroup.h"
 
 namespace Utils {
 
-SignalGroup::SignalGroup(QString name, GroupType type, QObject* parent) :
+MessageGroup::MessageGroup(QString name, GroupType type, QObject* parent) :
     QObject(parent),
     m_client(NULL),
     m_exchange(NULL),
@@ -25,16 +25,16 @@ SignalGroup::SignalGroup(QString name, GroupType type, QObject* parent) :
       enableReceiving();
       break;
    default:
-      qCritical("SignalGroup::SignalGroup(): "
+      qCritical("MessageGroup::MessageGroup(): "
                 "Invalid GroupType: %i", type);
    }
 }
 
-SignalGroup::~SignalGroup()
+MessageGroup::~MessageGroup()
 {
 }
 
-bool SignalGroup::publish(const QByteArray data)
+bool MessageGroup::publish(const QByteArray data)
 {
    if (!m_exchange) {
       return false;
@@ -45,7 +45,7 @@ bool SignalGroup::publish(const QByteArray data)
    return false;
 }
 
-bool SignalGroup::publish(const Message& message)
+bool MessageGroup::publish(const Message& message)
 {
    if (m_type == Subscriber) {
       return false;
@@ -54,19 +54,19 @@ bool SignalGroup::publish(const Message& message)
    return publish(message.data());
 }
 
-void SignalGroup::publish(const QByteArray data, QString group)
+void MessageGroup::publish(const QByteArray data, QString group)
 {
-   SignalGroup* signalGroup = new SignalGroup(group, Publisher);
-   signalGroup->publish(data);
-   signalGroup->deleteLater();
+   MessageGroup* messageGroup = new MessageGroup(group, Publisher);
+   messageGroup->publish(data);
+   messageGroup->deleteLater();
 }
 
-void SignalGroup::publish(const Message &message, QString group)
+void MessageGroup::publish(const Message &message, QString group)
 {
    publish(message.data(), group);
 }
 
-void SignalGroup::onQueueDeclared()
+void MessageGroup::onQueueDeclared()
 {
    m_queue->bind(m_name, "");
    m_queue->consume(QAMQP::Queue::coNoAck);
@@ -77,7 +77,7 @@ void SignalGroup::onQueueDeclared()
    }
 }
 
-void SignalGroup::onExchangeDeclared()
+void MessageGroup::onExchangeDeclared()
 {
    m_exchangeReady = true;
    if (m_queueReady) {
@@ -85,13 +85,13 @@ void SignalGroup::onExchangeDeclared()
    }
 }
 
-void SignalGroup::onMessageReceived(QAMQP::Queue* queue)
+void MessageGroup::onMessageReceived(QAMQP::Queue* queue)
 {
    QByteArray payload = queue->getMessage()->payload;
    emit messageReceived(payload, m_name);
 }
 
-void SignalGroup::enableEmitting()
+void MessageGroup::enableEmitting()
 {
    m_exchange = m_client->createExchange(m_name);
    m_exchange->declare("fanout");
@@ -99,7 +99,7 @@ void SignalGroup::enableEmitting()
    connect(m_exchange, SIGNAL(declared()), this, SLOT(onExchangeDeclared()));
 }
 
-void SignalGroup::enableReceiving()
+void MessageGroup::enableReceiving()
 {
    m_queue = m_client->createQueue();
    m_queue->declare("", QAMQP::Queue::Exclusive);

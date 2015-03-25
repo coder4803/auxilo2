@@ -3,10 +3,10 @@ CONFIG      += staticlib
 QT          -= gui
 QT          += network
 
-SOURCES     += signalgroup.cpp
+SOURCES     += messagegroup.cpp
 SOURCES     += connection/connection.cpp
 
-HEADERS     += signalgroup.h
+HEADERS     += messagegroup.h
 HEADERS     += connection/connection.h
 
 INCLUDEPATH += ../../../externals/include/

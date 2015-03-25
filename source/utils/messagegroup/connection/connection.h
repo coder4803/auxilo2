@@ -19,7 +19,7 @@ class Connection : public QObject
 public:
    /*!
     * \brief getClient returns pointer to QAMQP::Client object.
-    * This method should be used only by SignalGroup class!
+    * This method should be used only by MessageGroup class!
     * \return Pointer to QAMQP::Client.
     */
    static QAMQP::Client* getClient();

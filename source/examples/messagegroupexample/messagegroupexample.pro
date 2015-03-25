@@ -7,16 +7,16 @@
 QT              += core
 QT              -= gui
 
-TARGET          = signalgroupexample
+TARGET          = messagegroupexample
 CONFIG          += console
 CONFIG          -= app_bundle
 
 TEMPLATE        = app
 
 INCLUDEPATH     += ../../../externals/include/
-INCLUDEPATH     += ../../utils/signalgroup/
+INCLUDEPATH     += ../../utils/messagegroup/
 
-LIBS            += -L../../../build/lib/ -lsignalgroup
+LIBS            += -L../../../build/lib/ -lmessagegroup
 LIBS            += -L$$PWD/../../../externals/lib/ -lqamqp
 
 SOURCES         += main.cpp \

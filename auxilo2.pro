@@ -6,5 +6,5 @@ MOC_DIR         = build/moc/
 DESTDIR         = build/bin/
 
 SUBDIRS         = source/utils/messages \
-                  source/utils/signalgroup \
-                  source/examples/signalgroupexample
+                  source/utils/messagegroup \
+                  source/examples/messagegroupexample

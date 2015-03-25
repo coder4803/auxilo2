@@ -3,7 +3,7 @@
 
 #include "messager.h"
 
-namespace SignalGroupExample
+namespace MessageGroupExample
 {
    bool verbose = false;
 }
@@ -17,7 +17,7 @@ void messageHandler(QtMsgType type,
    switch (type) {
    case QtDebugMsg:
    case QtWarningMsg:
-      if (SignalGroupExample::verbose) {
+      if (MessageGroupExample::verbose) {
          printf("%s\n", msg.toLatin1().data());
       }
       break;
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
    // -v can be used to enable debug and warning prints
    if (a.arguments().contains("-v")) {
-       SignalGroupExample::verbose = true;
+       MessageGroupExample::verbose = true;
    }
 
    // Create list of allowed mode parameters
