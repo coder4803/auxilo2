@@ -12,7 +12,7 @@
 #define SIGNALQUEUE_HH
 
 #include "signal.hh"
-#include <queue>
+#include <list>
 #include <mutex>
 #include <condition_variable>
 
@@ -51,6 +51,9 @@ public:
      * If there are no signals in queue, the calling thread is put into sleep
      * until there are signals to be popped.
      * \return Signal with highest priority
+     * 
+     * Complexity: Constant, if there were signals in queue.
+     * Concurrency: This method is thread safe.
      */
     Signal pop();
     
@@ -60,17 +63,23 @@ public:
      * \pre -
      * \post Signal is added into the queue. Signal's place is determined by its
      *  priority.
+     * 
+     * Complexity: logarithmic.
+     * Concurrency: This method is thread safe.
      */
     void push(const Signal& s);
     
     /*!
      * \brief empty Checks if the queue is empty.
      * \return True, if there are no pending signals in the queue.
+     * 
+     * Complexity: Constant.
+     * Concurrency: This method is thread safe.
      */
     bool empty() const;
     
 private:
-    std::priority_queue<Signal> queue_;
+    std::list<Signal> queue_;
     mutable std::recursive_mutex mx_;
     std::condition_variable_any not_empty_cv_;
 };
