@@ -7,7 +7,7 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 06-Mar-2015
- * Last modified: 06-Mar-2015
+ * Last modified: 31-Mar-2015
  */
 
 #ifndef SCRIPTBANKBUILDER_HH
@@ -69,7 +69,7 @@ public:
      * ScriptID:ScriptPriority:ScriptFilePath
      * <... All script definitions as declared above, seperated with ';' ...>
      * 
-     * where ScriptID and ScriptPriority are unsigned integers.
+     * where ScriptID is a string and ScriptPriority is an unsigned integers.
      */
     static ScriptBankInterface* createScriptBank(const QString& conf_msg);
     

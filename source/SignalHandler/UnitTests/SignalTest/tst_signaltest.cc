@@ -24,9 +24,9 @@ SignalTest::SignalTest()
 
 void SignalTest::comparisonTest()
 {
-    SignalHandler::Signal s1(0,0, std::vector<QString>() );
-    SignalHandler::Signal s2(1,0, std::vector<QString>() ); 
-    SignalHandler::Signal s3(0,0, std::vector<QString>() );
+    SignalHandler::Signal s1(0, QString("a"), QStringList() );
+    SignalHandler::Signal s2(1, QString("b"), QStringList() ); 
+    SignalHandler::Signal s3(0, QString("c"), QStringList() );
     
     QVERIFY2(s2 < s1, "Comparison does not work");
     QVERIFY2(!(s1 < s2), "Comparison does not work");

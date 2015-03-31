@@ -5,7 +5,7 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 05-Mar-2015
- * Last Modified: 07-Mar-2015
+ * Last Modified: 31-Mar-2015
  */
 
 #include "scriptbank.hh"
@@ -23,7 +23,7 @@ ScriptBank::~ScriptBank()
 }
 
 
-QString ScriptBank::getScript(unsigned int scriptID) const
+QString ScriptBank::getScript(const QString& scriptID) const
 {
     ScriptData::const_iterator it = scripts_.find(scriptID);
     if (it == scripts_.end()){
@@ -35,7 +35,7 @@ QString ScriptBank::getScript(unsigned int scriptID) const
 }
 
 
-unsigned int ScriptBank::getPriorityOf(unsigned int scriptID) const
+unsigned int ScriptBank::getPriorityOf(const QString& scriptID) const
 {
     ScriptData::const_iterator it = scripts_.find(scriptID);
     

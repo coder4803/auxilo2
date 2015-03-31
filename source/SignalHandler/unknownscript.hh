@@ -5,13 +5,14 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 07-Mar-2015
- * Last modified: 07-Mar-2015
+ * Last modified: 31-Mar-2015
  */
 
 #ifndef UNKNOWNSCRIPT_HH
 #define UNKNOWNSCRIPT_HH
 
 #include <exception>
+#include <QString>
 
 namespace SignalHandler
 {
@@ -30,7 +31,7 @@ public:
      * \param scriptID Unknown ID that caused exception.
      * \pre -
      */
-    explicit UnknownScript(unsigned int scriptID);
+    explicit UnknownScript(const QString& scriptID);
     
     //! Destructor
     virtual ~UnknownScript() noexcept;
@@ -47,11 +48,11 @@ public:
      * \return ID-number that caused the exception.
      * \pre -
      */
-    unsigned int getUnknownID() const noexcept;
+    QString getUnknownID() const noexcept;
     
     
 private:
-    unsigned int scriptID_;
+    QString scriptID_;
 };
 
 
