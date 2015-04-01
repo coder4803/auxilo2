@@ -13,9 +13,17 @@ CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += c++11
 
-INCLUDEPATH += /ScriptLangWrapper
-INCLUDEPATH += /exceptions
-INCLUDEPATH += /interfaces
+INCLUDEPATH     += /ScriptLangWrapper
+INCLUDEPATH     += /exceptions
+INCLUDEPATH     += /interfaces
+INCLUDEPATH     += /communication
+INCLUDEPATH     += ../../externals/include/
+INCLUDEPATH     += ../utils/messagegroup/
+INCLUDEPATH     += ../utils/messages/
+
+LIBS            += -L../../build/lib/ -lmessagegroup
+LIBS            += -L../../build/lib/ -lmessages
+LIBS            += -L$$PWD/../../externals/lib/ -lqamqp
 
 
 TEMPLATE = app
@@ -29,7 +37,8 @@ SOURCES += main.cc \
     signalqueue.cc \
     exceptions/badmessage.cc \
     ScriptLangWrapper/scriplangwrapperfactory.cc \
-    ScriptLangWrapper/scriptlangwrapperpool.cc
+    ScriptLangWrapper/scriptlangwrapperpool.cc \
+    communication/signalreader.cc
 
 HEADERS += \
     signal.hh \
@@ -47,4 +56,5 @@ HEADERS += \
     signalqueue.hh \
     ScriptLangWrapper/scriptlangwrapper.hh \
     ScriptLangWrapper/scriptlangwrapperpool.hh \
-    ScriptLangWrapper/scriptlangwrapperfactory.hh
+    ScriptLangWrapper/scriptlangwrapperfactory.hh \
+    communication/signalreader.hh

@@ -11,7 +11,7 @@
 #ifndef SCRIPTPRIORITYLIBRARY_HH
 #define SCRIPTPRIORITYLIBRARY_HH
 
-#include "unknownscript.hh"
+#include "exceptions/unknownscript.hh"
 #include <QString>
 
 namespace SignalHandler
