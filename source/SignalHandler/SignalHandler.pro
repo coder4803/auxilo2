@@ -13,6 +13,9 @@ CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += c++11
 
+INCLUDEPATH += /ScriptLangWrapper
+
+
 TEMPLATE = app
 
 
@@ -22,7 +25,9 @@ SOURCES += main.cc \
     scriptbankbuilder.cc \
     unknownscript.cc \
     signalqueue.cc \
-    badmessage.cc
+    badmessage.cc \
+    ScriptLangWrapper/scriplangwrapperfactory.cc \
+    ScriptLangWrapper/scriptlangwrapperpool.cc
 
 HEADERS += \
     signal.hh \
@@ -37,4 +42,7 @@ HEADERS += \
     scriptbankinterface.hh \
     priorityupdateobserver.hh \
     priorityupdatesubject.hh \
-    signalqueue.hh
+    signalqueue.hh \
+    ScriptLangWrapper/scriptlangwrapper.hh \
+    ScriptLangWrapper/scriptlangwrapperpool.hh \
+    ScriptLangWrapper/scriptlangwrapperfactory.hh
