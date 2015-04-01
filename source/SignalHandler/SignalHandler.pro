@@ -14,6 +14,8 @@ CONFIG   -= app_bundle
 CONFIG   += c++11
 
 INCLUDEPATH += /ScriptLangWrapper
+INCLUDEPATH += /exceptions
+INCLUDEPATH += /interfaces
 
 
 TEMPLATE = app
@@ -23,25 +25,25 @@ SOURCES += main.cc \
     signal.cc \
     scriptbank.cc \
     scriptbankbuilder.cc \
-    unknownscript.cc \
+    exceptions/unknownscript.cc \
     signalqueue.cc \
-    badmessage.cc \
+    exceptions/badmessage.cc \
     ScriptLangWrapper/scriplangwrapperfactory.cc \
     ScriptLangWrapper/scriptlangwrapperpool.cc
 
 HEADERS += \
     signal.hh \
     scriptbank.hh \
-    scriptbankbuilder.hh \
-    scriptprioritylibrary.hh \
-    scriptlibrary.hh \
-    unknownscript.hh \
-    scriptupdateobserver.hh \
-    scriptupdatesubject.hh \
-    badmessage.hh \
-    scriptbankinterface.hh \
-    priorityupdateobserver.hh \
-    priorityupdatesubject.hh \
+    interfaces/scriptbankbuilder.hh \
+    interfaces/scriptprioritylibrary.hh \
+    interfaces/scriptlibrary.hh \
+    exceptions/unknownscript.hh \
+    interfaces/scriptupdateobserver.hh \
+    interfaces/scriptupdatesubject.hh \
+    exceptions/badmessage.hh \
+    interfaces/scriptbankinterface.hh \
+    interfaces/priorityupdateobserver.hh \
+    interfaces/priorityupdatesubject.hh \
     signalqueue.hh \
     ScriptLangWrapper/scriptlangwrapper.hh \
     ScriptLangWrapper/scriptlangwrapperpool.hh \
