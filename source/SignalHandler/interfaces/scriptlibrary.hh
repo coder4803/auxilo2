@@ -11,7 +11,7 @@
 #ifndef SCRIPTLIBRARY_HH
 #define SCRIPTLIBRARY_HH
 
-#include "unknownscript.hh"
+#include "exceptions/unknownscript.hh"
 #include <QString>
 
 namespace SignalHandler 
@@ -44,6 +44,14 @@ public:
      * \exception UnknownScript is thrown, if scriptID doesn't match any script.
      */
     virtual QString getScript(const QString& scriptID) const = 0;
+    
+    /*!
+     * \brief getLanguage Get script language.
+     * \param scriptID script identifier.
+     * \return Language identifier.
+     * \exception UnknownScript is thrown, if scriptID doesn't match any script.
+     */
+    virtual QString getLanguage(const QString& scriptID) const = 0;
 };
 
 } // Namespace SignalHandler

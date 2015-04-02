@@ -35,6 +35,18 @@ QString ScriptBank::getScript(const QString& scriptID) const
 }
 
 
+QString ScriptBank::getLanguage(const QString& scriptID) const
+{
+    ScriptData::const_iterator it = scripts_.find(scriptID);
+    if (it == scripts_.end()){
+        throw UnknownScript(scriptID);
+    }
+    else{
+        return it->second.language;
+    }
+}
+
+
 unsigned int ScriptBank::getPriorityOf(const QString& scriptID) const
 {
     ScriptData::const_iterator it = scripts_.find(scriptID);

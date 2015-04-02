@@ -40,7 +40,7 @@ void SignalReader::start()
 {
     // Only one call is allowed in object lifetime.
     static bool first_time(true);
-    Q_ASSERT(firts_time);
+    Q_ASSERT(first_time);
     first_time = false;
     
     // Host address

@@ -38,12 +38,13 @@ SOURCES += main.cc \
     exceptions/badmessage.cc \
     ScriptLangWrapper/scriplangwrapperfactory.cc \
     ScriptLangWrapper/scriptlangwrapperpool.cc \
-    communication/signalreader.cc
+    communication/signalreader.cc \
+    scriptrunner.cc
 
 HEADERS += \
     signal.hh \
     scriptbank.hh \
-    interfaces/scriptbankbuilder.hh \
+    scriptbankbuilder.hh \
     interfaces/scriptprioritylibrary.hh \
     interfaces/scriptlibrary.hh \
     exceptions/unknownscript.hh \
@@ -57,4 +58,5 @@ HEADERS += \
     ScriptLangWrapper/scriptlangwrapper.hh \
     ScriptLangWrapper/scriptlangwrapperpool.hh \
     ScriptLangWrapper/scriptlangwrapperfactory.hh \
-    communication/signalreader.hh
+    communication/signalreader.hh \
+    scriptrunner.hh

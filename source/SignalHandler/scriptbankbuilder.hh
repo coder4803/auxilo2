@@ -13,8 +13,8 @@
 #ifndef SCRIPTBANKBUILDER_HH
 #define SCRIPTBANKBUILDER_HH
 
-#include "scriptbankinterface.hh"
-#include "badmessage.hh"
+#include "interfaces/scriptbankinterface.hh"
+#include "exceptions/badmessage.hh"
 #include <exception>
 #include <QString>
 

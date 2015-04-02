@@ -77,7 +77,7 @@ getScriptProperties(const QString& input,
         throw BadMessage("");
     }
     
-    scripts[scriptID] = ScriptBank::ScriptInfo({script, priority});
+    scripts[scriptID] = ScriptBank::ScriptInfo({script, QString(), priority});
 }
 
 

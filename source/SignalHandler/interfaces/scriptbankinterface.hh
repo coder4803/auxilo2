@@ -35,6 +35,7 @@ public:
     struct ScriptInfo
     {
         QString script;
+        QString language;
         unsigned priority;
     };
     

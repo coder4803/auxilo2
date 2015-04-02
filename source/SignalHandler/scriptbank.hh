@@ -16,7 +16,7 @@
 
 #include <map>
 #include <QString>
-#include "scriptbankinterface.hh"
+#include "interfaces/scriptbankinterface.hh"
 
 namespace SignalHandler
 {
@@ -49,6 +49,7 @@ public:
     
     // ScriptLibrary methods (see documentation in scriptlibrary.hh):
     virtual QString getScript(const QString& scriptID) const;
+    virtual QString getLanguage(const QString& scriptID) const;
     
     // ScriptPriorityLibrary methods 
     // (see documentation in scriptprioritylibrary.hh):
