@@ -2,6 +2,8 @@
 #include <QDebug>
 #include "messagegroup.h"
 #include "signalackmessage.h"
+#include "exceptions/scriptrunexceptions.hh"
+
 
 namespace SignalHandler
 {
@@ -46,7 +48,9 @@ void ScriptRunner::start()
         ScriptLangWrapperPtr interpreter = pool_->reserve(lang);
         if (interpreter == nullptr){
             // Error: Language not supported.
-            // ... Error handling ...
+            Utils::SignalAckMessage ack_msg(s.getAckInfo().ackID,
+                                            Utils::SignalAckMessage::FAILED);
+            Utils::MessageGroup::publish(ack_msg, s.getAckInfo().ackGroup);
             continue;
         }
         
@@ -54,12 +58,22 @@ void ScriptRunner::start()
         {
             interpreter->run( script, s.getParameters() );
         }
-        catch(...)
+        catch(InvalidParameters&)
         {
-            // Something wrong with the script
+            // AckMessage: Invalid parameters.
+            Utils::SignalAckMessage ack_msg(s.getAckInfo().ackID,
+                                            Utils::SignalAckMessage::INVALID_PARAMETERS);
+            Utils::MessageGroup::publish(ack_msg, s.getAckInfo().ackGroup);
+            pool_->release( std::move(interpreter) );
+            continue;
+        }
+        catch(BadScript&){
+            // AckMessage: other error.
             Utils::SignalAckMessage ack_msg(s.getAckInfo().ackID,
                                             Utils::SignalAckMessage::FAILED);
             Utils::MessageGroup::publish(ack_msg, s.getAckInfo().ackGroup);
+            pool_->release( std::move(interpreter) );
+            continue;
         }
         
         pool_->release( std::move(interpreter) );

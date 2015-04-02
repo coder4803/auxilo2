@@ -59,4 +59,5 @@ HEADERS += \
     ScriptLangWrapper/scriptlangwrapperpool.hh \
     ScriptLangWrapper/scriptlangwrapperfactory.hh \
     communication/signalreader.hh \
-    scriptrunner.hh
+    scriptrunner.hh \
+    exceptions/scriptrunexceptions.hh

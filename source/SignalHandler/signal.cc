@@ -1,9 +1,11 @@
 
 /* signal.cc
+ * 
  * Implementation file for the Signal class defined in signal.hh.
+ * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 04-Mar-2015
- * Last Modified: 31-Mar-2015
+ * Last Modified: 04-April-2015
  */
 
 #include "signal.hh"
