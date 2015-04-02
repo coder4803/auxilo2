@@ -1,5 +1,7 @@
 #include "scriptrunner.hh"
 #include <QDebug>
+#include "messagegroup.h"
+#include "signalackmessage.h"
 
 namespace SignalHandler
 {
@@ -52,9 +54,20 @@ void ScriptRunner::start()
         {
             interpreter->run( script, s.getParameters() );
         }
-        catch(...){/* Something wrong with the script */}
+        catch(...)
+        {
+            // Something wrong with the script
+            Utils::SignalAckMessage ack_msg(s.getAckInfo().ackID,
+                                            Utils::SignalAckMessage::FAILED);
+            Utils::MessageGroup::publish(ack_msg, s.getAckInfo().ackGroup);
+        }
         
         pool_->release( std::move(interpreter) );
+        
+        // Send ackMessage: Success.
+        Utils::SignalAckMessage ack_msg(s.getAckInfo().ackID,
+                                        Utils::SignalAckMessage::SUCCEEDED);
+        Utils::MessageGroup::publish(ack_msg, s.getAckInfo().ackGroup);
     }
 }
 

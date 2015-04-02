@@ -24,9 +24,11 @@ SignalTest::SignalTest()
 
 void SignalTest::comparisonTest()
 {
-    SignalHandler::Signal s1(0, QString("a"), QStringList() );
-    SignalHandler::Signal s2(1, QString("b"), QStringList() ); 
-    SignalHandler::Signal s3(0, QString("c"), QStringList() );
+    using SignalHandler::Signal;
+    
+    Signal s1(0, QString("a"), QStringList(), Signal::AckInfo() );
+    Signal s2(1, QString("b"), QStringList(), Signal::AckInfo() ); 
+    Signal s3(0, QString("c"), QStringList(), Signal::AckInfo() );
     
     QVERIFY2(s2 < s1, "Comparison does not work");
     QVERIFY2(!(s1 < s2), "Comparison does not work");

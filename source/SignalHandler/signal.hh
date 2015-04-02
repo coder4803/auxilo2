@@ -29,6 +29,19 @@ class Signal
 public:
     
     /*!
+     * \brief The AckInfo struct
+     * Aid structure to hold data needed for responding to original sender.
+     */
+    struct AckInfo
+    {
+        QString ackGroup;
+        quint32 ackID;
+        
+        AckInfo();
+        AckInfo(const QString& group, quint32 id);
+    };
+    
+    /*!
      * \brief Signal Default constructor is defined, so that Signals can be
      * stored in stl-containers such as vector.
      * \pre-
@@ -47,8 +60,9 @@ public:
      * \post New Signal is constructed with given values.
      */
     Signal(unsigned int priority, 
-           QString scriptID, 
-           QStringList parameters);
+           const QString& scriptID, 
+           const QStringList& parameters,
+           const AckInfo& ack_info);
     
     //! Destructor
     ~Signal();
@@ -77,6 +91,8 @@ public:
      */
     QStringList getParameters() const;
     
+    AckInfo getAckInfo() const;
+    
     /*!
      * \brief operator < Comparison operator defines relative priority order.
      * This is equivalent to lhs.getPriority() > rhs.getPriority();
@@ -91,6 +107,7 @@ private:
     unsigned int priority_;
     QString scriptID_;
     QStringList parameters_;
+    AckInfo ack_info_;
 };
 
 

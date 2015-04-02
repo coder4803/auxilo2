@@ -88,18 +88,19 @@ void SignalQueueTest::serialTest()
 
 void SignalQueueTest::serialTest_data()
 {
+    using SignalHandler::Signal;
     QTest::addColumn<SignalHandler::Signal>("input");
     
-    QTest::newRow("s0") << SignalHandler::Signal(9, QString("0"), QStringList());
-    QTest::newRow("s1") << SignalHandler::Signal(8, QString("1"), QStringList());
-    QTest::newRow("s2") << SignalHandler::Signal(7, QString("2"), QStringList());
-    QTest::newRow("s3") << SignalHandler::Signal(6, QString("3"), QStringList());
-    QTest::newRow("s4") << SignalHandler::Signal(5, QString("4"), QStringList());
-    QTest::newRow("s5") << SignalHandler::Signal(4, QString("5"), QStringList());
-    QTest::newRow("s6") << SignalHandler::Signal(3, QString("6"), QStringList());
-    QTest::newRow("s7") << SignalHandler::Signal(2, QString("7"), QStringList());
-    QTest::newRow("s8") << SignalHandler::Signal(1, QString("8"), QStringList());
-    QTest::newRow("s9") << SignalHandler::Signal(0, QString("9"), QStringList());
+    QTest::newRow("s0") << Signal(9, QString("0"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s1") << Signal(8, QString("1"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s2") << Signal(7, QString("2"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s3") << Signal(6, QString("3"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s4") << Signal(5, QString("4"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s5") << Signal(4, QString("5"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s6") << Signal(3, QString("6"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s7") << Signal(2, QString("7"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s8") << Signal(1, QString("8"), QStringList(), Signal::AckInfo() );
+    QTest::newRow("s9") << Signal(0, QString("9"), QStringList(), Signal::AckInfo() );
 }
 
 
@@ -205,62 +206,63 @@ void SignalQueueTest::parallelTest()
 
 void SignalQueueTest::parallelTest_data()
 {
+    using SignalHandler::Signal;
     QTest::addColumn<SignalHandler::Signal>("input");
     
-    QTest::newRow("s0") << SignalHandler::Signal(9, QString("0"), QStringList());
-    QTest::newRow("s1") << SignalHandler::Signal(8, QString("0"), QStringList());
-    QTest::newRow("s2") << SignalHandler::Signal(7, QString("0"), QStringList());
-    QTest::newRow("s3") << SignalHandler::Signal(6, QString("0"), QStringList());
-    QTest::newRow("s4") << SignalHandler::Signal(5, QString("0"), QStringList());
-    QTest::newRow("s5") << SignalHandler::Signal(4, QString("0"), QStringList());
-    QTest::newRow("s6") << SignalHandler::Signal(3, QString("0"), QStringList());
-    QTest::newRow("s7") << SignalHandler::Signal(2, QString("0"), QStringList());
-    QTest::newRow("s8") << SignalHandler::Signal(1, QString("0"), QStringList());
-    QTest::newRow("s9") << SignalHandler::Signal(0, QString("0"), QStringList());
+    QTest::newRow("s0") << Signal(9, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s1") << Signal(8, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s2") << Signal(7, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s3") << Signal(6, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s4") << Signal(5, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s5") << Signal(4, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s6") << Signal(3, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s7") << Signal(2, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s8") << Signal(1, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s9") << Signal(0, QString("0"), QStringList(), Signal::AckInfo());
     
-    QTest::newRow("s10") << SignalHandler::Signal(9, QString("0"), QStringList());
-    QTest::newRow("s11") << SignalHandler::Signal(8, QString("0"), QStringList());
-    QTest::newRow("s12") << SignalHandler::Signal(7, QString("0"), QStringList());
-    QTest::newRow("s13") << SignalHandler::Signal(6, QString("0"), QStringList());
-    QTest::newRow("s14") << SignalHandler::Signal(5, QString("0"), QStringList());
-    QTest::newRow("s15") << SignalHandler::Signal(4, QString("0"), QStringList());
-    QTest::newRow("s16") << SignalHandler::Signal(3, QString("0"), QStringList());
-    QTest::newRow("s17") << SignalHandler::Signal(2, QString("0"), QStringList());
-    QTest::newRow("s18") << SignalHandler::Signal(1, QString("0"), QStringList());
-    QTest::newRow("s19") << SignalHandler::Signal(0, QString("0"), QStringList());
+    QTest::newRow("s10") << Signal(9, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s11") << Signal(8, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s12") << Signal(7, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s13") << Signal(6, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s14") << Signal(5, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s15") << Signal(4, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s16") << Signal(3, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s17") << Signal(2, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s18") << Signal(1, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s19") << Signal(0, QString("0"), QStringList(), Signal::AckInfo());
     
-    QTest::newRow("s20") << SignalHandler::Signal(9, QString("0"), QStringList());
-    QTest::newRow("s21") << SignalHandler::Signal(8, QString("0"), QStringList());
-    QTest::newRow("s22") << SignalHandler::Signal(7, QString("0"), QStringList());
-    QTest::newRow("s23") << SignalHandler::Signal(6, QString("0"), QStringList());
-    QTest::newRow("s24") << SignalHandler::Signal(5, QString("0"), QStringList());
-    QTest::newRow("s25") << SignalHandler::Signal(4, QString("0"), QStringList());
-    QTest::newRow("s26") << SignalHandler::Signal(3, QString("0"), QStringList());
-    QTest::newRow("s27") << SignalHandler::Signal(2, QString("0"), QStringList());
-    QTest::newRow("s28") << SignalHandler::Signal(1, QString("0"), QStringList());
-    QTest::newRow("s29") << SignalHandler::Signal(0, QString("0"), QStringList());
+    QTest::newRow("s20") << Signal(9, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s21") << Signal(8, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s22") << Signal(7, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s23") << Signal(6, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s24") << Signal(5, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s25") << Signal(4, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s26") << Signal(3, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s27") << Signal(2, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s28") << Signal(1, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s29") << Signal(0, QString("0"), QStringList(), Signal::AckInfo());
     
-    QTest::newRow("s30") << SignalHandler::Signal(9, QString("0"), QStringList());
-    QTest::newRow("s31") << SignalHandler::Signal(8, QString("0"), QStringList());
-    QTest::newRow("s32") << SignalHandler::Signal(7, QString("0"), QStringList());
-    QTest::newRow("s33") << SignalHandler::Signal(6, QString("0"), QStringList());
-    QTest::newRow("s34") << SignalHandler::Signal(5, QString("0"), QStringList());
-    QTest::newRow("s35") << SignalHandler::Signal(4, QString("0"), QStringList());
-    QTest::newRow("s36") << SignalHandler::Signal(3, QString("0"), QStringList());
-    QTest::newRow("s37") << SignalHandler::Signal(2, QString("0"), QStringList());
-    QTest::newRow("s38") << SignalHandler::Signal(1, QString("0"), QStringList());
-    QTest::newRow("s39") << SignalHandler::Signal(0, QString("0"), QStringList());
+    QTest::newRow("s30") << Signal(9, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s31") << Signal(8, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s32") << Signal(7, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s33") << Signal(6, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s34") << Signal(5, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s35") << Signal(4, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s36") << Signal(3, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s37") << Signal(2, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s38") << Signal(1, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s39") << Signal(0, QString("0"), QStringList(), Signal::AckInfo());
     
-    QTest::newRow("s40") << SignalHandler::Signal(9, QString("0"), QStringList());
-    QTest::newRow("s41") << SignalHandler::Signal(8, QString("0"), QStringList());
-    QTest::newRow("s42") << SignalHandler::Signal(7, QString("0"), QStringList());
-    QTest::newRow("s43") << SignalHandler::Signal(6, QString("0"), QStringList());
-    QTest::newRow("s44") << SignalHandler::Signal(5, QString("0"), QStringList());
-    QTest::newRow("s45") << SignalHandler::Signal(4, QString("0"), QStringList());
-    QTest::newRow("s46") << SignalHandler::Signal(3, QString("0"), QStringList());
-    QTest::newRow("s47") << SignalHandler::Signal(2, QString("0"), QStringList());
-    QTest::newRow("s48") << SignalHandler::Signal(1, QString("0"), QStringList());
-    QTest::newRow("s49") << SignalHandler::Signal(0, QString("0"), QStringList());
+    QTest::newRow("s40") << Signal(9, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s41") << Signal(8, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s42") << Signal(7, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s43") << Signal(6, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s44") << Signal(5, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s45") << Signal(4, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s46") << Signal(3, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s47") << Signal(2, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s48") << Signal(1, QString("0"), QStringList(), Signal::AckInfo());
+    QTest::newRow("s49") << Signal(0, QString("0"), QStringList(), Signal::AckInfo());
 }
 
 

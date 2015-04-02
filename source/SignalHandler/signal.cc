@@ -12,16 +12,18 @@ namespace SignalHandler
 {
 
 
-Signal::Signal() : priority_(0), scriptID_(), parameters_()
+Signal::Signal() : priority_(0), scriptID_(), parameters_(), ack_info_()
 {
 }
 
 
 Signal::Signal(unsigned int priority,
-               QString scriptID,
-               QStringList parameters):
+               const QString& scriptID,
+               const QStringList& parameters,
+               const AckInfo& ack_info):
     
-    priority_(priority), scriptID_(scriptID), parameters_(parameters)
+    priority_(priority), scriptID_(scriptID), parameters_(parameters),
+    ack_info_(ack_info)
 {
 }
 
@@ -49,10 +51,26 @@ QStringList Signal::getParameters() const
 }
 
 
+Signal::AckInfo Signal::getAckInfo() const
+{
+    return ack_info_;
+}
+
+
 bool Signal::operator<(const Signal& rhs) const
 {
     // Compare priorities
     return this->getPriority() > rhs.getPriority();
+}
+
+
+Signal::AckInfo::AckInfo() : ackGroup(), ackID(0)
+{
+}
+
+Signal::AckInfo::AckInfo(const QString& group, quint32 id):
+    ackGroup(group), ackID(id)
+{
 }
 
 } // Namespace SignalHandler

@@ -83,14 +83,14 @@ void SignalReader::onMessageReceived(QByteArray data)
     }
     catch (UnknownScript&){
         // Send ackMessage: SIGNAL_NOT_FOUND
-        Utils::MessageGroup ack(msg.ackGroup(), Utils::MessageGroup::Publisher);
-        auto result = Utils::SignalAckMessage::SIGNAL_NOT_FOUND;
-        Utils::SignalAckMessage ack_msg(msg.ackId(), result);
-        ack.publish(ack_msg);
+        Utils::SignalAckMessage ack = 
+                msg.createAckMessage(Utils::SignalAckMessage::SIGNAL_NOT_FOUND);
+        Utils::MessageGroup::publish( ack, msg.ackGroup() );
         return;
     }
 
-    Signal s(priority, msg.signalName(), msg.parameters());
+    Signal::AckInfo ack_info(msg.ackGroup(), msg.ackId());
+    Signal s(priority, msg.signalName(), msg.parameters(), ack_info);
     queue_->push(s);
 }
 
