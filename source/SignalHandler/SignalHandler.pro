@@ -36,10 +36,11 @@ SOURCES += main.cc \
     exceptions/unknownscript.cc \
     signalqueue.cc \
     exceptions/badmessage.cc \
-    ScriptLangWrapper/scriplangwrapperfactory.cc \
     ScriptLangWrapper/scriptlangwrapperpool.cc \
     communication/signalreader.cc \
-    scriptrunner.cc
+    scriptrunner.cc \
+    ScriptLangWrapper/qtscriptwrapper.cc \
+    ScriptLangWrapper/scriptlangwrapperfactory.cc
 
 HEADERS += \
     signal.hh \
@@ -60,4 +61,5 @@ HEADERS += \
     ScriptLangWrapper/scriptlangwrapperfactory.hh \
     communication/signalreader.hh \
     scriptrunner.hh \
-    exceptions/scriptrunexceptions.hh
+    exceptions/scriptrunexceptions.hh \
+    ScriptLangWrapper/qtscriptwrapper.hh

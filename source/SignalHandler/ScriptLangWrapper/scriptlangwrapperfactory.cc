@@ -9,13 +9,14 @@
  * Last modified: 01-April-2015
  */
 
-// Add headers of concrete wrapper classes here
-// --------------------------------------------
-
-// --------------------------------------------
-
 #include "scriptlangwrapperfactory.hh"
 #include <QDebug>
+
+// Add headers of concrete wrapper classes here
+// --------------------------------------------
+#include "qtscriptwrapper.hh"
+// --------------------------------------------
+
 
 namespace SignalHandler 
 {
@@ -23,24 +24,16 @@ namespace SignalHandler
 
 ScriptLangWrapper*
 ScriptLangWrapperFactory::getInstance(const QString& langName) const
-{
-    Q_UNUSED(langName);
-    /*   
-    if (langName == "Python"){
-        return new PythonWrapper;
-    }
-    else if (langName == "QtScript"){
+{   
+    if (langName == QtScriptWrapper::LANG_NAME){
         return new QtScriptWrapper;
     }
-    */
     
     // Add else-if -branches for new wrapper classes here
     
     // Language is not supported.
-    return nullptr;
-    
+    return nullptr;   
 }
-
 
 
 }
