@@ -16,7 +16,10 @@ public:
     
     virtual ~QtScriptWrapper();
     
-    virtual int run(const QString& script, const QStringList& args);
+    virtual int run(const QString& script, const QStringList& args,
+                    ScriptAPI* services);
+    
+    virtual QString getLangID() const;
 };
 
 

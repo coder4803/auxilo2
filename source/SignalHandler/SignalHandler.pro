@@ -17,6 +17,7 @@ INCLUDEPATH     += /ScriptLangWrapper
 INCLUDEPATH     += /exceptions
 INCLUDEPATH     += /interfaces
 INCLUDEPATH     += /communication
+INCLUDEPATH     += /ScriptAPI
 INCLUDEPATH     += ../../externals/include/
 INCLUDEPATH     += ../utils/messagegroup/
 INCLUDEPATH     += ../utils/messages/
@@ -40,7 +41,8 @@ SOURCES += main.cc \
     communication/signalreader.cc \
     scriptrunner.cc \
     ScriptLangWrapper/qtscriptwrapper.cc \
-    ScriptLangWrapper/scriptlangwrapperfactory.cc
+    ScriptLangWrapper/scriptlangwrapperfactory.cc \
+    ScriptAPI/scriptapiimplementation.cc
 
 HEADERS += \
     signal.hh \
@@ -62,4 +64,6 @@ HEADERS += \
     communication/signalreader.hh \
     scriptrunner.hh \
     exceptions/scriptrunexceptions.hh \
-    ScriptLangWrapper/qtscriptwrapper.hh
+    ScriptLangWrapper/qtscriptwrapper.hh \
+    ScriptAPI/scriptapi.hh \
+    ScriptAPI/scriptapiimplementation.hh

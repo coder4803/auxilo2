@@ -14,6 +14,7 @@
 
 #include <QString>
 #include <QStringList>
+#include "ScriptAPI/scriptapi.hh"
 
 
 namespace SignalHandler
@@ -45,7 +46,9 @@ public:
      * \post After executing script, the interpreter returns back to its
      *  initial state, and it is ready to run another script.
      */
-    virtual int run(const QString& script, const QStringList& args) = 0;
+    virtual int run(const QString& script, 
+                    const QStringList& args,
+                    ScriptAPI* services) = 0;
     
     /*!
      * \brief getLangID Return string identifying wrapped language.

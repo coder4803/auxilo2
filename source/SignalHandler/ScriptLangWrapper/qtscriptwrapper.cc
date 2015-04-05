@@ -14,12 +14,21 @@ QtScriptWrapper::~QtScriptWrapper()
 {   
 }
 
-int QtScriptWrapper::run(const QString& script, const QStringList& args)
+int QtScriptWrapper::run(const QString& script, 
+                         const QStringList& args, 
+                         ScriptAPI* services)
 {
     // Not implemented.
     Q_UNUSED(script);
     Q_UNUSED(args);
+    Q_UNUSED(services);
     return 0;
+}
+
+
+QString QtScriptWrapper::getLangID() const
+{
+    return QString(LANG_NAME);
 }
 
 

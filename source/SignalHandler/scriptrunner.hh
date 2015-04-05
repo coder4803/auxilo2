@@ -6,6 +6,7 @@
 #include "interfaces/scriptlibrary.hh"
 #include "ScriptLangWrapper/scriptlangwrapperpool.hh"
 #include "signalqueue.hh"
+#include "ScriptAPI/scriptapi.hh"
 #include <mutex>
 
 
@@ -39,6 +40,7 @@ private:
     ScriptUpdateSubject* subject_;
     ScriptLangWrapperPool* pool_;
     int runner_id_;
+    ScriptAPI* services_;
     std::mutex update_mx_;
     
     static int runner_counter_;

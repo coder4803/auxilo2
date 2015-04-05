@@ -3,6 +3,7 @@
 #include "messagegroup.h"
 #include "signalackmessage.h"
 #include "exceptions/scriptrunexceptions.hh"
+#include "ScriptAPI/scriptapiimplementation.hh"
 
 
 namespace SignalHandler
@@ -16,19 +17,22 @@ ScriptRunner::ScriptRunner(SignalQueue* queue,
                            ScriptLangWrapperPool* pool) :
     
     queue_(queue), lib_(lib), subject_(subject), pool_(pool),
-    runner_id_(runner_counter_++)
+    runner_id_(runner_counter_++), services_(nullptr)
 {
     Q_ASSERT(queue != nullptr);
     Q_ASSERT(lib != nullptr);
     Q_ASSERT(subject != nullptr);
     
     subject_->registerObserver(this);
+    services_ = new ScriptApiImplementation(lib_, subject_, 
+                                            QString::number(runner_id_));
 }
 
 
 ScriptRunner::~ScriptRunner()
 {   
     subject_->unregisterObserver(this);
+    delete services_;
 }
 
 
@@ -56,7 +60,7 @@ void ScriptRunner::start()
         
         try
         {
-            interpreter->run( script, s.getParameters() );
+            interpreter->run( script, s.getParameters(), services_);
         }
         catch(InvalidParameters&)
         {
