@@ -42,7 +42,8 @@ SOURCES += main.cc \
     scriptrunner.cc \
     ScriptLangWrapper/qtscriptwrapper.cc \
     ScriptLangWrapper/scriptlangwrapperfactory.cc \
-    ScriptAPI/scriptapiimplementation.cc
+    ScriptAPI/scriptapiimplementation.cc \
+    consoleui.cc
 
 HEADERS += \
     signal.hh \
@@ -66,4 +67,7 @@ HEADERS += \
     exceptions/scriptrunexceptions.hh \
     ScriptLangWrapper/qtscriptwrapper.hh \
     ScriptAPI/scriptapi.hh \
-    ScriptAPI/scriptapiimplementation.hh
+    ScriptAPI/scriptapiimplementation.hh \
+    interfaces/viewinterface.hh \
+    consoleui.hh \
+    interfaces/modelinterface.hh
