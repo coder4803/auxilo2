@@ -17,20 +17,12 @@ TEMPLATE = app
 
 
 SOURCES += tst_signaltest.cc \
-    ../../signalparser.cc \
     ../../signal.cc \
-    ../../badmessage.cc \
-    ../../unknownscript.cc
+
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    ../../signalparser.hh \
     ../../signal.hh \
-    ../../badmessage.hh \
-    ../../priorityupdatesubject.hh \
-    ../../priorityupdateobserver.hh \
-    ../../unknownscript.hh \
-    ../../scriptprioritylibrary.hh
 
 INCLUDEPATH += ../../
 DEPENDPATH += ../../

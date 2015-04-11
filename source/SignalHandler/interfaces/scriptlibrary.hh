@@ -5,7 +5,7 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 07-Mar-2015
- * Last modified: 07-Mar-2015
+ * Last modified: 31-Mar-2015
  */
 
 #ifndef SCRIPTLIBRARY_HH
@@ -43,7 +43,7 @@ public:
      * \return Script as a QString object.
      * \exception UnknownScript is thrown, if scriptID doesn't match any script.
      */
-    virtual QString getScript(unsigned int scriptID) const = 0;
+    virtual QString getScript(const QString& scriptID) const = 0;
 };
 
 } // Namespace SignalHandler

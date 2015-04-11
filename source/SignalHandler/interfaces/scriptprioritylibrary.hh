@@ -5,14 +5,14 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 06-Mar-2015
- * Last modified: 06-Mar-2015
+ * Last modified: 31-Mar-2015
  */
 
 #ifndef SCRIPTPRIORITYLIBRARY_HH
 #define SCRIPTPRIORITYLIBRARY_HH
 
-#include "unknownscript.hh"
-
+#include "exceptions/unknownscript.hh"
+#include <QString>
 
 namespace SignalHandler
 {
@@ -43,7 +43,7 @@ public:
      * \return Script's priority number (0 = highest).
      * \exception UnknownScript is thrown, if given ID doesn't match any script.
      */
-    virtual unsigned int getPriorityOf(unsigned int scriptID) const = 0;
+    virtual unsigned int getPriorityOf(const QString& scriptID) const = 0;
 };
 
 } // Namespace SignalHandler

@@ -5,7 +5,7 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 06-Mar-2015
- * Last modified: 06-Mar-2015
+ * Last modified: 31-Mar-2015
  */
 
 #include "scriptbankbuilder.hh"
@@ -45,8 +45,9 @@ ScriptBankInterface* ScriptBankBuilder::createScriptBank(const QString& conf_msg
 
 // Reads individual script's properties from QString and inserts them in 
 // Scriptdata
-void ScriptBankBuilder::getScriptProperties(const QString& input, 
-                                            ScriptBankInterface::ScriptData& scripts)
+void ScriptBankBuilder::
+getScriptProperties(const QString& input, 
+                    ScriptBankInterface::ScriptData& scripts)
 {
     QStringList fields = input.split(FIELD_SEPERATOR);
     if (fields.size() != 3){
@@ -55,14 +56,13 @@ void ScriptBankBuilder::getScriptProperties(const QString& input,
     }
     
     // Read ScriptID
-    bool ok(true);
-    unsigned scriptID = fields.at(0).toUInt(&ok);
-    if (!ok){
-        // Invalid scriptID field
+    QString scriptID = fields.at(0);
+    if (scriptID.size() == 0){
         throw BadMessage("");
     }
     
     // Read priority
+    bool ok(false);
     unsigned priority = fields.at(1).toUInt(&ok);
     if (!ok){
         // Invalid priority number
@@ -109,7 +109,8 @@ QString ScriptBankBuilder::readScriptFile(const QString& file_name)
 // ScriptBankBuilderFileError implementation
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-ScriptBankBuilderFileError::ScriptBankBuilderFileError(const QString& file_name):
+ScriptBankBuilderFileError::
+ScriptBankBuilderFileError(const QString& file_name):
     file_name_(file_name)
 {
 }

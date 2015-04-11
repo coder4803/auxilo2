@@ -5,7 +5,7 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 07-Mar-2015
- * Last modified: 07-Mar-2015
+ * Last modified: 31-Mar-2015
  */
 
 #include "unknownscript.hh"
@@ -14,7 +14,7 @@
 namespace SignalHandler
 {
 
-UnknownScript::UnknownScript(unsigned int scriptID): scriptID_(scriptID)
+UnknownScript::UnknownScript(const QString& scriptID): scriptID_(scriptID)
 {
 }
 
@@ -30,7 +30,7 @@ const char* UnknownScript::what() const noexcept
 }
 
 
-unsigned int UnknownScript::getUnknownID() const noexcept
+QString UnknownScript::getUnknownID() const noexcept
 {
     return scriptID_;
 }

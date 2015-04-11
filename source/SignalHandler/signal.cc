@@ -3,7 +3,7 @@
  * Implementation file for the Signal class defined in signal.hh.
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 04-Mar-2015
- * Last Modified: 04-Mar-2015
+ * Last Modified: 31-Mar-2015
  */
 
 #include "signal.hh"
@@ -12,14 +12,14 @@ namespace SignalHandler
 {
 
 
-Signal::Signal() : priority_(0), scriptID_(0), parameters_()
+Signal::Signal() : priority_(0), scriptID_(), parameters_()
 {
 }
 
 
 Signal::Signal(unsigned int priority,
-               unsigned int scriptID,
-               std::vector<QString> parameters):
+               QString scriptID,
+               QStringList parameters):
     
     priority_(priority), scriptID_(scriptID), parameters_(parameters)
 {
@@ -37,13 +37,13 @@ unsigned int Signal::getPriority() const
 }
 
 
-unsigned int Signal::getScriptID() const
+QString Signal::getScriptID() const
 {
     return scriptID_;
 }
 
 
-std::vector<QString> Signal::getParameters() const
+QStringList Signal::getParameters() const
 {
     return parameters_;
 }

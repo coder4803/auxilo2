@@ -6,7 +6,7 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 07-Mar-2015
- * Last modified: 07-Mar-2015 
+ * Last modified: 31-Mar-2015 
  */
 
 #ifndef SCRIPTBANKINTERFACE_HH
@@ -39,7 +39,7 @@ public:
     };
     
     //! Convenience type defifinition.
-    typedef std::map<unsigned int, ScriptInfo> ScriptData;
+    typedef std::map<QString, ScriptInfo> ScriptData;
     
     //! Constructor
     ScriptBankInterface(): ScriptLibrary(), ScriptPriorityLibrary() {}

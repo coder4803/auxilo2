@@ -90,16 +90,16 @@ void SignalQueueTest::serialTest_data()
 {
     QTest::addColumn<SignalHandler::Signal>("input");
     
-    QTest::newRow("s0") << SignalHandler::Signal(9, 0, std::vector<QString>());
-    QTest::newRow("s1") << SignalHandler::Signal(8, 1, std::vector<QString>());
-    QTest::newRow("s2") << SignalHandler::Signal(7, 2, std::vector<QString>());
-    QTest::newRow("s3") << SignalHandler::Signal(6, 3, std::vector<QString>());
-    QTest::newRow("s4") << SignalHandler::Signal(5, 4, std::vector<QString>());
-    QTest::newRow("s5") << SignalHandler::Signal(4, 5, std::vector<QString>());
-    QTest::newRow("s6") << SignalHandler::Signal(3, 6, std::vector<QString>());
-    QTest::newRow("s7") << SignalHandler::Signal(2, 7, std::vector<QString>());
-    QTest::newRow("s8") << SignalHandler::Signal(1, 8, std::vector<QString>());
-    QTest::newRow("s9") << SignalHandler::Signal(0, 9, std::vector<QString>());
+    QTest::newRow("s0") << SignalHandler::Signal(9, QString("0"), QStringList());
+    QTest::newRow("s1") << SignalHandler::Signal(8, QString("1"), QStringList());
+    QTest::newRow("s2") << SignalHandler::Signal(7, QString("2"), QStringList());
+    QTest::newRow("s3") << SignalHandler::Signal(6, QString("3"), QStringList());
+    QTest::newRow("s4") << SignalHandler::Signal(5, QString("4"), QStringList());
+    QTest::newRow("s5") << SignalHandler::Signal(4, QString("5"), QStringList());
+    QTest::newRow("s6") << SignalHandler::Signal(3, QString("6"), QStringList());
+    QTest::newRow("s7") << SignalHandler::Signal(2, QString("7"), QStringList());
+    QTest::newRow("s8") << SignalHandler::Signal(1, QString("8"), QStringList());
+    QTest::newRow("s9") << SignalHandler::Signal(0, QString("9"), QStringList());
 }
 
 
@@ -207,60 +207,60 @@ void SignalQueueTest::parallelTest_data()
 {
     QTest::addColumn<SignalHandler::Signal>("input");
     
-    QTest::newRow("s0") << SignalHandler::Signal(9, 0, std::vector<QString>());
-    QTest::newRow("s1") << SignalHandler::Signal(8, 1, std::vector<QString>());
-    QTest::newRow("s2") << SignalHandler::Signal(7, 2, std::vector<QString>());
-    QTest::newRow("s3") << SignalHandler::Signal(6, 3, std::vector<QString>());
-    QTest::newRow("s4") << SignalHandler::Signal(5, 4, std::vector<QString>());
-    QTest::newRow("s5") << SignalHandler::Signal(4, 5, std::vector<QString>());
-    QTest::newRow("s6") << SignalHandler::Signal(3, 6, std::vector<QString>());
-    QTest::newRow("s7") << SignalHandler::Signal(2, 7, std::vector<QString>());
-    QTest::newRow("s8") << SignalHandler::Signal(1, 8, std::vector<QString>());
-    QTest::newRow("s9") << SignalHandler::Signal(0, 9, std::vector<QString>());
+    QTest::newRow("s0") << SignalHandler::Signal(9, QString("0"), QStringList());
+    QTest::newRow("s1") << SignalHandler::Signal(8, QString("0"), QStringList());
+    QTest::newRow("s2") << SignalHandler::Signal(7, QString("0"), QStringList());
+    QTest::newRow("s3") << SignalHandler::Signal(6, QString("0"), QStringList());
+    QTest::newRow("s4") << SignalHandler::Signal(5, QString("0"), QStringList());
+    QTest::newRow("s5") << SignalHandler::Signal(4, QString("0"), QStringList());
+    QTest::newRow("s6") << SignalHandler::Signal(3, QString("0"), QStringList());
+    QTest::newRow("s7") << SignalHandler::Signal(2, QString("0"), QStringList());
+    QTest::newRow("s8") << SignalHandler::Signal(1, QString("0"), QStringList());
+    QTest::newRow("s9") << SignalHandler::Signal(0, QString("0"), QStringList());
     
-    QTest::newRow("s10") << SignalHandler::Signal(9, 10, std::vector<QString>());
-    QTest::newRow("s11") << SignalHandler::Signal(8, 11, std::vector<QString>());
-    QTest::newRow("s12") << SignalHandler::Signal(7, 12, std::vector<QString>());
-    QTest::newRow("s13") << SignalHandler::Signal(6, 13, std::vector<QString>());
-    QTest::newRow("s14") << SignalHandler::Signal(5, 14, std::vector<QString>());
-    QTest::newRow("s15") << SignalHandler::Signal(4, 15, std::vector<QString>());
-    QTest::newRow("s16") << SignalHandler::Signal(3, 16, std::vector<QString>());
-    QTest::newRow("s17") << SignalHandler::Signal(2, 17, std::vector<QString>());
-    QTest::newRow("s18") << SignalHandler::Signal(1, 18, std::vector<QString>());
-    QTest::newRow("s19") << SignalHandler::Signal(0, 19, std::vector<QString>());
+    QTest::newRow("s10") << SignalHandler::Signal(9, QString("0"), QStringList());
+    QTest::newRow("s11") << SignalHandler::Signal(8, QString("0"), QStringList());
+    QTest::newRow("s12") << SignalHandler::Signal(7, QString("0"), QStringList());
+    QTest::newRow("s13") << SignalHandler::Signal(6, QString("0"), QStringList());
+    QTest::newRow("s14") << SignalHandler::Signal(5, QString("0"), QStringList());
+    QTest::newRow("s15") << SignalHandler::Signal(4, QString("0"), QStringList());
+    QTest::newRow("s16") << SignalHandler::Signal(3, QString("0"), QStringList());
+    QTest::newRow("s17") << SignalHandler::Signal(2, QString("0"), QStringList());
+    QTest::newRow("s18") << SignalHandler::Signal(1, QString("0"), QStringList());
+    QTest::newRow("s19") << SignalHandler::Signal(0, QString("0"), QStringList());
     
-    QTest::newRow("s20") << SignalHandler::Signal(9, 20, std::vector<QString>());
-    QTest::newRow("s21") << SignalHandler::Signal(8, 21, std::vector<QString>());
-    QTest::newRow("s22") << SignalHandler::Signal(7, 22, std::vector<QString>());
-    QTest::newRow("s23") << SignalHandler::Signal(6, 23, std::vector<QString>());
-    QTest::newRow("s24") << SignalHandler::Signal(5, 24, std::vector<QString>());
-    QTest::newRow("s25") << SignalHandler::Signal(4, 25, std::vector<QString>());
-    QTest::newRow("s26") << SignalHandler::Signal(3, 26, std::vector<QString>());
-    QTest::newRow("s27") << SignalHandler::Signal(2, 27, std::vector<QString>());
-    QTest::newRow("s28") << SignalHandler::Signal(1, 28, std::vector<QString>());
-    QTest::newRow("s29") << SignalHandler::Signal(0, 29, std::vector<QString>());
+    QTest::newRow("s20") << SignalHandler::Signal(9, QString("0"), QStringList());
+    QTest::newRow("s21") << SignalHandler::Signal(8, QString("0"), QStringList());
+    QTest::newRow("s22") << SignalHandler::Signal(7, QString("0"), QStringList());
+    QTest::newRow("s23") << SignalHandler::Signal(6, QString("0"), QStringList());
+    QTest::newRow("s24") << SignalHandler::Signal(5, QString("0"), QStringList());
+    QTest::newRow("s25") << SignalHandler::Signal(4, QString("0"), QStringList());
+    QTest::newRow("s26") << SignalHandler::Signal(3, QString("0"), QStringList());
+    QTest::newRow("s27") << SignalHandler::Signal(2, QString("0"), QStringList());
+    QTest::newRow("s28") << SignalHandler::Signal(1, QString("0"), QStringList());
+    QTest::newRow("s29") << SignalHandler::Signal(0, QString("0"), QStringList());
     
-    QTest::newRow("s30") << SignalHandler::Signal(9, 30, std::vector<QString>());
-    QTest::newRow("s31") << SignalHandler::Signal(8, 31, std::vector<QString>());
-    QTest::newRow("s32") << SignalHandler::Signal(7, 32, std::vector<QString>());
-    QTest::newRow("s33") << SignalHandler::Signal(6, 33, std::vector<QString>());
-    QTest::newRow("s34") << SignalHandler::Signal(5, 34, std::vector<QString>());
-    QTest::newRow("s35") << SignalHandler::Signal(4, 35, std::vector<QString>());
-    QTest::newRow("s36") << SignalHandler::Signal(3, 36, std::vector<QString>());
-    QTest::newRow("s37") << SignalHandler::Signal(2, 37, std::vector<QString>());
-    QTest::newRow("s38") << SignalHandler::Signal(1, 38, std::vector<QString>());
-    QTest::newRow("s39") << SignalHandler::Signal(0, 39, std::vector<QString>());
+    QTest::newRow("s30") << SignalHandler::Signal(9, QString("0"), QStringList());
+    QTest::newRow("s31") << SignalHandler::Signal(8, QString("0"), QStringList());
+    QTest::newRow("s32") << SignalHandler::Signal(7, QString("0"), QStringList());
+    QTest::newRow("s33") << SignalHandler::Signal(6, QString("0"), QStringList());
+    QTest::newRow("s34") << SignalHandler::Signal(5, QString("0"), QStringList());
+    QTest::newRow("s35") << SignalHandler::Signal(4, QString("0"), QStringList());
+    QTest::newRow("s36") << SignalHandler::Signal(3, QString("0"), QStringList());
+    QTest::newRow("s37") << SignalHandler::Signal(2, QString("0"), QStringList());
+    QTest::newRow("s38") << SignalHandler::Signal(1, QString("0"), QStringList());
+    QTest::newRow("s39") << SignalHandler::Signal(0, QString("0"), QStringList());
     
-    QTest::newRow("s40") << SignalHandler::Signal(9, 40, std::vector<QString>());
-    QTest::newRow("s41") << SignalHandler::Signal(8, 41, std::vector<QString>());
-    QTest::newRow("s42") << SignalHandler::Signal(7, 42, std::vector<QString>());
-    QTest::newRow("s43") << SignalHandler::Signal(6, 43, std::vector<QString>());
-    QTest::newRow("s44") << SignalHandler::Signal(5, 44, std::vector<QString>());
-    QTest::newRow("s45") << SignalHandler::Signal(4, 45, std::vector<QString>());
-    QTest::newRow("s46") << SignalHandler::Signal(3, 46, std::vector<QString>());
-    QTest::newRow("s47") << SignalHandler::Signal(2, 47, std::vector<QString>());
-    QTest::newRow("s48") << SignalHandler::Signal(1, 48, std::vector<QString>());
-    QTest::newRow("s49") << SignalHandler::Signal(0, 49, std::vector<QString>());
+    QTest::newRow("s40") << SignalHandler::Signal(9, QString("0"), QStringList());
+    QTest::newRow("s41") << SignalHandler::Signal(8, QString("0"), QStringList());
+    QTest::newRow("s42") << SignalHandler::Signal(7, QString("0"), QStringList());
+    QTest::newRow("s43") << SignalHandler::Signal(6, QString("0"), QStringList());
+    QTest::newRow("s44") << SignalHandler::Signal(5, QString("0"), QStringList());
+    QTest::newRow("s45") << SignalHandler::Signal(4, QString("0"), QStringList());
+    QTest::newRow("s46") << SignalHandler::Signal(3, QString("0"), QStringList());
+    QTest::newRow("s47") << SignalHandler::Signal(2, QString("0"), QStringList());
+    QTest::newRow("s48") << SignalHandler::Signal(1, QString("0"), QStringList());
+    QTest::newRow("s49") << SignalHandler::Signal(0, QString("0"), QStringList());
 }
 
 
