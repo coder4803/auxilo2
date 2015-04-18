@@ -56,13 +56,13 @@ public:
     * \brief Returns response group name.
     * \return Group name to send state response.
     */
-   QString responseGroup() { return m_responseGroup; }
+   QString responseGroup() const { return m_responseGroup; }
 
    /*!
     * \brief Returns list of requested states.
     * \return List of requested states.
     */
-   const QStringList& states() { return m_states; }
+   const QStringList& states() const { return m_states; }
 
    /*!
     * \brief Returns message in binary format.
