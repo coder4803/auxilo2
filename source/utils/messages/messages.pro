@@ -11,7 +11,9 @@ SOURCES     += message.cpp \
                stateresponsemessage.cpp \
                statechangedmessage.cpp \
                statechangedackmessage.cpp \
-               logmessage.cpp
+               logmessage.cpp \
+               confrequestmessage.cpp \
+               confresponsemessage.cpp
 
 HEADERS     += message.h \
                signalmessage.h \
@@ -22,7 +24,9 @@ HEADERS     += message.h \
                stateresponsemessage.h \
                statechangedmessage.h \
                statechangedackmessage.h \
-               logmessage.h
+               logmessage.h \
+               confrequestmessage.h \
+               confresponsemessage.h
 
 INCLUDEPATH += ../../../externals/include/
 
