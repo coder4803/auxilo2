@@ -8,4 +8,5 @@ DESTDIR         = build/bin/
 SUBDIRS         = source/utils/messages \
                   source/utils/messagegroup \
                   source/examples/messagegroupexample \
-                  source/core/stateholder
+                  source/core/stateholder \
+                  source/core/confmanager
