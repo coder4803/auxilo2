@@ -30,6 +30,13 @@ void messageHandler(QtMsgType type,
    }
 }
 
+void printHelp()
+{
+   qCritical("Help:");
+   qCritical("-v        Enable debug and warning messages.");
+   qCritical("--server  Set RabbitMQ server address.");
+}
+
 } // Global
 
 int main(int argc, char* argv[])
@@ -43,11 +50,13 @@ int main(int argc, char* argv[])
        Global::verbose = true;
    }
 
-   try {
-      Core::StateHolder stateHolder;
-      return app.exec();
-   } catch(QException& e) {
-      qCritical("Initialization failed, quitting program.");
-      return -1;
+   // --server can be used to set RabbitMQ server address
+   QString serverAddress("127.0.0.1");
+   int serverIndex = app.arguments().indexOf("--server");
+   if (serverIndex != -1) {
+      serverAddress = app.arguments().value(serverIndex);
    }
+
+   Core::StateHolder stateHolder(serverAddress);
+   return app.exec();
 }
