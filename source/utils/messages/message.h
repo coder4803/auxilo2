@@ -5,6 +5,32 @@
 
 namespace Utils {
 
+/*
+ * Here is a list of constants which define message group names
+ */
+
+/*!
+ * \brief Name of group for sending configuration requests.
+ * This group is listened by configuration manager. Manager will handle the
+ * message and send response to a group that is specified in the request
+ * message.
+ */
+const QString CONF_REQUEST_GROUP("confRequest");
+
+/*!
+ * \brief Name of group for sending set state messages.
+ * This group is listened by state holder. State holder will set state value
+ * according to message information.
+ */
+const QString SET_STATE_GROUP("setState");
+
+/*!
+ * \brief Name of group for sending state requests.
+ * This group is listened by state holder. State holder will handle the message
+ * and send response to a group that is specified in the request message.
+ */
+const QString REQUEST_STATE_GROUP("requestState");
+
 /*!
  * \brief The Message class
  * Base class for all messages between applications.
@@ -12,11 +38,6 @@ namespace Utils {
 class Message
 {
 public:
-   /*!
-    * \brief Constructor.
-    */
-   Message() {}
-
    //! Destructor.
    virtual ~Message() {}
 

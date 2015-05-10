@@ -24,11 +24,8 @@ const QString StateHolder::PARAMETER_CONFPATH("confPath");
 const QString StateHolder::DEFAULT_CONF_FILE("../parameters/stateconfig.xml");
 
 const quint32 StateHolder::STATE_CHECK_INTERVAL(1000); // ms
-const QString StateHolder::SET_STATE_GROUP("setState");
-const QString StateHolder::REQUEST_STATE_GROUP("requestState");
 
 const quint32 StateHolder::CONF_REQUEST_INTERVAL(2000); // ms
-const QString StateHolder::CONF_REQUEST_GROUP("confRequest");
 const QString StateHolder::CONF_RESPONSE_GROUP("stateHolderConf");
 const QString StateHolder::FEATURE_NAME("stateHolder");
 
@@ -157,7 +154,7 @@ void StateHolder::requestParameters()
 {
    // Request parameters from confmanager
    Utils::ConfRequestMessage request(CONF_RESPONSE_GROUP, FEATURE_NAME, true);
-   Utils::MessageGroup::publish(request, CONF_REQUEST_GROUP);
+   Utils::MessageGroup::publish(request, Utils::CONF_REQUEST_GROUP);
 
    // Request parameters until received
    if (!m_confRequestTimer.isActive()) {
@@ -247,14 +244,14 @@ bool StateHolder::initStateHolder()
    }
 
    // Initialize setState message group
-   m_setStateGroup = new Utils::MessageGroup(SET_STATE_GROUP,
+   m_setStateGroup = new Utils::MessageGroup(Utils::SET_STATE_GROUP,
                                             Utils::MessageGroup::Subscriber,
                                             this);
    connect(m_setStateGroup, SIGNAL(messageReceived(QByteArray, QString)),
            this, SLOT(handleSetStateMessage(QByteArray)));
 
    // Initialize stateRequest message group
-   m_stateRequestGroup = new Utils::MessageGroup(REQUEST_STATE_GROUP,
+   m_stateRequestGroup = new Utils::MessageGroup(Utils::REQUEST_STATE_GROUP,
                                                 Utils::MessageGroup::Subscriber,
                                                 this);
    connect(m_stateRequestGroup, SIGNAL(messageReceived(QByteArray, QString)),

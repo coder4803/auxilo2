@@ -32,11 +32,8 @@ private:
    static const QString DEFAULT_CONF_FILE;
 
    static const quint32 STATE_CHECK_INTERVAL;
-   static const QString SET_STATE_GROUP;
-   static const QString REQUEST_STATE_GROUP;
 
    static const quint32 CONF_REQUEST_INTERVAL;
-   static const QString CONF_REQUEST_GROUP;
    static const QString CONF_RESPONSE_GROUP;
    static const QString FEATURE_NAME;
 

@@ -38,8 +38,6 @@ private slots:
    void handleConfRequestMessage(QByteArray payload);
 
 private:
-   static const QString CONF_REQUEST_GROUP;
-
    QString m_coreConfigPath;
    QString m_deviceConfigPath;
    Utils::MessageGroup* m_group;

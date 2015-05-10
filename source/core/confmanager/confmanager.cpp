@@ -11,8 +11,6 @@
 
 namespace Core {
 
-const QString ConfManager::CONF_REQUEST_GROUP("confRequest");
-
 ConfManager::ConfManager(const QString& coreConfigFile,
                          const QString& deviceConfigFile,
                          const QString& serverAddress,
@@ -38,7 +36,7 @@ ConfManager::ConfManager(const QString& coreConfigFile,
    Utils::Connection::setHost(serverAddress);
 
    // Listen for configuration requests
-   m_group = new Utils::MessageGroup(CONF_REQUEST_GROUP,
+   m_group = new Utils::MessageGroup(Utils::CONF_REQUEST_GROUP,
                                      Utils::MessageGroup::Subscriber,
                                      this);
    connect(m_group, SIGNAL(messageReceived(QByteArray, QString)),
