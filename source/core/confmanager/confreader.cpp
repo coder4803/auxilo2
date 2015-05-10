@@ -90,7 +90,7 @@ bool ConfReader::startElement(const QString& namespaceURI,
 
       QString parameterName;
       for (int i = 0; i < m_groupStack.size(); ++i) {
-         parameterName += m_groupStack.at(i) + ":";
+         parameterName += m_groupStack.at(i) + ".";
       }
       parameterName += name;
 

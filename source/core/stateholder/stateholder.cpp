@@ -72,7 +72,17 @@ void StateHolder::handleConfResponseMessage(QByteArray payload)
 {
    Utils::ConfResponseMessage response(payload);
 
-   m_configPath = response.parameter(PARAMETER_CONFPATH, DEFAULT_CONF_FILE);
+   const Utils::ParameterSet& parameterSet = response.parameteSet();
+
+   try {
+      m_configPath = parameterSet.parameter(PARAMETER_CONFPATH,
+                                            DEFAULT_CONF_FILE);
+   } catch (QException& e) {
+      qCritical("Invalid configuration path, quitting...");
+      QCoreApplication::quit();
+      return;
+   }
+
    qCritical("Configuration file: %s", m_configPath.toLatin1().data());
 
    // Stop requesting parameters

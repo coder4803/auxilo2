@@ -12,38 +12,31 @@
 namespace Utils {
 
 /*!
- * \brief The ConfResponseMessage class
- * This class can be used to create and parse configuration response messages.
+ * \brief The ParameterSet class.
+ * This class describes set of configuration parameters.
  */
-class ConfResponseMessage : public Message
+class ParameterSet
 {
 public:
-   enum Result {
-      NO_ERROR,          //!< No errors.
-      NO_PARAMETERS,     //!< Erro occured.
-      INVALID_PARAMETERS //!< Invalid parameters.
-   };
-
    /*!
     * \brief Constructor.
     */
-   ConfResponseMessage();
+   ParameterSet();
 
    /*!
     * \brief Constructor.
-    * This constructor is used to create message from received binary data.
-    * \param payload Received binary data.
+    * \param featureName Feature name of parameters.
     */
-   ConfResponseMessage(const QByteArray& payload);
+   ParameterSet(QString featureName);
 
    /*!
-    * \brief Sets result of request.
-    * \param result Result of request.
+    * \brief Sets parameter feature name.
+    * \param featureName Parameter feature name.
     */
-   void setResult(Result result) { m_result = result; }
+   void setFeatureName(QString featureName) { m_featureName = featureName; }
 
    /*!
-    * \brief Appends new parameter to response.
+    * \brief Appends new parameter.
     * \param parameter Name of parameter.
     * \param value Value of parameter.
     */
@@ -52,33 +45,35 @@ public:
 
    /*!
     * \brief Appends hash of parameters.
-    * Ignores existing parameters
+    * Ignores existing parameters.
     * \param parameters Hash of parameters.
     */
    void appendParameters(QHash<QString, QString> parameters);
 
    /*!
-    * \brief Returns result of configuration request.
-    * \return Result of configuration request.
+    * \brief Returns feature name of parameter set.
+    * \return Feature name of parameter set.
     */
-   Result result() const { return m_result; }
+   QString featureName() const { return m_featureName; }
 
    /*!
-    * \brief Returns list of parameter names that start with startsWith string.
+    * \brief Returns ParameterSet that contains only parameters that
+    * start with given string.
     * \param startsWith String to search from start of parameters.
-    * \param returnShortPath If true, parameters are returned without
+    * \param returnShortPath If true, startsWith string is removed from
+    * the beginning of each parameter name.
+    * \return ParameterSet that contains only parameters starting with
     * startsWith string.
-    * \return List of parameter names.
     */
-   QStringList parameterList(QString startsWith = QString(),
-                             bool returnShortPath = true) const;
+   ParameterSet getSection(QString startsWith,
+                           bool returnShortPath = true) const;
 
    /*!
-    * \brief Checks if list contains certain parameter.
+    * \brief Checks if parameter set contains certain parameter.
     * \param name Name of parameter.
-    * \return True if response contains the parameter, otherwise false.
+    * \return True if set contains the parameter, otherwise false.
     */
-   bool contains(QString name) const { return m_parameters.contains(name); }
+   bool contains(QString name) const;
 
    /*!
     * \brief Returns value of parameter converted to desired type.
@@ -100,6 +95,70 @@ public:
                                   T defaultValue) const;
 
    /*!
+    * \brief Returns list of parameter names that start with given string.
+    * \param startsWith String to search from start of parameters.
+    * \param returnShortPath If true, parameters are returned without
+    * startsWith string.
+    * \return List of parameter names.
+    */
+   QStringList parameterList(QString startsWith = QString(),
+                             bool returnShortPath = true) const;
+
+   /*!
+    * \brief Returns hash of parameters.
+    * \return Hash of parameters.
+    */
+   const QHash<QString, QString>& parameters() const { return m_parameters; }
+
+private:
+   QString m_featureName;
+   QHash<QString, QString> m_parameters;
+};
+
+/*!
+ * \brief The ConfResponseMessage class
+ * This class can be used to create and parse configuration response messages.
+ */
+class ConfResponseMessage : public Message
+{
+public:
+   enum Result {
+      NO_ERROR,          //!< No errors.
+      NO_PARAMETERS,     //!< Erro occured.
+      INVALID_PARAMETERS //!< Invalid parameters.
+   };
+
+   /*!
+    * \brief Constructor.
+    */
+   ConfResponseMessage(const ParameterSet& parameterSet);
+
+   /*!
+    * \brief Constructor.
+    * This constructor is used to create message from received binary data.
+    * \param payload Received binary data.
+    */
+   ConfResponseMessage(const QByteArray& payload);
+
+   /*!
+    * \brief Sets result of request.
+    * \param result Result of request.
+    */
+   void setResult(Result result) { m_result = result; }
+
+   /*!
+    * \brief Returns result of configuration request.
+    * \return Result of configuration request.
+    */
+   Result result() const { return m_result; }
+
+   /*!
+    * \brief Returns set of parameters in response message.
+    * \return Parameters in ParameterSet.
+    */
+   const ParameterSet& parameteSet() { return m_parameterSet; }
+
+   /*!
     * \brief Returns message in binary format.
     * \return Message in binary format.
     */
@@ -113,14 +172,15 @@ public:
    QString string() const;
 
 private:
-   QHash<QString, QString> m_parameters;
+   ParameterSet m_parameterSet;
    Result m_result;
 };
 
 template <class T>
-T ConfResponseMessage::parameter(QString name,
-                                 T defaultValue) const
+T ParameterSet::parameter(QString name,
+                          T defaultValue) const
 {
+   name = name.toLower();
    if (!m_parameters.contains(name)) {
       return defaultValue;
    }
@@ -129,9 +189,10 @@ T ConfResponseMessage::parameter(QString name,
 }
 
 template <class T>
-T ConfResponseMessage::parameter(QString name) const
+T ParameterSet::parameter(QString name) const
 {
    if (!m_parameters.contains(name)) {
+      qCritical("Missing mandatory parameter: %s", name.toLatin1().data());
       throw QException();
    }
 

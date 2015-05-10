@@ -53,18 +53,21 @@ void ConfManager::handleConfRequestMessage(QByteArray payload)
 
    // Read parameters from configuration file
    QHash<QString, QString> parameters;
-   bool result = readParameters(request.featureName(), parameters,
-                                request.isCoreFeature());
+   bool success = readParameters(request.featureName(), parameters,
+                                 request.isCoreFeature());
 
    // Create response message
-   Utils::ConfResponseMessage response;
-   if (!result) {
+   Utils::ParameterSet parameterSet;
+   parameterSet.setFeatureName(request.featureName());
+   parameterSet.appendParameters(parameters);
+   Utils::ConfResponseMessage response(parameterSet);
+
+   // Set result of configuration request
+   if (!success) {
       response.setResult(Utils::ConfResponseMessage::INVALID_PARAMETERS);
-      parameters.clear();
    } else if (parameters.isEmpty()) {
       response.setResult(Utils::ConfResponseMessage::NO_PARAMETERS);
    }
-   response.appendParameters(parameters);
 
    Utils::MessageGroup::publish(response, request.responseGroup());
 }
@@ -93,6 +96,8 @@ bool ConfManager::readParameters(QString featureName,
    if (!xmlReader.parse(source)) {
       qCritical("Error while reading configurations: %s",
                 confReader.getErrorMsg().toLatin1().data());
+
+      parameters.clear();
       return false;
    }
 
