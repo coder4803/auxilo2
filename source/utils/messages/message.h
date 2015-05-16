@@ -32,6 +32,20 @@ const QString SET_STATE_GROUP("setState");
 const QString REQUEST_STATE_GROUP("requestState");
 
 /*!
+ * \brief Name of group for sending signals to system.
+ * This group is listened by signal handler. Signal handler will handle the
+ * message and send ack message if required.
+ */
+const QString SIGNAL_HANDLER_GROUP("signalHandler");
+
+/*!
+ * \brief Name of group for sending log messages.
+ * This group is listened by message logger. Logger will handle message
+ * according to its configurations.
+ */
+const QString LOG_MESSAGE_GROUP("writeLog");
+
+/*!
  * \brief The Message class
  * Base class for all messages between applications.
  */
