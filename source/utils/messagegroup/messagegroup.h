@@ -1,6 +1,7 @@
 #include <QObject>
 #include <QString>
 #include <QByteArray>
+#include <QMutex>
 
 #include "amqp/amqp.h"
 #include "amqp/amqp_exchange.h"
@@ -120,6 +121,10 @@ private:
 
    bool m_queueReady;
    bool m_exchangeReady;
+
+   static QMutex m_mutex;
+   static QHash<QString, QAMQP::Exchange*> m_exchanges;
+   static QHash<QString, QAMQP::Queue*> m_queues;
 };
 
 } // Utils

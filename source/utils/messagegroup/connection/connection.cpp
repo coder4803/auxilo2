@@ -1,3 +1,5 @@
+#include <QMutexLocker>
+
 #include "connection.h"
 
 namespace Utils {
@@ -6,6 +8,7 @@ const QString Connection::DEFAULT_ADDRESS = "127.0.0.1";
 const quint16 Connection::DEFAULT_PORT = 5672;
 const quint16 Connection::DEFAULT_RETRY_INTERVAL = 5000; // 5s
 
+QMutex Connection::m_mutex;
 Connection* Connection::m_instance = NULL;
 
 QAMQP::Client* Connection::getClient()
@@ -32,6 +35,7 @@ void Connection::setHost(QString address,
 
 bool Connection::isConnected()
 {
+   // If instance doesn't exist, we don't want to create it
    if (instanceExists()) {
       return instance()->getClient()->isConnected();
    }
@@ -73,11 +77,14 @@ Connection::Connection(QString address,
 Connection* Connection::instance(QString address,
                                  quint16 port)
 {
-    if (!m_instance) {
-       m_instance = new Connection(address, port);
-    }
+   if (!m_instance) {
+      QMutexLocker locker(&m_mutex);
+      if (!m_instance) {
+         m_instance = new Connection(address, port);
+      }
+   }
 
-    return m_instance;
+   return m_instance;
 }
 
 bool Connection::instanceExists()

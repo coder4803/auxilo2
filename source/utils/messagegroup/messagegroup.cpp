@@ -1,6 +1,12 @@
+#include <QMutexLocker>
+
 #include "messagegroup.h"
 
 namespace Utils {
+
+QMutex MessageGroup::m_mutex;
+QHash<QString, QAMQP::Exchange*> MessageGroup::m_exchanges;
+QHash<QString, QAMQP::Queue*> MessageGroup::m_queues;
 
 MessageGroup::MessageGroup(QString name, GroupType type, QObject* parent) :
     QObject(parent),
@@ -93,20 +99,36 @@ void MessageGroup::onMessageReceived(QAMQP::Queue* queue)
 
 void MessageGroup::enableEmitting()
 {
-   m_exchange = m_client->createExchange(m_name);
-   m_exchange->declare("fanout");
+   QMutexLocker locker(&m_mutex);
 
-   connect(m_exchange, SIGNAL(declared()), this, SLOT(onExchangeDeclared()));
+   if (m_exchanges.contains(m_name)) {
+      m_exchange = m_exchanges.value(m_name);
+   } else {
+      m_exchange = m_client->createExchange(m_name);
+      m_exchange->declare("fanout");
+
+      connect(m_exchange, SIGNAL(declared()), this, SLOT(onExchangeDeclared()));
+
+      m_exchanges.insert(m_name, m_exchange);
+   }
 }
 
 void MessageGroup::enableReceiving()
 {
-   m_queue = m_client->createQueue();
-   m_queue->declare("", QAMQP::Queue::Exclusive);
+   QMutexLocker locker(&m_mutex);
 
-   connect(m_queue, SIGNAL(declared()), this, SLOT(onQueueDeclared()));
-   connect(m_queue, SIGNAL(messageReceived(QAMQP::Queue*)),
-           this,  SLOT(onMessageReceived(QAMQP::Queue*)));
+   if (m_queues.contains(m_name)) {
+      m_queue = m_queues.value(m_name);
+   } else {
+      m_queue = m_client->createQueue();
+      m_queue->declare("", QAMQP::Queue::Exclusive);
+
+      connect(m_queue, SIGNAL(declared()), this, SLOT(onQueueDeclared()));
+      connect(m_queue, SIGNAL(messageReceived(QAMQP::Queue*)),
+              this,  SLOT(onMessageReceived(QAMQP::Queue*)));
+
+      m_queues.insert(m_name, m_queue);
+   }
 }
 
 } // Utils
