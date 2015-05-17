@@ -6,10 +6,8 @@ namespace Core {
 
 const QString ConfReader::ELEMENT_FEATURES("features");
 const QString ConfReader::ELEMENT_FEATURE("feature");
-const QString ConfReader::ELEMENT_GROUP("group");
 const QString ConfReader::ELEMENT_PARAMETER("parameter");
 const QString ConfReader::ATTRIBUTE_FEATURE_NAME("name");
-const QString ConfReader::ATTRIBUTE_GROUP_NAME("name");
 const QString ConfReader::ATTRIBUTE_PARAMETER_NAME("name");
 const QString ConfReader::ATTRIBUTE_PARAMETER_VALUE("value");
 
@@ -60,19 +58,6 @@ bool ConfReader::startElement(const QString& namespaceURI,
       return true;
    }
 
-   if (qName.toLower() == ELEMENT_GROUP) {
-      if (attributes.index(ATTRIBUTE_GROUP_NAME) == -1) {
-         m_errorStr = "Missing attritube 'name'.";
-         return false;
-      }
-
-      // Add group to stack
-      QString groupName = attributes.value(ATTRIBUTE_GROUP_NAME);
-      m_groupStack.push(groupName);
-
-      return true;
-   }
-
    if (qName.toLower() == ELEMENT_PARAMETER) {
       if (attributes.index(ATTRIBUTE_PARAMETER_NAME) == -1) {
          m_errorStr = "Missing attritube 'name'.";
@@ -99,9 +84,10 @@ bool ConfReader::startElement(const QString& namespaceURI,
       return true;
    }
 
-   m_errorStr = QString("Unknown element %1 (begin).").arg(qName);
+   // Elemen is group. Add to group stack.
+   m_groupStack.push(qName);
 
-   return false;
+   return true;
 }
 
 bool ConfReader::endElement(const QString& namespaceURI,
@@ -137,19 +123,13 @@ bool ConfReader::endElement(const QString& namespaceURI,
       return true;
    }
 
-   if (qName.toLower() == ELEMENT_GROUP) {
-      // Remove group from stack
-      m_groupStack.pop();
-      return true;
-   }
-
    if (qName.toLower() == ELEMENT_PARAMETER) {
       return true;
    }
 
-   m_errorStr = QString("Unknown element %1 (end).").arg(qName);
-
-   return false;
+   // Elemen is group. Remove from stack.
+   m_groupStack.pop();
+   return true;
 }
 
 bool ConfReader::fatalError(const QXmlParseException& exception)

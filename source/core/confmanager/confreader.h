@@ -35,10 +35,8 @@ public:
 private:
    static const QString ELEMENT_FEATURES;
    static const QString ELEMENT_FEATURE;
-   static const QString ELEMENT_GROUP;
    static const QString ELEMENT_PARAMETER;
    static const QString ATTRIBUTE_FEATURE_NAME;
-   static const QString ATTRIBUTE_GROUP_NAME;
    static const QString ATTRIBUTE_PARAMETER_NAME;
    static const QString ATTRIBUTE_PARAMETER_VALUE;
 
