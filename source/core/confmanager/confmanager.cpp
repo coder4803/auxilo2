@@ -85,6 +85,7 @@ bool ConfManager::readParameters(QString featureName,
       return false;
    }
 
+   // Read parameters from configuartion file.
    QXmlInputSource source(&file);
    QXmlSimpleReader xmlReader;
    ConfReader confReader(featureName, parameters);

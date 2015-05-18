@@ -34,11 +34,13 @@ bool ConfReader::startElement(const QString& namespaceURI,
       return true;
    }
 
+   // Other elements can exist only inside features-element.
    if (!m_parsingFeatures) {
       m_errorStr = "All elements must be defined inside features element.";
       return false;
    }
 
+   // Parse feature start element
    if (qName.toLower() == ELEMENT_FEATURE) {
       if (attributes.index(ATTRIBUTE_FEATURE_NAME) == -1) {
          m_errorStr = "Missing attritube 'name'.";
@@ -49,6 +51,7 @@ bool ConfReader::startElement(const QString& namespaceURI,
       return true;
    }
 
+   // Other elements can exist only inside feature-element.
    if (m_currentFeatureName.isEmpty()) {
       m_errorStr = "features element may contain only feature elements";
       return false;
@@ -58,6 +61,7 @@ bool ConfReader::startElement(const QString& namespaceURI,
       return true;
    }
 
+   // Parse parameter element
    if (qName.toLower() == ELEMENT_PARAMETER) {
       if (attributes.index(ATTRIBUTE_PARAMETER_NAME) == -1) {
          m_errorStr = "Missing attritube 'name'.";
@@ -108,17 +112,20 @@ bool ConfReader::endElement(const QString& namespaceURI,
       return false;
    }
 
+   // Parse feature element
    if (qName.toLower() == ELEMENT_FEATURE) {
       m_currentFeatureName.clear();
       return true;
    }
 
+   // If not parsing feature element
    if (m_currentFeatureName.isEmpty()) {
       m_errorStr = QString("Unknown end tag outside feature element: %1.")
                            .arg(qName);
       return false;
    }
 
+   // We skip all other features except the one we are looking for
    if (m_currentFeatureName != m_featureName) {
       return true;
    }
