@@ -5,7 +5,7 @@ OBJECTS_DIR     = build/obj/
 MOC_DIR         = build/moc/
 DESTDIR         = build/bin/
 
-SUBDIRS         = source/utils \
-                  source/examples \
-                  source/core \
-                  source/plugins
+SUBDIRS         = stateholder \
+                  confmanager \
+                  plugininterfaces \
+                  interface
