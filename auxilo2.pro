@@ -11,4 +11,5 @@ SUBDIRS         = source/utils/messages \
                   source/core/stateholder \
                   source/core/confmanager \
                   source/core/plugininterfaces \
-                  source/core/interface
+                  source/core/interface \
+                  source/plugins
