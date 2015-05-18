@@ -1,4 +1,5 @@
 TEMPLATE            = subdirs
 CONFIG              += ordered
 
-SUBDIRS             += tcpclient
+SUBDIRS             += tcpclient \
+                       tcpserver
