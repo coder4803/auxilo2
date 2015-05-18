@@ -31,7 +31,8 @@ const QString StateHolder::FEATURE_NAME("stateHolder");
 
 const QString StateHolder::DATABASE_CONNECTION_NAME("stateholder");
 
-StateHolder::StateHolder(QString serverAddress, QObject* parent) :
+StateHolder::StateHolder(QString serverAddress,
+                         QObject* parent) :
    QObject(parent),
    m_configPath(DEFAULT_CONF_FILE),
    m_confResponseGroup(NULL),
@@ -69,6 +70,7 @@ void StateHolder::handleConfResponseMessage(QByteArray payload)
 {
    Utils::ConfResponseMessage response(payload);
 
+   // Get state configuration file path.
    const Utils::ParameterSet& parameterSet = response.parameteSet();
 
    try {
@@ -117,17 +119,20 @@ void StateHolder::handleRequestStateMessage(QByteArray payload)
    Utils::RequestStateMessage request(payload);
    Utils::StateResponseMessage response;
 
+   // Handle each state.
    foreach (QString name, request.states()) {
       bool available = false;
       QVariant value = QVariant();
       bool devicesAreUpToData = false;
 
+      // If state exists.
       if (m_states.contains(name)) {
          available = true;
          value = m_states.value(name)->getState();
          devicesAreUpToData = m_states.value(name)->isUpToDate();
       }
 
+      // Create and send state response.
       Utils::StateResponseMessage::State state(available, value,
                                                devicesAreUpToData);
       response.appendState(name, state);
@@ -183,9 +188,10 @@ bool StateHolder::loadStateConfigurations()
       return false;
    }
 
+   // Parse configuratino file.
    QXmlInputSource source(&file);
    QXmlSimpleReader xmlReader;
-   StateLoader stateLoader(m_states, m_configPath);
+   StateLoader stateLoader(m_states);
 
    xmlReader.setContentHandler(&stateLoader);
    xmlReader.setErrorHandler(&stateLoader);
@@ -245,22 +251,22 @@ bool StateHolder::initStateHolder()
 
    // Initialize setState message group
    m_setStateGroup = new Utils::MessageGroup(Utils::SET_STATE_GROUP,
-                                            Utils::MessageGroup::Subscriber,
-                                            this);
+                                             Utils::MessageGroup::Subscriber,
+                                             this);
    connect(m_setStateGroup, SIGNAL(messageReceived(QByteArray, QString)),
            this, SLOT(handleSetStateMessage(QByteArray)));
 
    // Initialize stateRequest message group
    m_stateRequestGroup = new Utils::MessageGroup(Utils::REQUEST_STATE_GROUP,
-                                                Utils::MessageGroup::Subscriber,
-                                                this);
+                                                 Utils::MessageGroup::Subscriber,
+                                                 this);
    connect(m_stateRequestGroup, SIGNAL(messageReceived(QByteArray, QString)),
            this, SLOT(handleRequestStateMessage(QByteArray)));
 
    // Initialize stateChangedAck message group
    m_stateChangedAckGroup = new Utils::MessageGroup(State::STATE_CHANGED_ACK_GROUP,
-                                                   Utils::MessageGroup::Subscriber,
-                                                   this);
+                                                    Utils::MessageGroup::Subscriber,
+                                                    this);
    connect(m_stateChangedAckGroup, SIGNAL(messageReceived(QByteArray, QString)),
            this, SLOT(handleStateChangedAckMessage(QByteArray)));
 

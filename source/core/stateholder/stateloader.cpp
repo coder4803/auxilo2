@@ -8,14 +8,12 @@ namespace Core {
 
 const quint32 StateLoader::DEFAULT_UPDATE_INTERVAL = 5;
 
-StateLoader::StateLoader(QHash<QString, State*>& states,
-                         QString configPath) :
+StateLoader::StateLoader(QHash<QString, State*>& states) :
    m_readingConfiguration(false),
    m_parsingDevice(false),
    m_state(NULL),
    m_deviceUpdateInterval(0),
-   m_states(states),
-   m_configPath(configPath)
+   m_states(states)
 {
 }
 
