@@ -73,7 +73,9 @@ void State::update(bool force)
 
       ++device->intervalCounter;
       if (device->intervalCounter >= device->updateInterval || force) {
-         QString deviceGroup = "d_" + m_devices.key(device);
+         QString deviceGroup = m_devices.key(device) +
+               Utils::STATE_CHANGED_POST_FIX;
+
          Utils::StateChangedMessage message(device->label, m_value,
                                             STATE_CHANGED_ACK_GROUP);
 
