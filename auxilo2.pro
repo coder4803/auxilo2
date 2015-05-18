@@ -10,4 +10,5 @@ SUBDIRS         = source/utils/messages \
                   source/examples/messagegroupexample \
                   source/core/stateholder \
                   source/core/confmanager \
-                  source/core/plugininterfaces
+                  source/core/plugininterfaces \
+                  source/core/interface

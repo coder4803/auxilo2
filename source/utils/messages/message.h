@@ -46,6 +46,19 @@ const QString SIGNAL_HANDLER_GROUP("signalHandler");
 const QString LOG_MESSAGE_GROUP("writeLog");
 
 /*!
+ * \brief Post fix for device signal group name. Each device listen for
+ * signal from <DEVICE_NAME><SIGNAL_POST_FIX> group.
+ */
+const QString SIGNAL_POST_FIX("_signal");
+
+/*!
+ * \brief Post fix for device state changed group name. Each device listen
+ * for state changed messages from <DEVICE_NAME><STATE_CHANGED_POST_FIX>
+ * group.
+ */
+const QString STATE_CHANGED_POST_FIX("_stateChanged");
+
+/*!
  * \brief The Message class
  * Base class for all messages between applications.
  */
