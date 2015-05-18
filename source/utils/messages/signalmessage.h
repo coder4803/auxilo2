@@ -18,10 +18,12 @@ public:
    /*!
     * \brief Constructor to create message from scratch.
     * \param signalName Signal's name.
+    * \param senderName Sender's name.
     * \param parameters List of parameters.
     * \param ackGroup Name of group to send ack message.
     */
    SignalMessage(QString signalName,
+                 QString senderName,
                  QStringList parameters = QStringList(),
                  QString ackGroup = QString());
 
@@ -48,6 +50,12 @@ public:
     * \return Signal name.
     */
    QString signalName() const { return m_signalName; }
+
+   /*!
+    * \brief Returns sender name.
+    * \return Sender name.
+    */
+   QString senderName() const { return m_senderName; }
 
    /*!
     * \brief Returns number of parameters.
@@ -105,6 +113,7 @@ public:
 
 private:
    QString m_signalName;
+   QString m_senderName;
    QStringList m_parameters;
    QString m_ackGroup;
    quint32 m_ackId;

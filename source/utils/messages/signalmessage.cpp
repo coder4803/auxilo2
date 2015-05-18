@@ -6,10 +6,12 @@
 namespace Utils {
 
 SignalMessage::SignalMessage(QString signalName,
+                             QString senderName,
                              QStringList parameters,
                              QString ackGroup) :
    Message(),
    m_signalName(signalName),
+   m_senderName(senderName),
    m_parameters(parameters),
    m_ackGroup(ackGroup),
    m_ackId(0)
@@ -24,6 +26,7 @@ SignalMessage::SignalMessage(QByteArray data) :
 {
    QDataStream stream(data);
    stream >> m_signalName;
+   stream >> m_senderName;
    stream >> m_parameters;
    stream >> m_ackGroup;
 
@@ -50,6 +53,7 @@ QByteArray SignalMessage::data() const
    QDataStream stream(&message, QIODevice::WriteOnly);
 
    stream << m_signalName;
+   stream << m_senderName;
    stream << m_parameters;
    stream << m_ackGroup;
 
@@ -64,6 +68,7 @@ QString SignalMessage::string() const
 {
    QString message("SignalMessage:\n");
    message += QString("- Name: %1\n").arg(m_signalName);
+   message += QString("- Sender: %1\n").arg(m_senderName);
 
    if (!m_ackGroup.isEmpty()) {
       message +=(QString("- AckGroup: %1\n")).arg(m_ackGroup);
