@@ -1,4 +1,5 @@
 TEMPLATE            = subdirs
 CONFIG              += ordered
 
-SUBDIRS             += communications
+SUBDIRS             += communications \
+                       protocols
