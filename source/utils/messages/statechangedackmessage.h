@@ -42,10 +42,16 @@ public:
    StateChangedAckMessage(QByteArray data);
 
    /*!
+    * \brief Returns result of acknowledge.
+    * \return Acknowledge result.
+    */
+   Result result() const { return m_result; }
+
+   /*!
     * \brief Retuns acknowledge id.
     * \return Acknowledge id.
     */
-   quint32 ackId() { return m_ackId; }
+   quint32 ackId() const { return m_ackId; }
 
    /*!
     * \brief Returns message in binary format.

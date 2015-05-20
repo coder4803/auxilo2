@@ -1,5 +1,6 @@
 #include <QObject>
 #include <QTimer>
+#include <QMutex>
 
 #include "amqp/amqp.h"
 
@@ -64,6 +65,7 @@ private:
 
    QAMQP::Client* client();
 
+   static QMutex m_mutex;
    static Connection* m_instance;
    QAMQP::Client* m_client;
 

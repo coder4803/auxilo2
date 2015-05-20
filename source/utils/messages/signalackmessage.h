@@ -42,7 +42,13 @@ public:
     * \brief Returns acknowledge id.
     * \return Acknowledge id.
     */
-   quint32 ackId() { return m_ackId; }
+   quint32 ackId() const { return m_ackId; }
+
+   /*!
+    * \brief Returns result of acknowledge.
+    * \return Acknowledge result.
+    */
+   Result result() const { return m_result; }
 
    /*!
     * \brief Returns message in binary format.

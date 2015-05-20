@@ -22,6 +22,7 @@ State::State(QString name,
    m_value(defaultValue),
    m_persisted(persisted)
 {
+   // If state is persisted, try to read it from data base.
    if (m_persisted) {
       if (!readPersistedValue()) {
          throw QException();
@@ -71,9 +72,13 @@ void State::update(bool force)
          continue;
       }
 
+      // Value will be sent to device every updateInterval until succeeded.
+      // If force is enabled, value is sent immediately.
       ++device->intervalCounter;
       if (device->intervalCounter >= device->updateInterval || force) {
-         QString deviceGroup = "d_" + m_devices.key(device);
+         QString deviceGroup = m_devices.key(device) +
+               Utils::STATE_CHANGED_POST_FIX;
+
          Utils::StateChangedMessage message(device->label, m_value,
                                             STATE_CHANGED_ACK_GROUP);
 
@@ -114,6 +119,7 @@ bool State::isWaitingForAck(quint32 ackId)
 
 void State::setDefaultValue(QVariant value)
 {
+   // Default value is set only if state is not persisted
    if (!m_persisted) {
       m_value = value;
    }

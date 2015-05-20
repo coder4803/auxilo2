@@ -5,6 +5,59 @@
 
 namespace Utils {
 
+/*
+ * Here is a list of constants which define message group names
+ */
+
+/*!
+ * \brief Name of group for sending configuration requests.
+ * This group is listened by configuration manager. Manager will handle the
+ * message and send response to a group that is specified in the request
+ * message.
+ */
+const QString CONF_REQUEST_GROUP("confRequest");
+
+/*!
+ * \brief Name of group for sending set state messages.
+ * This group is listened by state holder. State holder will set state value
+ * according to message information.
+ */
+const QString SET_STATE_GROUP("setState");
+
+/*!
+ * \brief Name of group for sending state requests.
+ * This group is listened by state holder. State holder will handle the message
+ * and send response to a group that is specified in the request message.
+ */
+const QString REQUEST_STATE_GROUP("requestState");
+
+/*!
+ * \brief Name of group for sending signals to system.
+ * This group is listened by signal handler. Signal handler will handle the
+ * message and send ack message if required.
+ */
+const QString SIGNAL_HANDLER_GROUP("signalHandler");
+
+/*!
+ * \brief Name of group for sending log messages.
+ * This group is listened by message logger. Logger will handle message
+ * according to its configurations.
+ */
+const QString LOG_MESSAGE_GROUP("writeLog");
+
+/*!
+ * \brief Post fix for device signal group name. Each device listen for
+ * signal from <DEVICE_NAME><SIGNAL_POST_FIX> group.
+ */
+const QString SIGNAL_POST_FIX("_signal");
+
+/*!
+ * \brief Post fix for device state changed group name. Each device listen
+ * for state changed messages from <DEVICE_NAME><STATE_CHANGED_POST_FIX>
+ * group.
+ */
+const QString STATE_CHANGED_POST_FIX("_stateChanged");
+
 /*!
  * \brief The Message class
  * Base class for all messages between applications.
@@ -12,11 +65,6 @@ namespace Utils {
 class Message
 {
 public:
-   /*!
-    * \brief Constructor.
-    */
-   Message() {}
-
    //! Destructor.
    virtual ~Message() {}
 
