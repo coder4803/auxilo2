@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT       += core script
 
 QT       -= gui
 
@@ -43,7 +43,9 @@ SOURCES += main.cc \
     ScriptLangWrapper/qtscriptwrapper.cc \
     ScriptLangWrapper/scriptlangwrapperfactory.cc \
     ScriptAPI/scriptapiimplementation.cc \
-    consoleui.cc
+    consoleui.cc \
+    signalhandlerbuilder.cc \
+    ScriptLangWrapper/scriptapiqobjectwrapper.cc
 
 HEADERS += \
     signal.hh \
@@ -70,4 +72,6 @@ HEADERS += \
     ScriptAPI/scriptapiimplementation.hh \
     interfaces/viewinterface.hh \
     consoleui.hh \
-    interfaces/modelinterface.hh
+    interfaces/modelinterface.hh \
+    signalhandlerbuilder.hh \
+    ScriptLangWrapper/scriptapiqobjectwrapper.hh

@@ -8,7 +8,7 @@
 #include "interfaces/scriptupdatesubject.hh"
 #include "messagegroup.h"
 #include "stateresponsemessage.h"
-#include "statechangedackmessage.h"
+#include "setstateackmessage.h"
 #include <mutex>
 #include <condition_variable>
 
@@ -72,7 +72,7 @@ private:
     QString reqGroupName_;
     QString ackGroupName_;
     Utils::StateResponseMessage pendingReq_;
-    Utils::StateChangedAckMessage pendingAck_;
+    Utils::SetStateAckMessage pendingAck_;
     
     std::mutex updateMx_;
     std::mutex waitMx_;

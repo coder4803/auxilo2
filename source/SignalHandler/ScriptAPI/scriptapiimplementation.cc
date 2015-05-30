@@ -17,7 +17,7 @@ ScriptApiImplementation::ScriptApiImplementation(const ScriptLibrary* lib,
     reqGroup_(nullptr), ackGroup_(nullptr),
     reqGroupName_(QString("SignalHandlerStateReq") + namingSuffix),
     ackGroupName_(QString("SignalHandlerStateAck") + namingSuffix),
-    pendingReq_(), pendingAck_(0, Utils::StateChangedAckMessage::FAILED),
+    pendingReq_(), pendingAck_(0, Utils::SetStateAckMessage::FAILED),
     updateMx_(), waitMx_(), cv_()
 {
     subject->registerObserver(this);
@@ -131,7 +131,12 @@ int ScriptApiImplementation::setState(const QString& stateName,
         }
     }
     
-    // Check if successed. StateChangeAckMessage has an insufficient interface.
+    // Check if succeeded
+    /*
+    if (pendingAck_.result() != Utils::SetStateAckMessage::SUCCEEDED){
+        return 1;
+    }
+    */
     return 0;
 }
 
@@ -190,7 +195,7 @@ void ScriptApiImplementation::onStateReqReturned(const QByteArray& data)
 void ScriptApiImplementation::onStateChangeAck(const QByteArray& data)
 {
     waitMx_.lock();
-    pendingAck_ = Utils::StateChangedAckMessage(data);
+    pendingAck_ = Utils::SetStateAckMessage(data);
     waitMx_.unlock();
     cv_.notify_one();
 }

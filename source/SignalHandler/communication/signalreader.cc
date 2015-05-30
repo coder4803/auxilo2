@@ -18,8 +18,6 @@
 namespace SignalHandler
 {
 
-const char* SignalReader::GROUP_NAME = "SignalHandlerSignals";
-
 
 SignalReader::SignalReader(SignalQueue* queue, const ScriptPriorityLibrary* lib,
                            PriorityUpdateSubject* subject,
@@ -46,7 +44,7 @@ void SignalReader::start()
     // Host address
     Utils::Connection::setHost("127.0.0.1");
     // Create message group
-    group_ = new Utils::MessageGroup(GROUP_NAME, 
+    group_ = new Utils::MessageGroup(Utils::SIGNAL_HANDLER_GROUP, 
                                      Utils::MessageGroup::Subscriber,
                                      this);
     // Connect signals

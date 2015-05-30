@@ -78,7 +78,6 @@ private Q_SLOTS:
     
 private:
     
-    static const char* GROUP_NAME; // "SignalHandlerSignals"
     Utils::MessageGroup* group_;
     SignalQueue* queue_;
     const ScriptPriorityLibrary* lib_;
