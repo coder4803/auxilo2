@@ -46,7 +46,7 @@ int QtScriptWrapper::run(const QString& script,
     // Run script.
     engine.evaluate(script);
     QScriptValue program = engine.evaluate("MainFunction");
-    int result = program.construct(script_args);
+    int result = program.construct(script_args).toInt32();
     
     if ( engine.hasUncaughtException() ){
         throw BadScript();
