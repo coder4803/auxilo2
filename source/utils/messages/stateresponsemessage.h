@@ -27,7 +27,7 @@ public:
        * \param Value State's value.
        * \param DevicesAreUpToDate Are linked devices up to date.
        */
-      State(bool Available,
+      State(bool Available = false,
             QVariant Value = QVariant(),
             bool DevicesAreUpToDate = false) :
          available(Available),
