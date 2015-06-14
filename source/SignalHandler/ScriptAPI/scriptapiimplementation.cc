@@ -6,6 +6,7 @@
 #include <ctime>
 #include <memory>
 #include <chrono>
+#include <QDebug>
 
 namespace SignalHandler 
 {
@@ -20,8 +21,9 @@ ScriptApiImplementation::ScriptApiImplementation(const ScriptLibrary* lib,
     pendingReq_(), pendingAck_(0, Utils::SetStateAckMessage::FAILED),
     updateMx_(), waitMx_(), cv_()
 {
-    subject->registerObserver(this);
+    Q_ASSERT(lib != nullptr); Q_ASSERT(subject != nullptr);
     
+    subject->registerObserver(this);  
     Utils::Connection::setHost("127.0.0.1");
     
     // Create Group for receiving states.
@@ -48,14 +50,9 @@ ScriptApiImplementation::~ScriptApiImplementation()
 }
 
 
-ScriptAPI::DateTime ScriptApiImplementation::dateTimeNow() const
+QDateTime ScriptApiImplementation::dateTimeNow() const
 {
-    std::time_t rawTime;
-    std::time(&rawTime);
-    std::tm* dt = localtime(&rawTime);
-    
-    return ScriptAPI::DateTime(dt->tm_mday, dt->tm_mon, dt->tm_year,
-                               dt->tm_hour, dt->tm_min, dt->tm_sec);
+    return QDateTime::currentDateTime();
 }
 
 
@@ -107,7 +104,7 @@ ScriptApiImplementation::getStates(const QStringList& states)
     QHash<QString,Utils::StateResponseMessage::State*> res=pendingReq_.states();
     ScriptAPI::StateMap rv;
     for (auto it=res.begin(); it!=res.end(); ++it){
-        rv.insert(std::make_pair(it.key(), *it.value()));
+        rv.insert(it.key(), *it.value());
     }
     
     lock.unlock();
@@ -151,9 +148,6 @@ int ScriptApiImplementation::sendSignal(const QString& signalName,
         script = lib_->getScript(signalName);
         lock.unlock();
     }
-    catch(InvalidParameters&){
-        return -1;
-    }
     catch(BadScript&){
         return -1;
     }
@@ -169,14 +163,17 @@ int ScriptApiImplementation::sendSignal(const QString& signalName,
     try{
         return interpreter->run(script, args, this);
     }
-    catch(...) {}
+    catch(BadScript&){
+        return -1;
+    }
     
-    return -1;
+    return 0;
 }
 
 
 void ScriptApiImplementation::notifyOnScriptUpdate(const ScriptLibrary* new_lib)
 {
+    Q_ASSERT(new_lib != nullptr);
     updateMx_.lock();
     lib_ = new_lib;
     updateMx_.unlock();

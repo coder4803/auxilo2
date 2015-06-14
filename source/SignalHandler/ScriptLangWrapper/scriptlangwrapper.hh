@@ -14,7 +14,7 @@
 
 #include <QString>
 #include <QStringList>
-#include "ScriptAPI/scriptapi.hh"
+#include "../ScriptAPI/scriptapi.hh"
 
 
 namespace SignalHandler

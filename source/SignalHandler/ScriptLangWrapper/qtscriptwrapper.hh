@@ -11,7 +11,7 @@
 #define QTSCRIPTWRAPPER_HH
 
 #include "scriptlangwrapper.hh"
-#include "exceptions/scriptrunexceptions.hh"
+#include "../exceptions/scriptrunexceptions.hh"
 #include <QtScript/QScriptEngine>
 
 namespace SignalHandler 

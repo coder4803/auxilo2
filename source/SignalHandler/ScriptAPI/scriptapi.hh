@@ -3,9 +3,10 @@
 
 #include <QString>
 #include <QStringList>
+#include <QMap>
 #include <QVariant>
-#include <map>
-#include "stateresponsemessage.h"
+#include <QDateTime>
+#include "../../utils/messages/stateresponsemessage.h"
 
 
 namespace SignalHandler
@@ -19,26 +20,7 @@ class ScriptAPI
 {
 public:
     
-    typedef std::map<QString, Utils::StateResponseMessage::State> StateMap;
-    
-    /*!
-     * \brief The DateTime struct
-     * Current date and time.
-     */
-    struct DateTime
-    {
-        const unsigned day;
-        const unsigned month;
-        const unsigned year;
-        const unsigned hour;
-        const unsigned minutes;
-        const unsigned seconds;
-        
-        //! DateTime Constructor.
-        DateTime(unsigned d, unsigned m, unsigned y, 
-                 unsigned h, unsigned min, unsigned s) :
-            day(d), month(m), year(y), hour(h), minutes(min), seconds(s) {}
-    };
+    typedef QMap<QString, Utils::StateResponseMessage::State> StateMap;
     
     //! Constructor
     ScriptAPI() = default;
@@ -53,9 +35,10 @@ public:
     
     /*!
      * \brief dateTimeNow Get current date and time.
-     * \return DateTime object representing current time.
+     * \pre None.
+     * \return QDateTime object representing current time.
      */
-    virtual DateTime dateTimeNow() const = 0;
+    virtual QDateTime dateTimeNow() const = 0;
     
     /*!
      * \brief getStateOf Ask a state.

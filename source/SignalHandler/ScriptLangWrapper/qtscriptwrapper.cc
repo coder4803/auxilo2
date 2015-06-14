@@ -33,28 +33,25 @@ int QtScriptWrapper::run(const QString& script,
 {
     // Create script engine and set ScriptApi as its global property.
     QScriptEngine engine;
-    ScriptApiQObjectWrapper api(services);
+    ScriptApiQObjectWrapper api(services, &engine);
     QScriptValue script_api = engine.newQObject(&api);
     engine.globalObject().setProperty("Auxilo2", script_api);
     
-    // Create argument list
-    QScriptValueList script_args;
-    foreach (QString s, args){
-        script_args << s;
-    }
+    // Set script arguments
+    QScriptValue script_args = qScriptValueFromSequence(&engine, args);
+    engine.globalObject().setProperty("argv", script_args);
+    engine.globalObject().setProperty("argc", engine.newVariant(args.size()) );
+    
     
     // Run script.
     engine.evaluate(script);
-    QScriptValue program = engine.evaluate("MainFunction");
-    int result = program.construct(script_args).toInt32();
-    
     if ( engine.hasUncaughtException() ){
         throw BadScript();
     }
     
-    return result;
+    return 0;
     // TODO: Invalid argument handling (is needed?).
-    // Specify universal starting function (MainFunction?".
+    // Return value?
 }
 
 

@@ -22,7 +22,7 @@ ModelInterface* SignalHandlerBuilder::create()
 
 void SignalHandlerBuilder::onMessageReceived(const QByteArray& data)
 {
-    
+    Q_UNUSED(data)
 }
 
 

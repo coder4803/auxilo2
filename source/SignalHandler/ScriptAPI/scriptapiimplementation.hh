@@ -22,10 +22,11 @@ class ScriptApiImplementation :
 public:
     
     /*!
-     * \brief ScriptApiImplementation Constructor.
+     * \brief Constructor.
      * \param lib Script library.
      * \param subject Script library update subject.
      * \param namingSuffix Suffix to be added at the end of message groups.
+     * \pre lib != nullptr, subject != nullptr, namingSuffix is unique.
      */
     ScriptApiImplementation(const ScriptLibrary* lib,
                             ScriptUpdateSubject* subject,
@@ -42,7 +43,7 @@ public:
     
     // ScriptApi interface implementations. See scriptapi.hh for documentation.
     
-    virtual ScriptAPI::DateTime dateTimeNow() const;
+    virtual QDateTime dateTimeNow() const;
     
     virtual Utils::StateResponseMessage::State 
     getStateOf(const QString& stateName);
