@@ -1,4 +1,7 @@
 TEMPLATE = subdirs
 
-SUBDIRS += SignalTest \
-    SignalQueueTest
+SUBDIRS += \
+    SignalTest \
+    SignalQueueTest \
+    QtScriptTest \
+    SignalReaderTest

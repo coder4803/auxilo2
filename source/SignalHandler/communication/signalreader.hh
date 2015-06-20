@@ -6,7 +6,7 @@
  * 
  * Author: Perttu Paarlahti     perttu.paarlahti@gmai.com
  * Created: 01-April-2015
- * Last modified: 01-April-2015
+ * Last modified: 19-June-2015
  */
 
 
@@ -26,7 +26,7 @@ namespace SignalHandler
 {
 
 /*!
- * \brief The SignalReader class
+ * \brief The SignalReader class.
  *  This class is responsible for receiving signal messages from RabbidQM.
  *  Incomming signals are pushed into siqnalqueue waiting to be handled.
  */
@@ -37,7 +37,7 @@ class SignalReader : public QObject, public PriorityUpdateObserver
 public:
     
     /*!
-     * \brief SignalReader Constructor
+     * \brief Constructor
      * \param queue SignalQueue.
      * \param lib Script priority source.
      * \param subject Observable PriorityUpdateSubject.
@@ -60,12 +60,12 @@ public:
     SignalReader& operator=(SignalReader&&) = delete;
     
     /*!
-     * \brief start
-     *  Start reading messages.
-     * \pre This method can be called only once.
+     * \brief Start reading messages.
+     * \param group_name Name of the signal message group.
+     * \pre This method can be called only once. Group name is not empty.
      * \post Incomming messages are handled and pushed to SignalQueue.
      */
-    void start();
+    void start(const QString& group_name = Utils::SIGNAL_HANDLER_GROUP);
     
     //! Implements the PriorityUpdateObserver interface.
     void notifyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib);

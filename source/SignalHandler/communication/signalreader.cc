@@ -6,7 +6,7 @@
  * 
  * Author: Perttu Paarlahti     perttu.paarlahti@gmai.com
  * Created: 01-April-2015
- * Last modified: 01-April-2015
+ * Last modified: 19-June-2015
  */
 
 
@@ -19,11 +19,12 @@ namespace SignalHandler
 {
 
 
-SignalReader::SignalReader(SignalQueue* queue, const ScriptPriorityLibrary* lib,
+SignalReader::SignalReader(SignalQueue* queue, 
+                           const ScriptPriorityLibrary* lib,
                            PriorityUpdateSubject* subject,
                            QObject* parent):
-    QObject(parent), PriorityUpdateObserver(), 
-    group_(nullptr), queue_(queue), lib_(lib), subject_(subject), update_mx_()
+    QObject(parent), PriorityUpdateObserver(), group_(nullptr), queue_(queue), 
+    lib_(lib), subject_(subject), update_mx_()
 {
     Q_ASSERT (queue != nullptr);
     Q_ASSERT (lib != nullptr);
@@ -34,7 +35,7 @@ SignalReader::SignalReader(SignalQueue* queue, const ScriptPriorityLibrary* lib,
 }
 
 
-void SignalReader::start()
+void SignalReader::start(const QString& group_name)
 {
     // Only one call is allowed in object lifetime.
     static bool first_time(true);
@@ -44,7 +45,7 @@ void SignalReader::start()
     // Host address
     Utils::Connection::setHost("127.0.0.1");
     // Create message group
-    group_ = new Utils::MessageGroup(Utils::SIGNAL_HANDLER_GROUP, 
+    group_ = new Utils::MessageGroup(group_name, 
                                      Utils::MessageGroup::Subscriber,
                                      this);
     // Connect signals
