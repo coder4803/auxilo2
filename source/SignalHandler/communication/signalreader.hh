@@ -43,15 +43,18 @@ public:
      * \param subject Observable PriorityUpdateSubject.
      * \param parent QObject's parent.
      * \pre queue != nullptr, lib != nullptr and subject != nullptr.
-     * \post SignalReader does not start reading messages until start() is
-     *  called.
+     * \post New object is registered to subject. SignalReader does not start 
+     *  reading messages until start() is called.
      */
     SignalReader(SignalQueue* queue, const ScriptPriorityLibrary* lib,
                  PriorityUpdateSubject* subject,
                  QObject* parent = nullptr);
     
-    //! Destructor.
-    ~SignalReader();
+    /*!
+     * \brief Destructor.
+     * \post Object is unregistered to its subject.
+     */
+    virtual ~SignalReader();
     
     //! Copy- and move-constructors and -assignment operators are forbidden.
     SignalReader(const SignalReader&) = delete;
@@ -62,7 +65,8 @@ public:
     /*!
      * \brief Start reading messages.
      * \param group_name Name of the signal message group.
-     * \pre This method can be called only once. Group name is not empty.
+     * \pre This method can be called only once for an object.
+     *  Group name is not empty.
      * \post Incomming messages are handled and pushed to SignalQueue.
      */
     void start(const QString& group_name = Utils::SIGNAL_HANDLER_GROUP);

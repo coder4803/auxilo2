@@ -31,7 +31,14 @@ SignalReader::SignalReader(SignalQueue* queue,
     Q_ASSERT (subject != nullptr);
     
     // Register to subject.
-    subject_->registerClient(this);
+    subject_->registerClient(this);    
+}
+
+
+SignalReader::~SignalReader()
+{
+    subject_->unregisterClient(this);
+    // group_ is automaticly destroyed as a child QObject.
 }
 
 
@@ -40,10 +47,12 @@ void SignalReader::start(const QString& group_name)
     // Only one call is allowed in object lifetime.
     static bool first_time(true);
     Q_ASSERT(first_time);
+    Q_ASSERT(!group_name.isEmpty());
     first_time = false;
     
-    // Host address
+    // Connect to RabbitMQ server. Set host address.
     Utils::Connection::setHost("127.0.0.1");
+    
     // Create message group
     group_ = new Utils::MessageGroup(group_name, 
                                      Utils::MessageGroup::Subscriber,
@@ -51,13 +60,6 @@ void SignalReader::start(const QString& group_name)
     // Connect signals
     connect(group_, SIGNAL(messageReceived(QByteArray, QString)),
             this, SLOT(onMessageReceived(QByteArray)));
-}
-
-
-SignalReader::~SignalReader()
-{
-    subject_->unregisterClient(this);
-    // group_ is automaticly destroyed as a child QObject.
 }
 
 
@@ -88,6 +90,7 @@ void SignalReader::onMessageReceived(QByteArray data)
         return;
     }
 
+    // Add signal to the queue.
     Signal::AckInfo ack_info(msg.ackGroup(), msg.ackId());
     Signal s(priority, msg.signalName(), msg.parameters(), ack_info);
     queue_->push(s);
