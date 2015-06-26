@@ -44,11 +44,7 @@ SignalReader::~SignalReader()
 
 void SignalReader::start(const QString& group_name)
 {
-    // Only one call is allowed in object lifetime.
-    static bool first_time(true);
-    Q_ASSERT(first_time);
     Q_ASSERT(!group_name.isEmpty());
-    first_time = false;
     
     // Connect to RabbitMQ server. Set host address.
     Utils::Connection::setHost("127.0.0.1");

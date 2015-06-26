@@ -38,18 +38,23 @@ private Q_SLOTS:
     // Test cnstructor and destructor
     void constructorTest();
     
-    // Test Signal handling without dealing with the RabbitMQ server 
+    // Test Signal handling without dealing with the actual message client. 
     // (one thread only).
     void bareSignalHandlingTest();
     void bareSignalHandlingTest_data();
     
-    // Test parallel signalhandling without dealing with the RabbitMQ server.
+    // Test parallel signalhandling without dealing with the actual 
+    // message client.
     void bareSignalHandlingParallelTest();
     void bareSignalHandlingParallelTest_data();
     
-    // Test functionality, when sending one RabbitMQ message at a time.
+    // Test functionality, when sending one message at a time.
     void serialTest();
     void serialTest_data();
+    
+    // Test functionality, when sending messages concurrently.
+    void parallelTest();
+    void parallelTest_data();
     
 private:
     // Aid functions:
@@ -68,6 +73,10 @@ private:
     // (using directly connected signal).
     void emitSignals(std::mutex* mx, std::condition_variable* cv, bool* ready,
                      const std::vector<Utils::SignalMessage> msgs);
+    
+    // Send given messages using the actual message client (in its own thread).
+    void sendMessages(std::mutex* mx, std::condition_variable* cv, bool* ready,
+                      const std::vector<Utils::SignalMessage> msgs);
 };
 
 
@@ -168,7 +177,8 @@ void SignalReaderTest::bareSignalHandlingParallelTest()
     // Create threads
     std::vector<std::thread> threads( messages.size() );
     for (unsigned i=0; i<messages.size(); ++i){
-        threads[i] = std::move( std::thread(&emitSignals, this, &mx, &cv, 
+        threads[i] = std::move( std::thread(&SignalReaderTest::emitSignals, 
+                                            this, &mx, &cv, 
                                             &ready, messages[i]));
     }
     
@@ -244,6 +254,54 @@ void SignalReaderTest::serialTest_data()
 }
 
 
+void SignalReaderTest::parallelTest()
+{
+    using namespace SignalHandler;
+    QFETCH(std::vector<std::vector<Utils::SignalMessage> >, messages);
+    QFETCH(std::shared_ptr<PriorityLibraryStub>, library);
+    
+    // Create reader and start reading.
+    std::shared_ptr<SignalQueue> queue(new SignalQueue);
+    std::shared_ptr<PrioritySubjectStub> sub(new PrioritySubjectStub);
+    SignalReader reader(queue.get(), library.get(), sub.get());    
+    reader.start("test_group");
+    
+    // Create threads.
+    bool ready(false);
+    std::mutex mx;
+    std::condition_variable cv;
+    std::vector<std::thread> threads(messages.size());
+    for (unsigned i=0; i<threads.size(); ++i){
+        threads[i] = std::move(std::thread(&SignalReaderTest::sendMessages,
+                                           this, &mx, &cv, &ready,
+                                           messages[i]));
+    }
+    
+    // Send all messages.
+    mx.lock();
+    ready = true;
+    cv.notify_all();
+    mx.unlock();
+    for (unsigned i=0; i<threads.size(); ++i){
+        threads[i].join();
+    }
+    
+    // Verify results.
+    std::vector<Utils::SignalMessage> all_messages;
+    for (unsigned i=0; i<messages.size(); ++i){
+        std::move(messages[i].begin(), messages[i].end(),
+                  std::back_inserter(all_messages));
+    }
+    this->verifyQueue(queue.get(), library.get(), all_messages);
+}
+
+
+void SignalReaderTest::parallelTest_data()
+{
+    this->bareSignalHandlingParallelTest_data();
+}
+
+
 void SignalReaderTest::
 verifyQueue(SignalHandler::SignalQueue* queue, 
             PriorityLibraryStub* lib, 
@@ -289,6 +347,30 @@ void SignalReaderTest::emitSignals(std::mutex* mx,
         emit this->sendSignal(msg.data());
     }
 }
+
+
+void SignalReaderTest::sendMessages(std::mutex* mx, 
+                                    std::condition_variable* cv, 
+                                    bool* ready, 
+                                    const std::vector<Utils::SignalMessage> msgs)
+{
+    // Wait for permission to start
+    std::unique_lock<std::mutex> lock(*mx);
+    while (!*ready){
+        cv->wait(lock);
+    }
+    lock.unlock();
+    
+    // Send messages.
+    TestSender sender(msgs);
+    
+    connect(&sender, SIGNAL(testFailed(const char*)),
+            this, SLOT(onTestFailed(const char*)),
+            Qt::DirectConnection);
+    
+    sender.startSending();
+}
+
 
 QTEST_APPLESS_MAIN(SignalReaderTest)
 
