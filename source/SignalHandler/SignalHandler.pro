@@ -45,7 +45,9 @@ SOURCES += main.cc \
     ScriptAPI/scriptapiimplementation.cc \
     consoleui.cc \
     signalhandlerbuilder.cc \
-    ScriptLangWrapper/scriptapiqobjectwrapper.cc
+    ScriptLangWrapper/scriptapiqobjectwrapper.cc \
+    communication/configurationreader.cc \
+    businesslogic.cc
 
 HEADERS += \
     signal.hh \
@@ -74,4 +76,6 @@ HEADERS += \
     consoleui.hh \
     interfaces/modelinterface.hh \
     signalhandlerbuilder.hh \
-    ScriptLangWrapper/scriptapiqobjectwrapper.hh
+    ScriptLangWrapper/scriptapiqobjectwrapper.hh \
+    communication/configurationreader.hh \
+    businesslogic.hh

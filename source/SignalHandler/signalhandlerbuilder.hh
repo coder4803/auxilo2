@@ -23,16 +23,6 @@ public:
     ~SignalHandlerBuilder();
     
     ModelInterface* create();
-    
-public slots:
-    
-    void onMessageReceived(const QByteArray& data);
-    
-private:
-    
-    std::mutex mx_;
-    std::condition_variable cv_;
-    std::deque<Utils::Message> received_;
 };
 
 } // Namespace SignalHandler

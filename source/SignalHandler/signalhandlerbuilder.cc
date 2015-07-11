@@ -1,10 +1,15 @@
 #include "signalhandlerbuilder.hh"
+#include "scriptbank.hh"
+#include "signalqueue.hh"
+#include "communication/configurationreader.hh"
+#include "communication/signalreader.hh"
+#include "scriptrunner.hh"
+#include "businesslogic.hh"
 
 namespace SignalHandler
 {
 
-SignalHandlerBuilder::SignalHandlerBuilder():
-    mx_(), cv_(), received_()
+SignalHandlerBuilder::SignalHandlerBuilder()
 {
 }
 
@@ -16,14 +21,23 @@ SignalHandlerBuilder::~SignalHandlerBuilder()
 
 ModelInterface* SignalHandlerBuilder::create()
 {
-    return nullptr;
+    std::unique_ptr<ScriptBankInterface> bank(new ScriptBank);
+    std::shared_ptr<SignalQueue> queue(new SignalQueue);
+    std::unique_ptr<ConfigurationReader> conf_reader(new ConfigurationReader);
+    std::unique_ptr<SignalReader> sig_reader(new SignalReader(queue, 
+                                                              bank.get()) );
+    std::shared_ptr<ScriptLangWrapperPool> pool(new ScriptLangWrapperPool);
+    
+    std::vector<std::unique_ptr<ScriptRunner> > workers;
+    for (unsigned i=0; i<3; ++i){
+        workers.push_back(std::unique_ptr<ScriptRunner>
+                          (new ScriptRunner(queue, bank.get(), pool)) );
+    }
+    
+    return new BusinessLogic(std::move(sig_reader), std::move(conf_reader), 
+                             std::move(workers), std::move(bank) );
 }
 
-
-void SignalHandlerBuilder::onMessageReceived(const QByteArray& data)
-{
-    Q_UNUSED(data)
-}
 
 
 } // Namespace SignalHandler

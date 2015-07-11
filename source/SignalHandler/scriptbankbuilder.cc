@@ -12,72 +12,34 @@
 #include "scriptbank.hh"
 #include <QStringList>
 #include <QFile>
-#include <QDir>
 #include <QDebug>
 
 
 namespace SignalHandler
 {
 
-const QChar ScriptBankBuilder::SCRIPT_SEPERATOR = QChar(';');
-const QChar ScriptBankBuilder::FIELD_SEPERATOR = QChar(':');
+const QString ScriptBankBuilder::SCRIPT_NAME_PREFIX_("ScriptName");
 
-
-ScriptBankInterface* ScriptBankBuilder::createScriptBank(const QString& conf_msg)
+ScriptBankInterface*ScriptBankBuilder::create(const Utils::ParameterSet& params)
 {
-    QStringList clauses = conf_msg.split(SCRIPT_SEPERATOR);
-    ScriptBankInterface::ScriptData scripts;
+    ScriptBankInterface::ScriptData data;
+    Utils::ParameterSet nameset = params.getSection(SCRIPT_NAME_PREFIX_);
+    QHash<QString, QString> names = nameset.parameters();
     
-    try
-    {
-        for (int i=0; i<clauses.size(); ++i){
-            ScriptBankBuilder::getScriptProperties(clauses.at(i), scripts);
-        }
-    }
-    catch (BadMessage&){
-        // Attach original message into exception.
-        throw BadMessage(conf_msg);
-    }
-    
-    return new ScriptBank(scripts);
-}
-
-
-// Reads individual script's properties from QString and inserts them in 
-// Scriptdata
-void ScriptBankBuilder::
-getScriptProperties(const QString& input, 
-                    ScriptBankInterface::ScriptData& scripts)
-{
-    QStringList fields = input.split(FIELD_SEPERATOR);
-    if (fields.size() != 3){
-        // too few fields.
-        throw BadMessage("");
+    foreach (QString name, names.values()) {
+       QString script_file = params.parameter<QString>(name+QString("_path"));
+       QString script = ScriptBankBuilder::readScriptFile(script_file);
+       unsigned priority = params.parameter<unsigned>(name+QString("_priority"));
+       QString lang = params.parameter<QString>(name+QString("_language"));
+       
+       ScriptBankInterface::ScriptInfo info;
+       info.script = script;
+       info.priority = priority;
+       info.language = lang;
+       data.insert(name, info);
     }
     
-    // Read ScriptID
-    QString scriptID = fields.at(0);
-    if (scriptID.size() == 0){
-        throw BadMessage("");
-    }
-    
-    // Read priority
-    bool ok(false);
-    unsigned priority = fields.at(1).toUInt(&ok);
-    if (!ok){
-        // Invalid priority number
-        throw BadMessage("");
-    }
-    
-    // Read script file
-    QString script = ScriptBankBuilder::readScriptFile(fields.at(2));
-    
-    // Check if a script with identical ID already exists
-    if (scripts.find(scriptID) != scripts.end()){
-        throw BadMessage("");
-    }
-    
-    scripts[scriptID] = ScriptBank::ScriptInfo({script, QString(), priority});
+    return new ScriptBank(data);
 }
 
 

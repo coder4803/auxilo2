@@ -11,19 +11,20 @@ namespace SignalHandler
 
 int ScriptRunner::runner_counter_ = 0;
 
-ScriptRunner::ScriptRunner(SignalQueue* queue, 
+ScriptRunner::ScriptRunner(std::shared_ptr<SignalQueue> queue, 
                            const ScriptLibrary* lib, 
-                           ScriptUpdateSubject* subject, 
-                           ScriptLangWrapperPool* pool) :
+                           std::shared_ptr<ScriptLangWrapperPool> pool, 
+                           ScriptUpdateSubject* subject) :
     
-    queue_(queue), lib_(lib), subject_(subject), pool_(pool),
-    runner_id_(runner_counter_++), services_(nullptr)
+    queue_(queue), lib_(lib), pool_(pool), subject_(subject),
+    runner_id_(runner_counter_++), services_(nullptr), update_mx_()
 {
     Q_ASSERT(queue != nullptr);
     Q_ASSERT(lib != nullptr);
-    Q_ASSERT(subject != nullptr);
     
-    subject_->registerObserver(this);
+    if (subject_ != nullptr){
+        subject_->registerObserver(this);
+    }
     services_ = new ScriptApiImplementation(lib_, subject_, 
                                             QString::number(runner_id_));
 }
@@ -31,8 +32,24 @@ ScriptRunner::ScriptRunner(SignalQueue* queue,
 
 ScriptRunner::~ScriptRunner()
 {   
-    subject_->unregisterObserver(this);
+    if (subject_ != nullptr){
+        subject_->unregisterObserver(this);
+    }
     delete services_;
+}
+
+
+void ScriptRunner::setScriptUpdateSubject(ScriptUpdateSubject* sub)
+{
+    Q_ASSERT(sub != nullptr);
+    
+    std::unique_lock<std::mutex> lock(update_mx_);
+    if (subject_ != nullptr){
+        subject_->unregisterObserver(this);
+    }
+    subject_ = sub;
+    subject_->registerObserver(this);
+    lock.unlock();
 }
 
 

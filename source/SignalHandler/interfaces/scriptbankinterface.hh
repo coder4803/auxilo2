@@ -14,7 +14,7 @@
 
 #include "scriptlibrary.hh"
 #include "scriptprioritylibrary.hh"
-#include <map>
+#include <QHash>
 
 namespace SignalHandler
 {
@@ -40,7 +40,7 @@ public:
     };
     
     //! Convenience type defifinition.
-    typedef std::map<QString, ScriptInfo> ScriptData;
+    typedef QHash<QString, ScriptInfo> ScriptData;
     
     //! Constructor
     ScriptBankInterface(): ScriptLibrary(), ScriptPriorityLibrary() {}

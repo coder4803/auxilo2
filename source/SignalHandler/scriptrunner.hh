@@ -8,6 +8,7 @@
 #include "signalqueue.hh"
 #include "ScriptAPI/scriptapi.hh"
 #include <mutex>
+#include <memory>
 
 
 namespace SignalHandler
@@ -21,12 +22,14 @@ class ScriptRunner : public ScriptUpdateObserver
 {
 public:
     
-    ScriptRunner(SignalQueue* queue, 
+    ScriptRunner(std::shared_ptr<SignalQueue> queue, 
                  const ScriptLibrary* lib,
-                 ScriptUpdateSubject* subject,
-                 ScriptLangWrapperPool* pool);
+                 std::shared_ptr<ScriptLangWrapperPool> pool,
+                 ScriptUpdateSubject* subject = nullptr);
     
     ~ScriptRunner();
+    
+    void setScriptUpdateSubject(ScriptUpdateSubject* sub);
     
     void start();
     
@@ -35,10 +38,10 @@ public:
     
 private:
     
-    SignalQueue* queue_;
+    std::shared_ptr<SignalQueue> queue_;
     const ScriptLibrary* lib_;
+    std::shared_ptr<ScriptLangWrapperPool> pool_;
     ScriptUpdateSubject* subject_;
-    ScriptLangWrapperPool* pool_;
     int runner_id_;
     ScriptAPI* services_;
     std::mutex update_mx_;

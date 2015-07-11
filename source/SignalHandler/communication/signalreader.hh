@@ -15,6 +15,7 @@
 
 #include <QObject>
 #include <mutex>
+#include <memory>
 #include "messagegroup.h"
 #include "interfaces/scriptprioritylibrary.hh"
 #include "interfaces/priorityupdateobserver.hh"
@@ -42,17 +43,18 @@ public:
      * \param lib Script priority source.
      * \param subject Observable PriorityUpdateSubject.
      * \param parent QObject's parent.
-     * \pre queue != nullptr, lib != nullptr and subject != nullptr.
-     * \post New object is registered to subject. SignalReader does not start 
-     *  reading messages until start() is called.
+     * \pre queue != nullptr, lib != nullptr.
+     * \post New object is registered to subject, if subject is not nullptr.
+     *  SignalReader does not start reading messages until start() is called.
      */
-    SignalReader(SignalQueue* queue, const ScriptPriorityLibrary* lib,
-                 PriorityUpdateSubject* subject,
+    SignalReader(std::shared_ptr<SignalQueue> queue, 
+                 const ScriptPriorityLibrary* lib,
+                 PriorityUpdateSubject* subject = nullptr,
                  QObject* parent = nullptr);
     
     /*!
      * \brief Destructor.
-     * \post Object is unregistered to its subject.
+     * \post Object is unregistered to its subject (if there was one).
      */
     virtual ~SignalReader();
     
@@ -63,6 +65,15 @@ public:
     SignalReader& operator=(SignalReader&&) = delete;
     
     /*!
+     * \brief Set (new) priority update subject.
+     * \param sub new subject.
+     * \pre sub != nullptr.
+     * \post If there was a non-null subject, this object is unregistered from
+     *  it. This object is registered to new subject.
+     */
+    void setPrioritySubject(PriorityUpdateSubject* sub);
+    
+    /*!
      * \brief Start reading messages.
      * \param group_name Name of the signal message group.
      * \pre This method can be called only once for an object.
@@ -70,6 +81,12 @@ public:
      * \post Incomming messages are handled and pushed to SignalQueue.
      */
     void start(const QString& group_name = Utils::SIGNAL_HANDLER_GROUP);
+    
+    /*!
+     * \brief Check if start has been called.
+     * \return True, if start() has been called.
+     */
+    bool isStarted() const;
     
     //! Implements the PriorityUpdateObserver interface.
     void notifyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib);
@@ -83,7 +100,7 @@ private Q_SLOTS:
 private:
     
     Utils::MessageGroup* group_;
-    SignalQueue* queue_;
+    std::shared_ptr<SignalQueue> queue_;
     const ScriptPriorityLibrary* lib_;
     PriorityUpdateSubject* subject_;
     std::mutex update_mx_;

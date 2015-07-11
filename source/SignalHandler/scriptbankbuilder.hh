@@ -15,8 +15,10 @@
 
 #include "interfaces/scriptbankinterface.hh"
 #include "exceptions/badmessage.hh"
+#include "confresponsemessage.h"
 #include <exception>
 #include <QString>
+#include <QHash>
 
 
 namespace SignalHandler
@@ -32,12 +34,6 @@ class ScriptBankBuilder
 {
 public:
     
-    //! Character in configuration message to seperate different scripts.
-    static const QChar SCRIPT_SEPERATOR;
-    
-    //! Character in configuration message to seperate script properties.
-    static const QChar FIELD_SEPERATOR;
-    
     //! Default constructor
     ScriptBankBuilder() = default;
     
@@ -50,34 +46,12 @@ public:
     //! Default copy-assignment operator.
     ScriptBankBuilder& operator=(const ScriptBankBuilder&) = default;
     
-    /*!
-     * \brief createScriptBank Creates new instance of ScriptBank.
-     * 
-     * \param conf_msg The configuration message.
-     * 
-     * \return New ScriptBank object that is constructed after configuration. 
-     *  The caller takes ownership over the new object.
-     * 
-     * \pre -
-     * 
-     * \exception BadMessage is thrown, if conf_msg is invalid.
-     *  If any of sctipt files could not be opened, 
-     *  ScriptBankBuilderFileError is thrown.
-     * 
-     * Valid configuration messages are formated as follows:
-     * 
-     * ScriptID:ScriptPriority:ScriptFilePath
-     * <... All script definitions as declared above, seperated with ';' ...>
-     * 
-     * where ScriptID is a string and ScriptPriority is an unsigned integers.
-     */
-    static ScriptBankInterface* createScriptBank(const QString& conf_msg);
+    static ScriptBankInterface* create(const Utils::ParameterSet& params);
     
     
 private:
     
-    static void getScriptProperties(const QString& input, 
-                                    ScriptBankInterface::ScriptData& scripts);
+    static const QString SCRIPT_NAME_PREFIX_;
     
     static QString readScriptFile(const QString& file_name);
 };

@@ -30,7 +30,7 @@ QString ScriptBank::getScript(const QString& scriptID) const
         throw UnknownScript(scriptID);
     }
     else{
-        return it->second.script;
+        return it.value().script;
     }
 }
 
@@ -42,7 +42,7 @@ QString ScriptBank::getLanguage(const QString& scriptID) const
         throw UnknownScript(scriptID);
     }
     else{
-        return it->second.language;
+        return it.value().language;
     }
 }
 
@@ -55,7 +55,7 @@ unsigned int ScriptBank::getPriorityOf(const QString& scriptID) const
         throw UnknownScript(scriptID);
     }
     else{
-        return it->second.priority;
+        return it.value().priority;
     }
 }
 

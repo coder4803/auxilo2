@@ -36,7 +36,7 @@ public:
      * \pre -
      * \post ScriptBank object holds all given scripts and their properties.
      */
-    explicit ScriptBank(const ScriptData& scripts);
+    explicit ScriptBank(const ScriptData& scripts = ScriptData());
     
     //! Destructor.
     ~ScriptBank();

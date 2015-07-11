@@ -19,7 +19,7 @@ namespace SignalHandler
 {
 
 
-SignalReader::SignalReader(SignalQueue* queue, 
+SignalReader::SignalReader(std::shared_ptr<SignalQueue> queue, 
                            const ScriptPriorityLibrary* lib,
                            PriorityUpdateSubject* subject,
                            QObject* parent):
@@ -28,17 +28,34 @@ SignalReader::SignalReader(SignalQueue* queue,
 {
     Q_ASSERT (queue != nullptr);
     Q_ASSERT (lib != nullptr);
-    Q_ASSERT (subject != nullptr);
     
     // Register to subject.
-    subject_->registerClient(this);    
+    if (subject_ != nullptr){
+        subject_->registerClient(this);
+    }
 }
 
 
 SignalReader::~SignalReader()
 {
-    subject_->unregisterClient(this);
+    if (subject_ != nullptr){
+        subject_->unregisterClient(this);
+    }
     // group_ is automaticly destroyed as a child QObject.
+}
+
+
+void SignalReader::setPrioritySubject(PriorityUpdateSubject* sub)
+{
+    Q_ASSERT(sub != nullptr);
+    
+    std::unique_lock<std::mutex> lock(update_mx_);
+    if (subject_ != nullptr){
+        subject_->unregisterClient(this);
+    }
+    subject_ = sub;
+    subject_->registerClient(this);
+    lock.unlock();
 }
 
 
@@ -56,6 +73,12 @@ void SignalReader::start(const QString& group_name)
     // Connect signals
     connect(group_, SIGNAL(messageReceived(QByteArray, QString)),
             this, SLOT(onMessageReceived(QByteArray)));
+}
+
+
+bool SignalReader::isStarted() const
+{
+    return group_ != nullptr;
 }
 
 
