@@ -16,7 +16,9 @@ ConfigurationReader::ConfigurationReader(QObject* parent) :
     QObject(parent), conf_data_(), responseGroup_(nullptr), mx_(),
     retry_timer_()
 {
-    Utils::Connection::setHost("127.0.0.1");
+    if (!Utils::Connection::isConnected()){
+        Utils::Connection::setHost("127.0.0.1");
+    }
 }
 
 

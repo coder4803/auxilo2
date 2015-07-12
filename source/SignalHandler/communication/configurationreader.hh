@@ -25,6 +25,9 @@ public:
     /*!
      * \brief Constructor
      * \param parent QObject's parent.
+     * \pre parent is nullptr or a valid QObject-pointer.
+     * \post ConfigurationReader is created and holding an empty configuration.
+     *  Connects to the messager server if not already connected.
      */
     ConfigurationReader(QObject* parent = nullptr);
     

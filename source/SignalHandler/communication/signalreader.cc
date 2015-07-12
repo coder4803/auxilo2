@@ -29,6 +29,11 @@ SignalReader::SignalReader(std::shared_ptr<SignalQueue> queue,
     Q_ASSERT (queue != nullptr);
     Q_ASSERT (lib != nullptr);
     
+    // Connect to messaging server. Set host address.
+    if (!Utils::Connection::isConnected()){
+        Utils::Connection::setHost("127.0.0.1");
+    }
+    
     // Register to subject.
     if (subject_ != nullptr){
         subject_->registerClient(this);
@@ -60,9 +65,6 @@ void SignalReader::setPrioritySubject(PriorityUpdateSubject* sub)
 void SignalReader::start(const QString& group_name)
 {
     Q_ASSERT(!group_name.isEmpty());
-    
-    // Connect to RabbitMQ server. Set host address.
-    Utils::Connection::setHost("127.0.0.1");
     
     // Create message group
     group_ = new Utils::MessageGroup(group_name, 
