@@ -101,7 +101,7 @@ void SignalReaderTest::constructorTest()
     SignalReader* reader_ptr = nullptr;
     
     {
-        SignalReader reader(queue.get(), lib.get(), sub.get());
+        SignalReader reader(queue, lib.get(), sub.get());
         reader_ptr = &reader;
         QVERIFY2(sub->hasClient(reader_ptr), "Observer was not registered.");
     }
@@ -118,7 +118,7 @@ void SignalReaderTest::bareSignalHandlingTest()
     
     std::shared_ptr<SignalQueue> queue(new SignalQueue);
     std::shared_ptr<PrioritySubjectStub> sub(new PrioritySubjectStub);
-    SignalReader reader(queue.get(), library.get(), sub.get());
+    SignalReader reader(queue, library.get(), sub.get());
     
     connect(this, SIGNAL(sendSignal(QByteArray)), 
             &reader, SLOT(onMessageReceived(QByteArray)) );
@@ -167,7 +167,7 @@ void SignalReaderTest::bareSignalHandlingParallelTest()
     std::condition_variable cv;
     std::shared_ptr<SignalQueue> queue(new SignalQueue);
     std::shared_ptr<PrioritySubjectStub> sub(new PrioritySubjectStub);
-    SignalReader reader(queue.get(), library.get(), sub.get());
+    SignalReader reader(queue, library.get(), sub.get());
     
     // Inter-thread signals must be connected using Qt::DirectConnection.
     connect(this, SIGNAL(sendSignal(QByteArray)), 
@@ -239,7 +239,7 @@ void SignalReaderTest::serialTest()
             this, SLOT(onTestFailed(const char*)) );
     std::shared_ptr<SignalQueue> queue(new SignalQueue);
     std::shared_ptr<PrioritySubjectStub> sub(new PrioritySubjectStub);
-    SignalReader reader(queue.get(), library.get(), sub.get());
+    SignalReader reader(queue, library.get(), sub.get());
     reader.start(QString("test_group"));
     sender.startSending();
     
@@ -263,7 +263,7 @@ void SignalReaderTest::parallelTest()
     // Create reader and start reading.
     std::shared_ptr<SignalQueue> queue(new SignalQueue);
     std::shared_ptr<PrioritySubjectStub> sub(new PrioritySubjectStub);
-    SignalReader reader(queue.get(), library.get(), sub.get());    
+    SignalReader reader(queue, library.get(), sub.get());    
     reader.start("test_group");
     
     // Create threads.

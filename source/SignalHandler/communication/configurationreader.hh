@@ -11,6 +11,11 @@
 namespace SignalHandler
 {
 
+/*!
+ * \brief The ConfigurationReader class
+ *  This class sends configuration requests, receives response messages and 
+ *  stores the latest configuration.
+ */
 class ConfigurationReader : public QObject
 {
     Q_OBJECT
@@ -34,12 +39,16 @@ public:
     /*!
      * \brief Start sending ConfRequestMessages. 
      * \param group_name Request group.
+     * \pre group_name is a non-empty string.
+     * \post The response group is created. Starts sending request messages when
+     *  the response group is ready. 
      */
     void start(const QString& group_name = Utils::CONF_REQUEST_GROUP);
     
     /*!
      * \brief Get latest configuration.
      * \return ParameterSet that holds SignalHandler configuration.
+     * \pre None.
      */
     Utils::ParameterSet getConfiguration() const;
     
@@ -52,8 +61,20 @@ Q_SIGNALS:
     
 private Q_SLOTS:
     
+    /*!
+     * \brief Handle incomming ConfResponseMessages.
+     * \param data Message's binary representation.
+     * \pre data is a valid representation.
+     * \post New configuration is set. configurationUpdated()-signal is emitted.
+     */
     void onConfMessageReceived(QByteArray data);
     
+    /*!
+     * \brief Starts sending ConfRequestMessages when the response group is
+     *  ready.
+     * \pre -
+     * \post Requests are sent every second until a response is received.
+     */
     void onResponseGroupReady();
     
     

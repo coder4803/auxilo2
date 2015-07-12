@@ -30,7 +30,7 @@ ConfigurationReader::~ConfigurationReader()
 
 void ConfigurationReader::start(const QString& group_name)
 {
-    Q_ASSERT(!group_name.isNull());
+    Q_ASSERT(!group_name.isEmpty());
     
     responseGroup_ = new Utils::MessageGroup(RESPONSE_GROUP_NAME_,
                                              Utils::MessageGroup::Subscriber,

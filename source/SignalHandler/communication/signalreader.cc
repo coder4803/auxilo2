@@ -41,7 +41,7 @@ SignalReader::~SignalReader()
     if (subject_ != nullptr){
         subject_->unregisterClient(this);
     }
-    // group_ is automaticly destroyed as a child QObject.
+    delete group_;
 }
 
 
@@ -66,8 +66,7 @@ void SignalReader::start(const QString& group_name)
     
     // Create message group
     group_ = new Utils::MessageGroup(group_name, 
-                                     Utils::MessageGroup::Subscriber,
-                                     this);
+                                     Utils::MessageGroup::Subscriber);
     // Connect signals
     connect(group_, SIGNAL(messageReceived(QByteArray, QString)),
             this, SLOT(onMessageReceived(QByteArray)));

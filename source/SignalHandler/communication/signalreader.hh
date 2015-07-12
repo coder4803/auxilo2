@@ -28,7 +28,7 @@ namespace SignalHandler
 
 /*!
  * \brief The SignalReader class.
- *  This class is responsible for receiving signal messages from RabbidQM.
+ *  This class is responsible for receiving signal messages from message app.
  *  Incomming signals are pushed into siqnalqueue waiting to be handled.
  */
 class SignalReader : public QObject, public PriorityUpdateObserver
@@ -100,7 +100,12 @@ public:
     
 private Q_SLOTS:
     
-    // Handles incomming messages.
+    /*!
+     * \brief Handle incoming SignalMessage
+     * \param data SignalMessage as a QByteArray.
+     * \pre data is a binary representation of a legit SignalMessage.
+     * \post SignalMessage is converted into a Signal and added to the queue.
+     */
     void onMessageReceived(QByteArray data);
     
 private:

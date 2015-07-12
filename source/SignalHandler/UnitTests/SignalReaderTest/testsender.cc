@@ -22,8 +22,10 @@ TestSender::~TestSender()
 void TestSender::startSending()
 {   
     std::unique_lock<std::mutex> lock(mx_);
-    send_group_ = new Utils::MessageGroup("test_group", Utils::MessageGroup::Publisher, this);
-    ack_group_ = new Utils::MessageGroup("test_ack_group", Utils::MessageGroup::Subscriber, this);
+    send_group_ = new Utils::MessageGroup("test_group", 
+                                          Utils::MessageGroup::Publisher);
+    ack_group_ = new Utils::MessageGroup("test_ack_group", 
+                                         Utils::MessageGroup::Subscriber);
     
     connect(ack_group_, SIGNAL(messageReceived(QByteArray,QString)), 
             this, SLOT(onAckMessageReceived(QByteArray)) );
