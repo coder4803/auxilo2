@@ -88,6 +88,12 @@ public:
      */
     bool isStarted() const;
     
+    /*!
+     * \brief Stop receiving signals. Signal group is destroyed. SignalReader
+     *  can be restarted by calling start().
+     */
+    void stop();
+    
     //! Implements the PriorityUpdateObserver interface.
     void notifyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib);
     
@@ -103,7 +109,7 @@ private:
     std::shared_ptr<SignalQueue> queue_;
     const ScriptPriorityLibrary* lib_;
     PriorityUpdateSubject* subject_;
-    std::mutex update_mx_;
+    mutable std::mutex update_mx_;
 };
 
 } // Namespace SignalHandler

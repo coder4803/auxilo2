@@ -49,13 +49,11 @@ void SignalReader::setPrioritySubject(PriorityUpdateSubject* sub)
 {
     Q_ASSERT(sub != nullptr);
     
-    std::unique_lock<std::mutex> lock(update_mx_);
     if (subject_ != nullptr){
         subject_->unregisterClient(this);
     }
     subject_ = sub;
     subject_->registerClient(this);
-    lock.unlock();
 }
 
 
@@ -78,7 +76,19 @@ void SignalReader::start(const QString& group_name)
 
 bool SignalReader::isStarted() const
 {
+    update_mx_.lock();
     return group_ != nullptr;
+    update_mx_.unlock();
+}
+
+
+void SignalReader::stop()
+{
+    std::lock_guard<std::mutex> lock(update_mx_);
+    disconnect(group_, SIGNAL(messageReceived(QByteArray,QString)),
+               this, SLOT(onMessageReceived(QByteArray)) );
+    delete group_;
+    group_ = nullptr;
 }
 
 

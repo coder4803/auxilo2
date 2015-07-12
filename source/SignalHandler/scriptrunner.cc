@@ -24,9 +24,10 @@ ScriptRunner::ScriptRunner(std::shared_ptr<SignalQueue> queue,
     
     if (subject_ != nullptr){
         subject_->registerObserver(this);
+    
+        services_ = new ScriptApiImplementation(lib_, subject_, 
+                                                QString::number(runner_id_));
     }
-    services_ = new ScriptApiImplementation(lib_, subject_, 
-                                            QString::number(runner_id_));
 }
 
 
@@ -43,13 +44,14 @@ void ScriptRunner::setScriptUpdateSubject(ScriptUpdateSubject* sub)
 {
     Q_ASSERT(sub != nullptr);
     
-    std::unique_lock<std::mutex> lock(update_mx_);
     if (subject_ != nullptr){
         subject_->unregisterObserver(this);
+        delete services_;
     }
     subject_ = sub;
     subject_->registerObserver(this);
-    lock.unlock();
+    services_ = new ScriptApiImplementation(lib_, subject_, 
+                                            QString::number(runner_id_));
 }
 
 

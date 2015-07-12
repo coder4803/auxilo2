@@ -5,6 +5,7 @@
 #include "communication/signalreader.hh"
 #include "scriptrunner.hh"
 #include "businesslogic.hh"
+#include <QDebug>
 
 namespace SignalHandler
 {
@@ -21,6 +22,7 @@ SignalHandlerBuilder::~SignalHandlerBuilder()
 
 ModelInterface* SignalHandlerBuilder::create()
 {
+    qDebug() << "Starting to build system.";
     std::unique_ptr<ScriptBankInterface> bank(new ScriptBank);
     std::shared_ptr<SignalQueue> queue(new SignalQueue);
     std::unique_ptr<ConfigurationReader> conf_reader(new ConfigurationReader);
@@ -35,7 +37,7 @@ ModelInterface* SignalHandlerBuilder::create()
     }
     
     return new BusinessLogic(std::move(sig_reader), std::move(conf_reader), 
-                             std::move(workers), std::move(bank) );
+                             std::move(workers), std::move(bank));
 }
 
 

@@ -1,11 +1,13 @@
 
 #include <QCoreApplication>
-#include "consoleui.hh"
-#include <iostream>
+#include <memory>
+#include "signalhandlerbuilder.hh"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    ConsoleUI ui(&std::cin, &std::cout);
-    a.exit( ui.exec() );
+    std::unique_ptr<SignalHandler::ModelInterface> model;
+    model.reset( SignalHandler::SignalHandlerBuilder().create() );
+    model->start();
+    return a.exec();
 }

@@ -26,7 +26,7 @@ public:
      * \param lib Script library.
      * \param subject Script library update subject.
      * \param namingSuffix Suffix to be added at the end of message groups.
-     * \pre lib != nullptr, subject != nullptr, namingSuffix is unique.
+     * \pre lib != nullptr, namingSuffix is unique.
      */
     ScriptApiImplementation(const ScriptLibrary* lib,
                             ScriptUpdateSubject* subject,
@@ -40,6 +40,15 @@ public:
     ScriptApiImplementation(ScriptApiImplementation&&) = delete;
     ScriptApiImplementation& operator=(const ScriptApiImplementation&) = delete;
     ScriptApiImplementation& operator=(ScriptApiImplementation&&) = delete;
+    
+    /*!
+     * \brief Set (new) ScriptUpdateSubject.
+     * \param sub New subject.
+     * \pre sub != nullptr.
+     * \post This observer is unregistered to previous subject, if there is one.
+     *  This observer is registered to new subject.
+     */
+    void setSubject(ScriptUpdateSubject* sub);
     
     // ScriptApi interface implementations. See scriptapi.hh for documentation.
     

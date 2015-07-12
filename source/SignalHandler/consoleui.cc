@@ -10,10 +10,12 @@
  */
 
 #include "consoleui.hh"
+#include "signalhandlerbuilder.hh"
 
 ConsoleUI::ConsoleUI(std::istream* input, std::ostream* output) :
     input_(input), output_(output), outputMx_(), model_(nullptr)
 {
+    model_ = SignalHandler::SignalHandlerBuilder().create();
 }
 
 
@@ -36,7 +38,7 @@ int ConsoleUI::exec()
     outputMx_.lock();
     this->showMessage("Commands:");
     this->showMessage("Q = quit.");
-    this->showMessage("S = start/continue");
+    this->showMessage("S = start");
     this->showMessage("P = pause.");
     outputMx_.unlock();
     
@@ -48,13 +50,16 @@ int ConsoleUI::exec()
         
         if (command == "Q"){
             this->showMessage("Quiting...");
+            model_->stop();
             return 0;
         }
         else if (command == "S"){
-            this->showMessage("Not implemented yet");
+            model_->start();
         }
         else if (command == "P"){
-            this->showMessage("Not implemented yet");
+            model_->stop();
+            this->showMessage("System paused. Press S to continue. "
+                              "Press Q to quit");
         }
         else{
             outputMx_.lock();

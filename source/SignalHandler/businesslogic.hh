@@ -4,12 +4,15 @@
 #include <QObject>
 #include <unordered_set>
 #include <memory>
+#include <thread>
+#include <mutex>
 #include "interfaces/modelinterface.hh"
 #include "interfaces/priorityupdateobserver.hh"
 #include "interfaces/scriptupdateobserver.hh"
 #include "interfaces/scriptbankinterface.hh"
 #include "interfaces/scriptupdatesubject.hh"
 #include "interfaces/priorityupdatesubject.hh"
+#include "interfaces/viewinterface.hh"
 #include "communication/signalreader.hh"
 #include "communication/configurationreader.hh"
 #include "scriptrunner.hh"
@@ -68,7 +71,8 @@ private:
     std::unique_ptr<ScriptBankInterface> library_;
     std::unordered_set<ScriptUpdateObserver*> script_observers_;
     std::unordered_set<PriorityUpdateObserver*> priority_observers_;
-    
+    std::vector<std::thread> threads_;
+    std::mutex mx_;
 };
 
 } // Namespace SignalHandler

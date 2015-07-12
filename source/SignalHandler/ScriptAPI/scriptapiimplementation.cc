@@ -21,9 +21,11 @@ ScriptApiImplementation::ScriptApiImplementation(const ScriptLibrary* lib,
     pendingReq_(), pendingAck_(0, Utils::SetStateAckMessage::FAILED),
     updateMx_(), waitMx_(), cv_()
 {
-    Q_ASSERT(lib != nullptr); Q_ASSERT(subject != nullptr);
+    Q_ASSERT(lib != nullptr);
     
-    subject->registerObserver(this);  
+    if (subject_ != nullptr){
+        subject->registerObserver(this);
+    }
     Utils::Connection::setHost("127.0.0.1");
     
     // Create Group for receiving states.
@@ -44,9 +46,22 @@ ScriptApiImplementation::ScriptApiImplementation(const ScriptLibrary* lib,
 
 ScriptApiImplementation::~ScriptApiImplementation()
 {
-    subject_->unregisterObserver(this);
+    if (subject_ != nullptr){
+        subject_->unregisterObserver(this);
+    }
     delete reqGroup_;
     delete ackGroup_;
+}
+
+
+void ScriptApiImplementation::setSubject(ScriptUpdateSubject* sub)
+{
+    std::lock_guard<std::mutex> lock(updateMx_);
+    if (subject_ != nullptr){
+        subject_->unregisterObserver(this);
+    }
+    subject_ = sub;
+    subject_->registerObserver(this);
 }
 
 
