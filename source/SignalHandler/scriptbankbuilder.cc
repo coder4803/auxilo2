@@ -18,25 +18,34 @@
 namespace SignalHandler
 {
 
-const QString ScriptBankBuilder::SCRIPT_NAME_PREFIX_("ScriptName");
+const QString ScriptBankBuilder::SCRIPT_NAME_PREFIX("scriptname");
+const QString ScriptBankBuilder::PRIORITY_POSTFIX("_priority");
+const QString ScriptBankBuilder::PATH_POSTFIX("_path");
+const QString ScriptBankBuilder::LANG_POSTFIX("_language");
 
 ScriptBankInterface*ScriptBankBuilder::create(const Utils::ParameterSet& params)
 {
     ScriptBankInterface::ScriptData data;
-    Utils::ParameterSet nameset = params.getSection(SCRIPT_NAME_PREFIX_);
+    Utils::ParameterSet nameset = params.getSection(SCRIPT_NAME_PREFIX);
     QHash<QString, QString> names = nameset.parameters();
     
-    foreach (QString name, names.values()) {
-       QString script_file = params.parameter<QString>(name+QString("_path"));
-       QString script = ScriptBankBuilder::readScriptFile(script_file);
-       unsigned priority = params.parameter<unsigned>(name+QString("_priority"));
-       QString lang = params.parameter<QString>(name+QString("_language"));
-       
-       ScriptBankInterface::ScriptInfo info;
-       info.script = script;
-       info.priority = priority;
-       info.language = lang;
-       data.insert(name, info);
+    try
+    {
+        foreach (QString name, names.values()) {
+            QString script_file = params.parameter<QString>(name+PATH_POSTFIX);
+            QString script = ScriptBankBuilder::readScriptFile(script_file);
+            unsigned priority=params.parameter<unsigned>(name+PRIORITY_POSTFIX);
+            QString lang=params.parameter<QString>(name+QString(LANG_POSTFIX));
+            
+            ScriptBankInterface::ScriptInfo info;
+            info.script = script;
+            info.priority = priority;
+            info.language = lang;
+            data.insert(name, info);
+        }
+    }
+    catch (QException& e){
+        throw ScriptBankBuilderError(e.what());
     }
     
     return new ScriptBank(data);
@@ -45,21 +54,11 @@ ScriptBankInterface*ScriptBankBuilder::create(const Utils::ParameterSet& params)
 
 // Reads and returns script from given file.
 QString ScriptBankBuilder::readScriptFile(const QString& file_name)
-{
-    /*
-    QStringList seperated = file_name.split('/');
-    QString path = QDir::currentPath();
-    for (int i=0; i<seperated.size(); ++i){
-        path.append("/");
-        path.append(seperated.at(i));
-    }
-    */
-    
+{   
     QFile file(file_name);
-    qDebug() << "Does exist?" << file.exists() << file.fileName();
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text) ){
         // Could not open the file
-        throw ScriptBankBuilderFileError(file_name);
+        throw ScriptBankBuilderError(file_name + QString(" did not open."));
     }
     
     QString script = file.readAll();
@@ -71,26 +70,26 @@ QString ScriptBankBuilder::readScriptFile(const QString& file_name)
 // ScriptBankBuilderFileError implementation
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-ScriptBankBuilderFileError::
-ScriptBankBuilderFileError(const QString& file_name):
-    file_name_(file_name)
+ScriptBankBuilderError::
+ScriptBankBuilderError(const QString& message):
+    msg_(message)
 {
 }
 
 
-ScriptBankBuilderFileError::~ScriptBankBuilderFileError() noexcept
+ScriptBankBuilderError::~ScriptBankBuilderError() noexcept
 {
 }
 
-const char* ScriptBankBuilderFileError::what() const noexcept
+const char* ScriptBankBuilderError::what() const noexcept
 {
-    return "SignalHandler::ScriptBankBuilderFileError";
+    return "SignalHandler::ScriptBankBuilderError";
 }
 
 
-QString ScriptBankBuilderFileError::getFileName() const
+QString ScriptBankBuilderError::getMessage() const
 {
-    return file_name_;
+    return msg_;
 }
 
 

@@ -14,7 +14,6 @@
 #define SCRIPTBANKBUILDER_HH
 
 #include "interfaces/scriptbankinterface.hh"
-#include "exceptions/badmessage.hh"
 #include "confresponsemessage.h"
 #include <exception>
 #include <QString>
@@ -28,11 +27,16 @@ namespace SignalHandler
 /*!
  * \brief The ScriptBankBuilder class
  * Builder class for the ScriptBank class. This class is responsible for
- * constrcting ScriptBank objects based on configuration messages.
+ * constrcting ScriptBank objects based on ParameterSet.
  */
 class ScriptBankBuilder
 {
 public:
+    
+    static const QString SCRIPT_NAME_PREFIX;
+    static const QString PRIORITY_POSTFIX;
+    static const QString PATH_POSTFIX;
+    static const QString LANG_POSTFIX;
     
     //! Default constructor
     ScriptBankBuilder() = default;
@@ -51,30 +55,27 @@ public:
     
 private:
     
-    static const QString SCRIPT_NAME_PREFIX_;
-    
     static QString readScriptFile(const QString& file_name);
 };
 
 
 
 /*!
- * \brief The ScriptBankBuilderFileError class
- * Exception class to signal that ScriptBank construction failed, because
- * at liest one script file could not be opened.
+ * \brief The ScriptBankBuilderError class
+ * Exception class to signal that ScriptBank construction failed.
  */
-class ScriptBankBuilderFileError : std::exception
+class ScriptBankBuilderError : std::exception
 {
 public:
     
     /*!
-     * \brief ScriptBankBuilderFileError Constructor
-     * \param file_name Name of file that failed to open.
+     * \brief Constructor
+     * \param clarifying message.
      */
-    ScriptBankBuilderFileError(const QString& file_name);
+    ScriptBankBuilderError(const QString& message);
     
     //! Destructor
-    virtual ~ScriptBankBuilderFileError() noexcept;
+    virtual ~ScriptBankBuilderError() noexcept;
     
     /*!
      * \brief what Reimplements the std::exception-interface.
@@ -83,13 +84,12 @@ public:
     virtual const char* what() const noexcept;
     
     /*!
-     * \brief getFileName Gets unopenable file name.
-     * \return Name of script file that failed to open.
+     * \brief Get the clarifying error message.
      */
-    QString getFileName() const;
+    QString getMessage() const;
     
 private:
-    QString file_name_;
+    QString msg_;
 };
 
 
