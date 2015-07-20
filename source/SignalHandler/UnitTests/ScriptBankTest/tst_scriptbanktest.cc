@@ -21,9 +21,16 @@ public:
     
 private Q_SLOTS:
     
-    // Verify that functionality with faulty ParamSet
+    // Verify correct functionality with faulty ParamSet
     void builderFailTest();
     void builderFailTest_data();
+    
+    // Verify Builder and Bank functionality with valid configuration.
+    void validConfTest();
+    void validConfTest_data();
+    
+    // Verify Bank functionality when querring non-existent sctipts.
+    void badQuerryTest();
 };
 
 
@@ -119,7 +126,7 @@ void ScriptBankTest::builderFailTest_data()
         QTest::newRow("No lang") << params;
     }
     
-    // Invalid priority
+    // NaN priority
     {
         Utils::ParameterSet params(QString("SignalHandler"));    
         QString name("invalid_priority");
@@ -130,8 +137,129 @@ void ScriptBankTest::builderFailTest_data()
                 {name+PRIORITY_POST, QString("Not a number")},
                 {name+LANG_POST, QString("QtScript")}
             } ) );
-        QTest::newRow("Invalid priority") << params;
+        QTest::newRow("NaN priority") << params;
     }
+    
+    // Negative priority
+    {
+        Utils::ParameterSet params(QString("SignalHandler"));    
+        QString name("invalid_priority");
+        params.appendParameters(QHash<QString,QString>( 
+            {
+                {NAME_PRE+QString("0"), name},
+                {name+PATH_POST, QString("tmp_file.txt")},
+                {name+PRIORITY_POST, QString("-3")},
+                {name+LANG_POST, QString("QtScript")}
+            } ) );
+        QTest::newRow("negative priority") << params;
+    }
+}
+
+
+void ScriptBankTest::validConfTest()
+{
+    using namespace SignalHandler;
+    const QString NAME_PREFIX = ScriptBankBuilder::SCRIPT_NAME_PREFIX;
+    const QString PRIORITY = ScriptBankBuilder::PRIORITY_POSTFIX;
+    const QString LANG = ScriptBankBuilder::LANG_POSTFIX;
+    QFETCH(Utils::ParameterSet, params);
+    QFETCH(QString, script_content);
+    
+    // Try to create instance of ScripBank.
+    std::shared_ptr<ScriptBankInterface> bank(nullptr);
+    try{
+        bank.reset(ScriptBankBuilder::create(params));
+    }
+    catch (ScriptBankBuilderError&){
+        QFAIL("ScriptBankError from a valid configuration.");
+    }
+    catch(...){
+        QFAIL("Unknown exception from a valid configuration");
+    }
+    QVERIFY2(bank != nullptr, "Bank was not created.");
+    
+    // Verify Bank content
+    QHash<QString,QString> conf = params.parameters();
+    QStringList names =  params.getSection(NAME_PREFIX).parameters().values();
+    
+    foreach (QString name, names) {
+        try{
+            QCOMPARE(bank->getScript(name), script_content);
+            QCOMPARE(bank->getPriorityOf(name), 
+                     conf.value(name+PRIORITY).toUInt() );
+            QCOMPARE(bank->getLanguage(name), conf.value(name+LANG));
+        }
+        catch(UnknownScript&){
+            QFAIL("Unknown script");
+        }
+        catch(...){
+            QFAIL("Unknown exception from valid querry.");
+        }
+    }
+    
+}
+
+
+void ScriptBankTest::validConfTest_data()
+{
+    using SignalHandler::ScriptBankBuilder;
+    const QString CONTENT = "This is a temporary test file";
+    const QString PATH = "tmp_file.txt";
+    QTest::addColumn<Utils::ParameterSet>("params");
+    QTest::addColumn<QString>("script_content");
+    
+    QTest::newRow("empty params") << Utils::ParameterSet() << QString();
+    
+    // One script
+    {
+        Utils::ParameterSet params;
+        const QString NAME = "only_script";
+        params.appendParameter(ScriptBankBuilder::SCRIPT_NAME_PREFIX+"0", NAME);
+        params.appendParameter(NAME + ScriptBankBuilder::PATH_POSTFIX, PATH);
+        params.appendParameter(NAME + ScriptBankBuilder::PRIORITY_POSTFIX,
+                               QString::number(10));
+        params.appendParameter(NAME + ScriptBankBuilder::LANG_POSTFIX,
+                               QString("QtScript"));
+        QTest::newRow("1 param") << params << CONTENT;
+    }
+    
+    // 10 scripts
+    {
+        Utils::ParameterSet params;
+        for (int i=0; i<10; ++i){
+            const QString N = QString::number(i);
+            const QString NAME = QString("script_name") + N;
+            params.appendParameter(ScriptBankBuilder::SCRIPT_NAME_PREFIX+N, NAME);
+            params.appendParameter(NAME+ScriptBankBuilder::PATH_POSTFIX, PATH);
+            params.appendParameter(NAME+ScriptBankBuilder::PRIORITY_POSTFIX, N);
+            params.appendParameter(NAME + ScriptBankBuilder::LANG_POSTFIX,
+                                   QString("QtScript"));
+        }
+        QTest::newRow("10 params") << params << CONTENT;
+    }
+}
+
+
+void ScriptBankTest::badQuerryTest()
+{
+    // Build an empty ScriptBank
+    using namespace SignalHandler;
+    std::shared_ptr<ScriptBankInterface> bank;
+    try{
+        bank.reset( ScriptBankBuilder::create(Utils::ParameterSet()) );
+    }
+    catch (ScriptBankBuilderError&){
+        QFAIL("Builder failed with valid configuration");
+    }
+    catch (...){
+        QFAIL("Builder threw unknown type of exception");
+    }
+    QVERIFY2(bank != nullptr, "Bank was not created.");
+    
+    // Verify
+    QVERIFY_EXCEPTION_THROWN(bank->getScript("not_exist"), UnknownScript);
+    QVERIFY_EXCEPTION_THROWN(bank->getLanguage("not_exist"), UnknownScript);
+    QVERIFY_EXCEPTION_THROWN(bank->getPriorityOf("not_exist"), UnknownScript);
 }
 
 
