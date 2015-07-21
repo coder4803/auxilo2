@@ -23,7 +23,6 @@ BusinessLogic::BusinessLogic(std::unique_ptr<SignalReader>&& signal_reader,
     
     connect(conf_reader.get(), SIGNAL(configurationUpdated()),
             this, SLOT(onConfigurationReceived()), Qt::DirectConnection);
-    conf_reader_->start();
 }
 
 BusinessLogic::~BusinessLogic()
@@ -86,9 +85,9 @@ void BusinessLogic::onConfigurationReceived()
     try{
         new_bank.reset(ScriptBankBuilder::create(conf_reader_->getConfiguration()));
     }
-    catch(ScriptBankBuilderFileError& e){
+    catch(ScriptBankBuilderError& e){
         qDebug() << "Configuration failed!";
-        qDebug() << "Error: file'" << e.getFileName() << "' did not open!";
+        qDebug() << "Error with configuration:" << e.getMessage();
         return;
     }
     

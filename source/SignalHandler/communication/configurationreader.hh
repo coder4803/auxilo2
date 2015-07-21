@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QString>
 #include <mutex>
+#include <condition_variable>
 #include "messagegroup.h"
 #include "confresponsemessage.h"
 
@@ -44,7 +45,8 @@ public:
      * \param group_name Request group.
      * \pre group_name is a non-empty string.
      * \post The response group is created. Starts sending request messages when
-     *  the response group is ready. 
+     *  the response group is ready. Function won't return until at liest one 
+     *  ConfResponceMessage is received.
      */
     void start(const QString& group_name = Utils::CONF_REQUEST_GROUP);
     
@@ -86,6 +88,7 @@ private:
     Utils::ParameterSet conf_data_;
     Utils::MessageGroup* responseGroup_;
     mutable std::mutex mx_;
+    std::condition_variable cv_;
     QTimer retry_timer_;
     
     static const QString RESPONSE_GROUP_NAME_;

@@ -13,7 +13,7 @@ const unsigned ConfigurationReader::RETRY_INTERVAL_ (1000);
 
 
 ConfigurationReader::ConfigurationReader(QObject* parent) :
-    QObject(parent), conf_data_(), responseGroup_(nullptr), mx_(),
+    QObject(parent), conf_data_(), responseGroup_(nullptr), mx_(), cv_(),
     retry_timer_()
 {
     if (!Utils::Connection::isConnected()){
@@ -38,12 +38,20 @@ void ConfigurationReader::start(const QString& group_name)
                                              Utils::MessageGroup::Subscriber,
                                              this);
     
+    // Wait for configuration received.
+    std::unique_lock<std::mutex> lock(mx_);
+    
     connect(responseGroup_, SIGNAL(ready()), 
             this, SLOT(onResponseGroupReady()) );
     
     connect(responseGroup_, SIGNAL(messageReceived(QByteArray,QString)),
             this, SLOT(onConfMessageReceived(QByteArray)), 
             Qt::DirectConnection);
+    
+    while (conf_data_.parameters().empty()){
+        cv_.wait(lock);
+    }
+    lock.unlock();
 }
 
 
@@ -62,6 +70,7 @@ void ConfigurationReader::onConfMessageReceived(QByteArray data)
     std::unique_lock<std::mutex> lock(mx_);
     conf_data_ = Utils::ConfResponseMessage(data).parameteSet();
     lock.unlock();
+    cv_.notify_one();
     emit this->configurationUpdated();
 }
 
