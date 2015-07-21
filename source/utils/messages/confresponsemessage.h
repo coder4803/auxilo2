@@ -213,7 +213,7 @@ T ParameterSet::parameter(QString name) const
    }
 
    // Check if value can be converted
-   if (!value.canConvert<T>()) {
+   if (!value.canConvert<T>() || !value.convert((int)QVariant(T()).type())) {
       qCritical("Value can't be converted to desired type");
       throw QException();
    }
