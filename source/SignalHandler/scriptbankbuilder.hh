@@ -33,11 +33,6 @@ class ScriptBankBuilder
 {
 public:
     
-    static const QString SCRIPT_NAME_PREFIX;
-    static const QString PRIORITY_POSTFIX;
-    static const QString PATH_POSTFIX;
-    static const QString LANG_POSTFIX;
-    
     //! Default constructor
     ScriptBankBuilder() = default;
     

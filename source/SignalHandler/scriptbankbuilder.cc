@@ -10,6 +10,7 @@
 
 #include "scriptbankbuilder.hh"
 #include "scriptbank.hh"
+#include "configuration.hh"
 #include <QStringList>
 #include <QFile>
 #include <QDebug>
@@ -18,29 +19,43 @@
 namespace SignalHandler
 {
 
-const QString ScriptBankBuilder::SCRIPT_NAME_PREFIX("scriptname");
-const QString ScriptBankBuilder::PRIORITY_POSTFIX("_priority");
-const QString ScriptBankBuilder::PATH_POSTFIX("_path");
-const QString ScriptBankBuilder::LANG_POSTFIX("_language");
-
 ScriptBankInterface*ScriptBankBuilder::create(const Utils::ParameterSet& params)
 {
     ScriptBankInterface::ScriptData data;
-    Utils::ParameterSet nameset = params.getSection(SCRIPT_NAME_PREFIX);
+    Utils::ParameterSet nameset = params.getSection(Conf::NAME_PREFIX);
     QHash<QString, QString> names = nameset.parameters();
     
     try
     {
         foreach (QString name, names.values()) {
-            QString script_file = params.parameter<QString>(name+PATH_POSTFIX);
-            QString script = ScriptBankBuilder::readScriptFile(script_file);
-            unsigned priority=params.parameter<unsigned>(name+PRIORITY_POSTFIX);
-            QString lang=params.parameter<QString>(name+QString(LANG_POSTFIX));
-            
             ScriptBankInterface::ScriptInfo info;
-            info.script = script;
-            info.priority = priority;
-            info.language = lang;
+            
+            // Read file (unless script is a from-file-script.
+            QString script_file = params.parameter<QString>(name+Conf::PATH);
+            if (!params.contains(name+Conf::FROM_FILE) || 
+                                 !params.parameter<bool>(name+Conf::FROM_FILE))
+            {
+                // read script to memory
+                info.script = ScriptBankBuilder::readScriptFile(script_file);
+                info.from_file = false;
+            }
+            else{
+                if (!QFile::exists(script_file) ){
+                    throw ScriptBankBuilderError(script_file+" does not exist");
+                }
+                info.script = script_file;
+                info.from_file = true;
+            }
+            
+            // Get sctipt priority
+            if (!params.contains(name + Conf::PRIORITY)){
+                info.priority = Conf::DEFAULT_PRIORITY;
+            }
+            else {
+                info.priority = params.parameter<unsigned>(name+Conf::PRIORITY);
+            }
+            
+            info.language = params.parameter<QString>(name+QString(Conf::LANG));
             data.insert(name, info);
         }
     }

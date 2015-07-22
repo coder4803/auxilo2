@@ -9,6 +9,7 @@
  */
 
 #include "scriptbank.hh"
+#include <QFile>
 
 namespace SignalHandler {
 
@@ -29,8 +30,12 @@ QString ScriptBank::getScript(const QString& scriptID) const
     if (it == scripts_.end()){
         throw UnknownScript(scriptID);
     }
-    else{
+    else if (!it.value().from_file){
         return it.value().script;
+    }
+    else{
+        // Read script from file.
+        return ScriptBank::readFile(it.value().script);
     }
 }
 
@@ -57,6 +62,16 @@ unsigned int ScriptBank::getPriorityOf(const QString& scriptID) const
     else{
         return it.value().priority;
     }
+}
+
+
+QString ScriptBank::readFile(const QString& path)
+{
+    QFile f(path);
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)){
+        throw UnknownScript(path);
+    }
+    return f.readAll();
 }
 
 

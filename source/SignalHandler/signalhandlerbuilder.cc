@@ -6,6 +6,7 @@
 #include "communication/signalreader.hh"
 #include "scriptrunner.hh"
 #include "businesslogic.hh"
+#include "configuration.hh"
 #include <QDebug>
 
 namespace SignalHandler
@@ -32,16 +33,22 @@ ModelInterface* SignalHandlerBuilder::create()
     Utils::ParameterSet conf = conf_reader->getConfiguration();
     std::unique_ptr<ScriptBankInterface> bank( ScriptBankBuilder::create(conf));
     
-    // Create queue, signalreader and scriptrunners.
+    // Create queue and signalreader.
     std::shared_ptr<SignalQueue> queue(new SignalQueue);
     std::unique_ptr<SignalReader> sig_reader(new SignalReader(queue, 
                                                               bank.get()) );
     std::shared_ptr<ScriptLangWrapperPool> pool(new ScriptLangWrapperPool);
     
-    unsigned worker_count = 3;
-    if (conf_reader->getConfiguration().contains("workers")){
-        worker_count = conf.parameter<unsigned>("workers");
+    // Find number of workers.
+    unsigned worker_count = Conf::DEFAULT_WORKERS;
+    if (conf_reader->getConfiguration().contains(Conf::WORKERS_TAG)){
+        worker_count = conf.parameter<unsigned>(Conf::WORKERS_TAG);
+        if (worker_count == 0){
+            throw std::domain_error("invalid number of workers.");
+        }
     }
+    
+    // Create script runners.
     std::vector<std::unique_ptr<ScriptRunner> > workers;
     for (unsigned i=0; i<worker_count; ++i){
         workers.push_back(std::unique_ptr<ScriptRunner>

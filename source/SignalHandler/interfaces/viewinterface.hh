@@ -12,7 +12,7 @@
 #ifndef VIEWINTERFACE_HH
 #define VIEWINTERFACE_HH
 
-#include <string>
+#include <QString>
 
 namespace SignalHandler 
 {
@@ -44,7 +44,7 @@ public:
      * \post Message is displayed.
      *  Concurrency: This method is thread safe.
      */
-    virtual void showMessage(const std::string& msg) = 0;
+    virtual void showMessage(const QString& msg) = 0;
 };
 
 }

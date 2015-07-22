@@ -37,6 +37,7 @@ public:
         QString script;
         QString language;
         unsigned priority;
+        bool from_file;
     };
     
     //! Convenience type defifinition.

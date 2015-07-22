@@ -6,6 +6,7 @@
 
 #include "scriptbankbuilder.hh"
 #include "confresponsemessage.h"
+#include "configuration.hh"
 
 
 Q_DECLARE_METATYPE(Utils::ParameterSet)
@@ -67,10 +68,10 @@ void ScriptBankTest::builderFailTest()
 void ScriptBankTest::builderFailTest_data()
 {
     using namespace SignalHandler;
-    const QString NAME_PRE = ScriptBankBuilder::SCRIPT_NAME_PREFIX;
-    const QString PATH_POST = ScriptBankBuilder::PATH_POSTFIX;
-    const QString PRIORITY_POST = ScriptBankBuilder::PRIORITY_POSTFIX;
-    const QString LANG_POST = ScriptBankBuilder::LANG_POSTFIX;
+    const QString NAME_PRE = Conf::NAME_PREFIX;
+    const QString PATH_POST = Conf::PATH;
+    const QString PRIORITY_POST = Conf::PRIORITY;
+    const QString LANG_POST = Conf::LANG;
     QTest::addColumn<Utils::ParameterSet>("params");
     
     // File doesn't open
@@ -98,19 +99,6 @@ void ScriptBankTest::builderFailTest_data()
                 {name+LANG_POST, QString("QtScript")}
             } ) );
         QTest::newRow("No path") << params;
-    }
-    
-    // No priority declared
-    {
-        Utils::ParameterSet params(QString("SignalHandler"));    
-        QString name("no_priority");
-        params.appendParameters(QHash<QString,QString>( 
-            {
-                {NAME_PRE+QString("0"), name},
-                {name+PATH_POST, QString("tmp_file.txt")},
-                {name+LANG_POST, QString("QtScript")}
-            } ) );
-        QTest::newRow("No priority") << params;
     }
     
     // No lang declared
@@ -159,9 +147,6 @@ void ScriptBankTest::builderFailTest_data()
 void ScriptBankTest::validConfTest()
 {
     using namespace SignalHandler;
-    const QString NAME_PREFIX = ScriptBankBuilder::SCRIPT_NAME_PREFIX;
-    const QString PRIORITY = ScriptBankBuilder::PRIORITY_POSTFIX;
-    const QString LANG = ScriptBankBuilder::LANG_POSTFIX;
     QFETCH(Utils::ParameterSet, params);
     QFETCH(QString, script_content);
     
@@ -180,14 +165,20 @@ void ScriptBankTest::validConfTest()
     
     // Verify Bank content
     QHash<QString,QString> conf = params.parameters();
-    QStringList names =  params.getSection(NAME_PREFIX).parameters().values();
+    QStringList names;
+    names = params.getSection(Conf::NAME_PREFIX).parameters().values();
     
     foreach (QString name, names) {
         try{
             QCOMPARE(bank->getScript(name), script_content);
-            QCOMPARE(bank->getPriorityOf(name), 
-                     conf.value(name+PRIORITY).toUInt() );
-            QCOMPARE(bank->getLanguage(name), conf.value(name+LANG));
+            if (params.contains(name+Conf::PRIORITY)){
+                QCOMPARE(bank->getPriorityOf(name), 
+                         conf.value(name+Conf::PRIORITY).toUInt() );
+            }
+            else{
+                QCOMPARE(bank->getPriorityOf(name), Conf::DEFAULT_PRIORITY);
+            }
+            QCOMPARE(bank->getLanguage(name), conf.value(name+Conf::LANG));
         }
         catch(UnknownScript&){
             QFAIL("Unknown script");
@@ -202,7 +193,7 @@ void ScriptBankTest::validConfTest()
 
 void ScriptBankTest::validConfTest_data()
 {
-    using SignalHandler::ScriptBankBuilder;
+    using namespace SignalHandler;
     const QString CONTENT = "This is a temporary test file";
     const QString PATH = "tmp_file.txt";
     QTest::addColumn<Utils::ParameterSet>("params");
@@ -214,13 +205,32 @@ void ScriptBankTest::validConfTest_data()
     {
         Utils::ParameterSet params;
         const QString NAME = "only_script";
-        params.appendParameter(ScriptBankBuilder::SCRIPT_NAME_PREFIX+"0", NAME);
-        params.appendParameter(NAME + ScriptBankBuilder::PATH_POSTFIX, PATH);
-        params.appendParameter(NAME + ScriptBankBuilder::PRIORITY_POSTFIX,
-                               QString::number(10));
-        params.appendParameter(NAME + ScriptBankBuilder::LANG_POSTFIX,
-                               QString("QtScript"));
+        params.appendParameter(Conf::NAME_PREFIX+"0", NAME);
+        params.appendParameter(NAME + Conf::PATH, PATH);
+        params.appendParameter(NAME + Conf::PRIORITY, QString::number(10));
+        params.appendParameter(NAME + Conf::LANG, QString("QtScript"));
         QTest::newRow("1 param") << params << CONTENT;
+    }
+    
+    // One script with no priority declared
+    {
+        Utils::ParameterSet params;
+        const QString NAME = "only_script";
+        params.appendParameter(Conf::NAME_PREFIX+"0", NAME);
+        params.appendParameter(NAME + Conf::PATH, PATH);
+        params.appendParameter(NAME + Conf::LANG, QString("QtScript"));
+        QTest::newRow("1 param no priority") << params << CONTENT;
+    }
+    
+    // One script with from-file option
+    {
+        Utils::ParameterSet params;
+        const QString NAME = "only_script";
+        params.appendParameter(Conf::NAME_PREFIX+"0", NAME);
+        params.appendParameter(NAME + Conf::PATH, PATH);
+        params.appendParameter(NAME + Conf::LANG, QString("QtScript"));
+        params.appendParameter(NAME + Conf::FROM_FILE, QString::number(1));
+        QTest::newRow("1 param from file") << params << CONTENT;
     }
     
     // 10 scripts
@@ -228,12 +238,11 @@ void ScriptBankTest::validConfTest_data()
         Utils::ParameterSet params;
         for (int i=0; i<10; ++i){
             const QString N = QString::number(i);
-            const QString NAME = QString("script_name") + N;
-            params.appendParameter(ScriptBankBuilder::SCRIPT_NAME_PREFIX+N, NAME);
-            params.appendParameter(NAME+ScriptBankBuilder::PATH_POSTFIX, PATH);
-            params.appendParameter(NAME+ScriptBankBuilder::PRIORITY_POSTFIX, N);
-            params.appendParameter(NAME + ScriptBankBuilder::LANG_POSTFIX,
-                                   QString("QtScript"));
+            const QString NAME = QString("name") + N;
+            params.appendParameter(Conf::NAME_PREFIX+N, NAME);
+            params.appendParameter(NAME+Conf::PATH, PATH);
+            params.appendParameter(NAME+Conf::PRIORITY, N);
+            params.appendParameter(NAME+Conf::LANG, QString("QtScript"));
         }
         QTest::newRow("10 params") << params << CONTENT;
     }

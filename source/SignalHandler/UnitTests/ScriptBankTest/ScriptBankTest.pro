@@ -16,6 +16,7 @@ TEMPLATE = app
 
 
 HEADERS += ../../scriptbank.hh \
+    ../../configuration.hh \
     ../../scriptbankbuilder.hh \
     ../../interfaces/scriptbankinterface.hh \
     ../../interfaces/scriptlibrary.hh \

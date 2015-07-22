@@ -58,6 +58,8 @@ public:
     
 private:
     ScriptData scripts_;
+    
+    static QString readFile(const QString& path);
 };
 
 } // Namespace SignalHandler

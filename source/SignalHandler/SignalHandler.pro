@@ -78,4 +78,5 @@ HEADERS += \
     signalhandlerbuilder.hh \
     ScriptLangWrapper/scriptapiqobjectwrapper.hh \
     communication/configurationreader.hh \
-    businesslogic.hh
+    businesslogic.hh \
+    configuration.hh
