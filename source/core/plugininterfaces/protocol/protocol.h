@@ -40,12 +40,6 @@ public:
    void setCommunication(Communication* communication);
 
    /*!
-    * \brief Returns communication used by device.
-    * \return Communication used by device.
-    */
-   Communication* getCommunication();
-
-   /*!
     * \brief Sets last acknowledge id.
     * \param ackId Acknowledge id.
     */

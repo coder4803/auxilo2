@@ -23,12 +23,6 @@ void Protocol::setCommunication(Communication* communication)
            this, SLOT(dataReceived(QByteArray,qint32)));
 }
 
-Communication* Protocol::getCommunication()
-{
-   QMutexLocker locker(&m_mutex);
-   return m_communication;
-}
-
 bool Protocol::isConnected(qint32 connectionId) const
 {
    if (m_communication) {
