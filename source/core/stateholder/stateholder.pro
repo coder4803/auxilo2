@@ -26,7 +26,6 @@ HEADERS         += stateholder.h \
                    states/integerstate.h
 
 LIBS            += -L../../../build/lib/ -lmessages \
-                   -L../../../build/lib/ -lmessagegroup \
-                   -L$$PWD/../../../externals/lib/ -lqamqp
+                   -L../../../build/lib/ -lmessagegroup
 
 DESTDIR         = ../../../build/bin/
