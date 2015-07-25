@@ -92,9 +92,6 @@ private:
    //! Interval to request configurations until received.
    static const int CONF_REQUEST_INTERVAL;
 
-   //! Name of group to listen for configuration response.
-   static const QString CONF_RESPONSE_GROUP;
-
    //! Configuration response message group.
    Utils::MessageGroup* m_confResponseGroup;
 

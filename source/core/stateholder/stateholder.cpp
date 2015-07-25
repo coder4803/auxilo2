@@ -26,7 +26,6 @@ const QString StateHolder::DEFAULT_CONF_FILE("../parameters/stateconfig.xml");
 const quint32 StateHolder::STATE_CHECK_INTERVAL(1000); // ms
 
 const quint32 StateHolder::CONF_REQUEST_INTERVAL(2000); // ms
-const QString StateHolder::CONF_RESPONSE_GROUP("stateHolderConf");
 const QString StateHolder::FEATURE_NAME("stateHolder");
 
 const QString StateHolder::DATABASE_CONNECTION_NAME("stateholder");
@@ -43,9 +42,9 @@ StateHolder::StateHolder(QString serverAddress,
    Utils::Connection::setHost(serverAddress);
 
    // Initialize confResponse message group
-   m_confResponseGroup = new Utils::MessageGroup(CONF_RESPONSE_GROUP,
-                                                Utils::MessageGroup::Subscriber,
-                                                this);
+   m_confResponseGroup = new Utils::MessageGroup(Utils::SH_CONF_RESPONSE_GROUP,
+                                                 Utils::MessageGroup::Subscriber,
+                                                 this);
    connect(m_confResponseGroup, SIGNAL(messageReceived(QByteArray, QString)),
            this, SLOT(handleConfResponseMessage(QByteArray)));
 
@@ -158,7 +157,8 @@ void StateHolder::handleStateChangedAckMessage(QByteArray payload)
 void StateHolder::requestParameters()
 {
    // Request parameters from confmanager
-   Utils::ConfRequestMessage request(CONF_RESPONSE_GROUP, FEATURE_NAME, true);
+   Utils::ConfRequestMessage request(Utils::SH_CONF_RESPONSE_GROUP,
+                                     FEATURE_NAME, true);
    Utils::MessageGroup::publish(request, Utils::CONF_REQUEST_GROUP);
 
    // Request parameters until received
@@ -264,7 +264,7 @@ bool StateHolder::initStateHolder()
            this, SLOT(handleRequestStateMessage(QByteArray)));
 
    // Initialize stateChangedAck message group
-   m_stateChangedAckGroup = new Utils::MessageGroup(State::STATE_CHANGED_ACK_GROUP,
+   m_stateChangedAckGroup = new Utils::MessageGroup(Utils::SH_STATE_CHANGED_ACK_GROUP,
                                                     Utils::MessageGroup::Subscriber,
                                                     this);
    connect(m_stateChangedAckGroup, SIGNAL(messageReceived(QByteArray, QString)),

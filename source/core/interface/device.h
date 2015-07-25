@@ -163,13 +163,6 @@ private:
     */
    void initMessageGroups();
 
-   // Group name post fixes.
-   static const QString CONF_RESPONSE_POST_FIX;
-   static const QString STATE_RESPONSE_POST_FIX;
-   static const QString SET_STATE_POST_FIX;
-   static const QString SIGNAL_ACK_POST_FIX;
-   static const QString SET_STATE_ACK_POST_FIX;
-
    //! Device thread.
    QThread m_thread;
 

@@ -10,7 +10,6 @@
 
 namespace Core {
 
-const QString State::STATE_CHANGED_ACK_GROUP("statechangedack");
 const QString State::DATABASE_NAME("states");
 
 State::State(QString name,
@@ -80,7 +79,7 @@ void State::update(bool force)
                Utils::STATE_CHANGED_POST_FIX;
 
          Utils::StateChangedMessage message(device->label, m_value,
-                                            STATE_CHANGED_ACK_GROUP);
+                                            Utils::SH_STATE_CHANGED_ACK_GROUP);
 
          Utils::MessageGroup::publish(message, deviceGroup);
          device->intervalCounter = 0;

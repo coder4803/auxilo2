@@ -13,7 +13,6 @@
 namespace Core {
 
 const int Interface::CONF_REQUEST_INTERVAL(2000);
-const QString Interface::CONF_RESPONSE_GROUP("interfaceConf");
 
 Interface::Interface(QString serverAddress,
                      QString featureName) :
@@ -24,7 +23,7 @@ Interface::Interface(QString serverAddress,
 
    // Initialize confResponse message group.
    m_confResponseGroup =
-         new Utils::MessageGroup(CONF_RESPONSE_GROUP,
+         new Utils::MessageGroup(Utils::INTERFACE_CONF_RESPONSE_GROUP,
                                  Utils::MessageGroup::Subscriber);
    connect(m_confResponseGroup, SIGNAL(messageReceived(QByteArray, QString)),
            this, SLOT(handleConfResponseMessage(QByteArray)));
@@ -51,7 +50,8 @@ void Interface::onPublish(const QByteArray& message,
 void Interface::requestParameters()
 {
    // Request parameters from confmanager.
-   Utils::ConfRequestMessage request(CONF_RESPONSE_GROUP, m_featureName, true);
+   Utils::ConfRequestMessage request(Utils::INTERFACE_CONF_RESPONSE_GROUP,
+                                     m_featureName, true);
    Utils::MessageGroup::publish(request, Utils::CONF_REQUEST_GROUP);
 
    // Request parameters until received.
@@ -240,7 +240,7 @@ bool Interface::initDevices(const Utils::ParameterSet& parameters)
 
    // Handle devices.
    foreach (QString deviceName, devices) {
-      qCritical("Loading device: %s...", deviceName.toLatin1().data());
+      qCritical("\nLoading device: %s...", deviceName.toLatin1().data());
 
       // Read parameters
       QString tmp;
@@ -293,10 +293,10 @@ bool Interface::initDevices(const Utils::ParameterSet& parameters)
       // Initialize device.
       try {
          Device* device = new Device(deviceName,
-                                           communicationPlugin,
-                                           communicationParameters,
-                                           protocolPlugin,
-                                           protocolParameters);
+                                     communicationPlugin,
+                                     communicationParameters,
+                                     protocolPlugin,
+                                     protocolParameters);
 
          // All messages are routed through main thread.
          connect(device, SIGNAL(publish(QByteArray,QString)),
@@ -318,7 +318,7 @@ bool Interface::initDevices(const Utils::ParameterSet& parameters)
       }
    }
 
-   qCritical("All devices initialized successfully.");
+   qCritical("\nAll devices initialized successfully.");
    qCritical("\nInterface is running...");
    return true;
 }

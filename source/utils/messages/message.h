@@ -18,6 +18,13 @@ namespace Utils {
 const QString CONF_REQUEST_GROUP("confRequest");
 
 /*!
+ * \brief Name of group for sending configuration response to State Holder.
+ * This group is listened by State Holder. This could be defined in State
+ * Holder source code but we want use it also in MessageTool so it is defined here.
+ */
+const QString SH_CONF_RESPONSE_GROUP("stateHolderConf");
+
+/*!
  * \brief Name of group for sending set state messages.
  * This group is listened by state holder. State holder will set state value
  * according to message information.
@@ -30,6 +37,13 @@ const QString SET_STATE_GROUP("setState");
  * and send response to a group that is specified in the request message.
  */
 const QString REQUEST_STATE_GROUP("requestState");
+
+/*!
+ * \brief Name of group for sending state changed acknowledges.
+ * This group is listened by State Holder. This could be defined in State
+ * Holder source code but we want use it also in MessageTool so it is defined here.
+ */
+const QString SH_STATE_CHANGED_ACK_GROUP("stateChangedAck");
 
 /*!
  * \brief Name of group for sending signals to system.
@@ -46,6 +60,13 @@ const QString SIGNAL_HANDLER_GROUP("signalHandler");
 const QString LOG_MESSAGE_GROUP("writeLog");
 
 /*!
+ * \brief Name of group for sending configuration responses to Interface.
+ * This group is listened by Interface. This could be defined in Interface
+ * source code but we want use it also in MessageTool so it is defined here.
+ */
+const QString INTERFACE_CONF_RESPONSE_GROUP("interfaceConf");
+
+/*!
  * \brief Post fix for device signal group name. Each device listen for
  * signal from <DEVICE_NAME><SIGNAL_POST_FIX> group.
  */
@@ -57,6 +78,39 @@ const QString SIGNAL_POST_FIX("_signal");
  * group.
  */
 const QString STATE_CHANGED_POST_FIX("_stateChanged");
+
+/*!
+ * \brief Name of group for sending device configuration responses.
+ * This group is listened by Interface that controls the device. Interface
+ * will deliver configurations to the device. This could be defined in
+ * Interface source code but we want use it also in MessageTool so it is
+ * defined here.
+ */
+const QString CONF_RESPONSE_POST_FIX("_confResponse");
+
+/*!
+ * \brief Post fix for devices state response group name.
+ * This group is listened by Interface that controls the device. Interface
+ * will deliver response to the device. This could be defined in Interface
+ * source code but we want use it also in MessageTool so it is defined here.
+ */
+const QString STATE_RESPONSE_POST_FIX("_stateResponse");
+
+/*!
+ * \brief Post fix for device signal acknowledge message group name.
+ * This group is listened by Interface that controls the device. Interface
+ * will deliver acknowledge to the device. This could be defined in Interface
+ * source code but we want use it also in MessageTool so it is defined here.
+ */
+const QString SIGNAL_ACK_POST_FIX("_signalAck");
+
+/*!
+ * \brief Post fix for device set state acknowledge message group name.
+ * This group is listened by Interface that controls the device. Interface
+ * will deliver acknowledge to the device. This could be defined in Interface
+ * source code but we want use it also in MessageTool so it is defined here.
+ */
+const QString SET_STATE_ACK_POST_FIX("_setStateAck");
 
 /*!
  * \brief The Message class

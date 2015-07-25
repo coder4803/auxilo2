@@ -18,9 +18,6 @@ class State : public QObject
 {
    Q_OBJECT
 public:
-   //! State changed ack message group name.
-   static const QString STATE_CHANGED_ACK_GROUP;
-
    //! Persisted value data base name.
    static const QString DATABASE_NAME;
 

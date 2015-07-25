@@ -79,9 +79,6 @@ private:
    //! Defines how often configurations are requested until received.
    static const quint32 CONF_REQUEST_INTERVAL;
 
-   //! Configuration response group name.
-   static const QString CONF_RESPONSE_GROUP;
-
    //! Feature name (for requesting configuarions).
    static const QString FEATURE_NAME;
 
