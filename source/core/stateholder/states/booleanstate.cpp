@@ -3,10 +3,10 @@
 namespace Core {
 
 const QStringList BooleanState::TRUE_STRINGS(
-      QStringList() << "1" << "true" << "on");
+      QStringList() << "1" << "true" << "on" << "enabled");
 
 const QStringList BooleanState::FALSE_STRINGS(
-      QStringList() << "0" << "false" << "off");
+      QStringList() << "0" << "false" << "off" << "disabled");
 
 BooleanState::BooleanState(QString name,
                            bool persisted,
@@ -38,8 +38,11 @@ bool BooleanState::setOption(const QString name,
 
 bool BooleanState::setState(const QVariant& value)
 {
-   if (value.type() == QVariant::Bool) {
-      setValue(value);
+   if (TRUE_STRINGS.contains(value.toString())) {
+      setValue(true);
+      return true;
+   } else if (FALSE_STRINGS.contains(value.toString())) {
+      setValue(false);
       return true;
    }
 
