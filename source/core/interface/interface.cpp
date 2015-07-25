@@ -67,7 +67,7 @@ void Interface::requestParameters()
 void Interface::handleConfResponseMessage(QByteArray payload)
 {
    Utils::ConfResponseMessage response(payload);
-   QString featureName = response.parameteSet().featureName();
+   QString featureName = response.parameterSet().featureName();
 
    if (featureName == m_featureName) {
       // Stop requesting parameters.
@@ -78,7 +78,7 @@ void Interface::handleConfResponseMessage(QByteArray payload)
          emit QCoreApplication::exit(EXIT_FAILURE);
       }
 
-      Utils::ParameterSet parameters = response.parameteSet();
+      Utils::ParameterSet parameters = response.parameterSet();
       if(!initDevices(parameters)) {
          qCritical("Failed to initialize devices, quitting program.");
          emit QCoreApplication::exit(EXIT_FAILURE);

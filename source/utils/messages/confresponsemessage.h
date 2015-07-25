@@ -156,7 +156,7 @@ public:
     * \brief Returns set of parameters in response message.
     * \return Parameters in ParameterSet.
     */
-   const ParameterSet& parameteSet() { return m_parameterSet; }
+   const ParameterSet& parameterSet() const { return m_parameterSet; }
 
    /*!
     * \brief Returns message in binary format.

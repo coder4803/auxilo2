@@ -70,7 +70,7 @@ void StateHolder::handleConfResponseMessage(QByteArray payload)
    Utils::ConfResponseMessage response(payload);
 
    // Get state configuration file path.
-   const Utils::ParameterSet& parameterSet = response.parameteSet();
+   const Utils::ParameterSet& parameterSet = response.parameterSet();
 
    try {
       m_configPath = parameterSet.parameter(PARAMETER_CONFPATH,

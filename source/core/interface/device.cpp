@@ -60,7 +60,7 @@ void Device::handleConfResponseMessage(QByteArray payload)
 {
    Utils::ConfResponseMessage response(payload);
 
-   Utils::ParameterSet parameters = response.parameteSet();
+   Utils::ParameterSet parameters = response.parameterSet();
    m_protocol->handleParameters(parameters);
 }
 

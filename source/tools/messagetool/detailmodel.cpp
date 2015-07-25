@@ -92,7 +92,7 @@ void DetailModel::parseConfResponseMessage(const QByteArray& data)
 
    newRow("Result", (int)message.result());
 
-   QHash<QString, QString> parameters = message.parameteSet().parameters();
+   QHash<QString, QString> parameters = message.parameterSet().parameters();
    foreach (QString name, parameters.keys()) {
       newRow(name, parameters.value(name));
    }
