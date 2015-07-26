@@ -7,4 +7,9 @@ SUBDIRS += \
     SignalTest \
     SignalQueueTest \
     QtScriptTest \
-    SignalReaderTest
+    SignalReaderTest \
+    ConfigurationReaderTest\
+    ScriptBankTest \
+    XmlHandlerTest
+    
+

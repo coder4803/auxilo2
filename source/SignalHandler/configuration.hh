@@ -8,28 +8,11 @@ namespace SignalHandler
 
 namespace Conf 
 {
+    //! Define configuration file path with parameter "CONF_PATH"
+    const QString CONF_PATH ("signalConfigurationFile");
 
-    //! Define script name with parameter starting with NAME_PREFIX.
-    const QString NAME_PREFIX ("script_name");
-    
-    //! Define script file path with parameter "<script name>PATH".
-    const QString PATH ("_path");
-    
-    //! Define script language with parameter "<script name>LANG".
-    const QString LANG ("_language");
-    
-    //! Define script priority with parameter "<script name>PRIORITY".
-    //! This parameter is optional. In not defined, script has default priority.
-    const QString PRIORITY ("_priority");
-    
-    //! Default priority is used if priority is not defined.
-    const unsigned DEFAULT_PRIORITY (1);
-    
-    //! Define wheather the script is read from file when needed or loaded to 
-    //! program memory at configuration. Big or rarely used scripts may be
-    //! wiser to read from file when needed. This parameter is optional and
-    //! defaults to false.
-    const QString FROM_FILE ("read_from_file");
+    //! Define script file path with parameter "SCRIPT_PATH".
+    const QString SCRIPT_PATH ("scriptFolder");
     
     //! Define number of script runners i.e. how many scripts can run 
     //! concurrently. This parameter is optional and defaults to 
@@ -37,7 +20,20 @@ namespace Conf
     const QString WORKERS_TAG ("workers");
     
     //! Default number of script runners.
-    const unsigned DEFAULT_WORKERS (3);
+    const unsigned DEFAULT_WORKERS (5);
+    
+    const QString SIGNAL_NAME ("name");
+    
+    const QString SIGNAL_PRIORITY ("priority");
+    
+    const QString SIGNAL_PATH ("script");
+    
+    const QString SIGNAL_TO_MEM ("readToMemory");
+    
+    const QString SIGNAL_LANG ("language");
+    
+    //! DEFAULT PRIORITY is used, if priority has not been defined.
+    const unsigned DEFAULT_PRIORITY (2);
 
     
 } // Namespace SignalHandler::Conf

@@ -14,6 +14,8 @@
 #include <QStringList>
 #include <QFile>
 #include <QDebug>
+#include <QXmlReader>
+#include "confxmlhandler.hh"
 
 
 namespace SignalHandler
@@ -22,47 +24,45 @@ namespace SignalHandler
 ScriptBankInterface*ScriptBankBuilder::create(const Utils::ParameterSet& params)
 {
     ScriptBankInterface::ScriptData data;
-    Utils::ParameterSet nameset = params.getSection(Conf::NAME_PREFIX);
-    QHash<QString, QString> names = nameset.parameters();
     
-    try
-    {
-        foreach (QString name, names.values()) {
-            ScriptBankInterface::ScriptInfo info;
-            
-            // Read file (unless script is a from-file-script.
-            QString script_file = params.parameter<QString>(name+Conf::PATH);
-            if (!params.contains(name+Conf::FROM_FILE) || 
-                                 !params.parameter<bool>(name+Conf::FROM_FILE))
-            {
-                // read script to memory
-                info.script = ScriptBankBuilder::readScriptFile(script_file);
-                info.from_file = false;
+    try{
+        // Parse XML-file
+        QString conf_path = params.parameter<QString>(Conf::CONF_PATH);
+        QString script_path = params.parameter<QString>(Conf::SCRIPT_PATH);
+        
+        QFile f(conf_path);
+        if (!f.open(QIODevice::ReadOnly) ){
+            throw ScriptBankBuilderError(conf_path + " did not open.");
+        }
+        QXmlInputSource source(&f);
+        ConfXmlHandler handler(&data);
+        QXmlSimpleReader reader;
+        reader.setContentHandler(&handler);
+        reader.setErrorHandler(&handler);
+        if (!reader.parse(&source)){
+            throw ScriptBankBuilderError(conf_path + "is an invalid xml-file.");
+        }
+        
+        // Read files if needed
+        for (auto it = data.begin(); it != data.end(); ++it){
+            it.value().script = script_path + it.value().script;
+            if (it.value().from_file){
+                if (QFile::exists(it.value().script) ){
+                    throw ScriptBankBuilderError(it.value().script + 
+                                                 " does not exist.");
+                }
             }
             else{
-                if (!QFile::exists(script_file) ){
-                    throw ScriptBankBuilderError(script_file+" does not exist");
-                }
-                info.script = script_file;
-                info.from_file = true;
+                // Read file to memory
+                it.value().script = readScriptFile(it.value().script);
             }
-            
-            // Get sctipt priority
-            if (!params.contains(name + Conf::PRIORITY)){
-                info.priority = Conf::DEFAULT_PRIORITY;
-            }
-            else {
-                info.priority = params.parameter<unsigned>(name+Conf::PRIORITY);
-            }
-            
-            info.language = params.parameter<QString>(name+QString(Conf::LANG));
-            data.insert(name, info);
         }
+        
     }
     catch (QException& e){
         throw ScriptBankBuilderError(e.what());
     }
-    
+
     return new ScriptBank(data);
 }
 

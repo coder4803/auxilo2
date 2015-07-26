@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core script
+QT       += core script xml
 
 QT       -= gui
 
@@ -47,7 +47,8 @@ SOURCES += main.cc \
     signalhandlerbuilder.cc \
     ScriptLangWrapper/scriptapiqobjectwrapper.cc \
     communication/configurationreader.cc \
-    businesslogic.cc
+    businesslogic.cc \
+    confxmlhandler.cc
 
 HEADERS += \
     signal.hh \
@@ -79,4 +80,5 @@ HEADERS += \
     ScriptLangWrapper/scriptapiqobjectwrapper.hh \
     communication/configurationreader.hh \
     businesslogic.hh \
-    configuration.hh
+    configuration.hh \
+    confxmlhandler.hh

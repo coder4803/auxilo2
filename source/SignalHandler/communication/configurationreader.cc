@@ -9,7 +9,7 @@ namespace SignalHandler
 
 const QString ConfigurationReader::RESPONSE_GROUP_NAME_ ("SignalHandlerConf");
 const QString ConfigurationReader::FEATURE_NAME_ ("SignalHandler");
-const unsigned ConfigurationReader::RETRY_INTERVAL_ (1000);
+const unsigned ConfigurationReader::RETRY_INTERVAL_ (2000);
 
 
 ConfigurationReader::ConfigurationReader(QObject* parent) :
