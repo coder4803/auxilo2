@@ -22,15 +22,22 @@ namespace Conf
     //! Default number of script runners.
     const unsigned DEFAULT_WORKERS (5);
     
+    //! Name of signal's name property (mandatory)
     const QString SIGNAL_NAME ("name");
     
-    const QString SIGNAL_PRIORITY ("priority");
+    //! Name of signal script's language property (mandatory)
+    const QString SIGNAL_LANG ("language");
     
+    //! Name of signal's file path property (mandatory).
     const QString SIGNAL_PATH ("script");
     
-    const QString SIGNAL_TO_MEM ("readToMemory");
+    //! Name of signal's priority property 
+    //! (optional, defaults to DEFAULT PRIORITY).
+    const QString SIGNAL_PRIORITY ("priority");
     
-    const QString SIGNAL_LANG ("language");
+    
+    //! Name of signal's read-to-memory -property (optional, defaults to true).
+    const QString SIGNAL_TO_MEM ("readToMemory");
     
     //! DEFAULT PRIORITY is used, if priority has not been defined.
     const unsigned DEFAULT_PRIORITY (2);

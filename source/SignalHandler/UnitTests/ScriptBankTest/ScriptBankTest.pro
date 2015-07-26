@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
+QT       += testlib xml
 
 QT       -= gui
 
@@ -21,13 +21,15 @@ HEADERS += ../../scriptbank.hh \
     ../../interfaces/scriptbankinterface.hh \
     ../../interfaces/scriptlibrary.hh \
     ../../interfaces/scriptprioritylibrary.hh \
-    ../../exceptions/unknownscript.hh 
+    ../../exceptions/unknownscript.hh \
+    ../../confxmlhandler.hh
 
 
 SOURCES += tst_scriptbanktest.cc \
     ../../scriptbank.cc \
     ../../scriptbankbuilder.cc \
-    ../../exceptions/unknownscript.cc
+    ../../exceptions/unknownscript.cc \
+    ../../confxmlhandler.cc
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

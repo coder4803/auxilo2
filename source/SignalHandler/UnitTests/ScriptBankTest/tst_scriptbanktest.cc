@@ -7,10 +7,19 @@
 #include "scriptbankbuilder.hh"
 #include "confresponsemessage.h"
 #include "configuration.hh"
+#include <QXmlInputSource>
+#include "confxmlhandler.hh"
+#include "scriptbank.hh"
 
 
 Q_DECLARE_METATYPE(Utils::ParameterSet)
-Q_DECLARE_METATYPE(const char*)
+
+const QString SCRIPT_CONTENT = "This is script from file: ";
+const QString CONF_DIR = "./confDir";
+const QString CONF_FILE1 = CONF_DIR + "/signals1.xml";
+const QString CONF_FILE2 = CONF_DIR + "/signals2.xml";
+const QString INVALID_FILE = CONF_DIR + "/invalid.xml";
+const QString SCRIPT_PATH = CONF_DIR + "/scripts";
 
 class ScriptBankTest : public QObject
 {
@@ -32,24 +41,34 @@ private Q_SLOTS:
     
     // Verify Bank functionality when querring non-existent sctipts.
     void badQuerryTest();
+    
+    
+private:
+    
+    void createConfFiles();
 };
 
 
 ScriptBankTest::ScriptBankTest()
 {
-    // Create test file
-    QFile f("tmp_file.txt");
-    f.open(QIODevice::WriteOnly | QIODevice::Text);
-    f.write("This is a temporary test file");
-    f.close();
+    using namespace SignalHandler;
+    QDir().mkdir(CONF_DIR);
+    QDir().mkdir(SCRIPT_PATH);
+    this->createConfFiles();
+    
+    // Create 10 test script files
+    for (int i=0; i<10; ++i){
+        QFile f(SCRIPT_PATH + "/signal" + QString::number(i) + QString(".txt"));
+        f.open(QIODevice::WriteOnly);
+        QString data = SCRIPT_CONTENT + QString::number(i);
+        f.write(QByteArray(data.toStdString().c_str()));
+        f.close();
+    }
 }
 
 
 ScriptBankTest::~ScriptBankTest()
 {
-    // remove test file
-    QDir dir;
-    dir.remove("tmp_file.txt");
 }
 
 
@@ -68,79 +87,50 @@ void ScriptBankTest::builderFailTest()
 void ScriptBankTest::builderFailTest_data()
 {
     using namespace SignalHandler;
-    const QString NAME_PRE = Conf::NAME_PREFIX;
-    const QString PATH_POST = Conf::PATH;
-    const QString PRIORITY_POST = Conf::PRIORITY;
-    const QString LANG_POST = Conf::LANG;
     QTest::addColumn<Utils::ParameterSet>("params");
     
-    // File doesn't open
+    QTest::newRow("empty") << Utils::ParameterSet();
+    
     {
-        Utils::ParameterSet params(QString("SignalHandler"));    
-        QString name("non_exixtent_name");
-        params.appendParameters(QHash<QString,QString>( 
-            {
-                {NAME_PRE+QString("0"), name},
-                {name+PATH_POST, QString("does_not_exist.txt")},
-                {name+PRIORITY_POST, QString::number(0)},
-                {name+LANG_POST, QString("QtScript")}
-            } ) );
-        QTest::newRow("file doesn't exist") << params;
+        Utils::ParameterSet params;
+        params.appendParameter(Conf::CONF_PATH, CONF_FILE1);
+        QTest::newRow("missing script path") << params;
     }
     
-    // No path declared
     {
-        Utils::ParameterSet params(QString("SignalHandler"));    
-        QString name("no_path");
-        params.appendParameters(QHash<QString,QString>( 
-            {
-                {NAME_PRE+QString("0"), name},
-                {name+PRIORITY_POST, QString::number(0)},
-                {name+LANG_POST, QString("QtScript")}
-            } ) );
-        QTest::newRow("No path") << params;
+        Utils::ParameterSet params;
+        params.appendParameter(Conf::SCRIPT_PATH, SCRIPT_PATH);
+        QTest::newRow("missing conf path") << params;
     }
     
-    // No lang declared
     {
-        Utils::ParameterSet params(QString("SignalHandler"));    
-        QString name("no_lang");
-        params.appendParameters(QHash<QString,QString>( 
-            {
-                {NAME_PRE+QString("0"), name},
-                {name+PATH_POST, QString("tmp_file.txt")},
-                {name+PRIORITY_POST, QString::number(0)}
-            } ) );
-        QTest::newRow("No lang") << params;
+        Utils::ParameterSet params;
+        params.appendParameter(Conf::SCRIPT_PATH, SCRIPT_PATH);
+        params.appendParameter(Conf::CONF_PATH, "does_not_exist.xml");
+        QTest::newRow("conf file not exist") << params;
     }
     
-    // NaN priority
     {
-        Utils::ParameterSet params(QString("SignalHandler"));    
-        QString name("invalid_priority");
-        params.appendParameters(QHash<QString,QString>( 
-            {
-                {NAME_PRE+QString("0"), name},
-                {name+PATH_POST, QString("tmp_file.txt")},
-                {name+PRIORITY_POST, QString("Not a number")},
-                {name+LANG_POST, QString("QtScript")}
-            } ) );
-        QTest::newRow("NaN priority") << params;
+        Utils::ParameterSet params;
+        params.appendParameter(Conf::SCRIPT_PATH, "not_a_valid_path");
+        params.appendParameter(Conf::CONF_PATH, CONF_FILE1);
+        QTest::newRow("incorrect script path1") << params;
     }
     
-    // Negative priority
     {
-        Utils::ParameterSet params(QString("SignalHandler"));    
-        QString name("invalid_priority");
-        params.appendParameters(QHash<QString,QString>( 
-            {
-                {NAME_PRE+QString("0"), name},
-                {name+PATH_POST, QString("tmp_file.txt")},
-                {name+PRIORITY_POST, QString("-3")},
-                {name+LANG_POST, QString("QtScript")}
-            } ) );
-        QTest::newRow("negative priority") << params;
+        Utils::ParameterSet params;
+        params.appendParameter(Conf::SCRIPT_PATH, "not_a_valid_path");
+        params.appendParameter(Conf::CONF_PATH, CONF_FILE2);
+        QTest::newRow("incorrect script path2") << params;
     }
+    
+    {
+        Utils::ParameterSet params;
+        params.appendParameter(Conf::SCRIPT_PATH, SCRIPT_PATH);
+        params.appendParameter(Conf::CONF_PATH, INVALID_FILE);
+        QTest::newRow("invalid conf_file") << params;
+    }
+    
 }
 
 
@@ -148,103 +138,71 @@ void ScriptBankTest::validConfTest()
 {
     using namespace SignalHandler;
     QFETCH(Utils::ParameterSet, params);
-    QFETCH(QString, script_content);
     
-    // Try to create instance of ScripBank.
-    std::shared_ptr<ScriptBankInterface> bank(nullptr);
+    // Create bank.
+    std::shared_ptr<ScriptBankInterface> bank;
     try{
         bank.reset(ScriptBankBuilder::create(params));
     }
-    catch (ScriptBankBuilderError&){
-        QFAIL("ScriptBankError from a valid configuration.");
+    catch (ScriptBankBuilderError& e){
+        qDebug() << e.getMessage();
+        QFAIL("ScriptBankBuilderError from valid configuration.");
     }
     catch(...){
-        QFAIL("Unknown exception from a valid configuration");
+        QFAIL("Unknown exception from valid configuration.");
     }
-    QVERIFY2(bank != nullptr, "Bank was not created.");
     
-    // Verify Bank content
-    QHash<QString,QString> conf = params.parameters();
-    QStringList names;
-    names = params.getSection(Conf::NAME_PREFIX).parameters().values();
+    // Get correct results
+    ScriptBankInterface::ScriptData correct_data;
+    QFile f(params.parameter<QString>(Conf::CONF_PATH.toLower()));
+    QXmlInputSource source(&f);
+    ConfXmlHandler h(&correct_data);
+    QXmlSimpleReader r;
+    r.setContentHandler(&h);
+    r.setErrorHandler(&h);
+    r.parse(&source);
     
-    foreach (QString name, names) {
+    // Compare results
+    for (auto it = correct_data.begin(); it != correct_data.end(); ++it) {
         try{
-            QCOMPARE(bank->getScript(name), script_content);
-            if (params.contains(name+Conf::PRIORITY)){
-                QCOMPARE(bank->getPriorityOf(name), 
-                         conf.value(name+Conf::PRIORITY).toUInt() );
-            }
-            else{
-                QCOMPARE(bank->getPriorityOf(name), Conf::DEFAULT_PRIORITY);
-            }
-            QCOMPARE(bank->getLanguage(name), conf.value(name+Conf::LANG));
+            unsigned priority = it.value().priority;
+            QCOMPARE(bank->getLanguage(it.key()), it.value().language);
+            QCOMPARE(bank->getPriorityOf(it.key()), priority);
+            
+            QString f_name = params.parameter<QString>(Conf::SCRIPT_PATH.toLower());
+            f_name.append("/"+it.key()+".txt");
+            QFile f(f_name);
+            f.open(QIODevice::ReadOnly);
+            QString content = f.readAll();
+            QCOMPARE(bank->getScript(it.key()), content);
         }
         catch(UnknownScript&){
-            QFAIL("Unknown script");
+            QFAIL("Script was not found");
         }
         catch(...){
-            QFAIL("Unknown exception from valid querry.");
+            QFAIL("Unknown exception.");
         }
     }
-    
 }
 
 
 void ScriptBankTest::validConfTest_data()
 {
     using namespace SignalHandler;
-    const QString CONTENT = "This is a temporary test file";
-    const QString PATH = "tmp_file.txt";
     QTest::addColumn<Utils::ParameterSet>("params");
-    QTest::addColumn<QString>("script_content");
     
-    QTest::newRow("empty params") << Utils::ParameterSet() << QString();
-    
-    // One script
     {
         Utils::ParameterSet params;
-        const QString NAME = "only_script";
-        params.appendParameter(Conf::NAME_PREFIX+"0", NAME);
-        params.appendParameter(NAME + Conf::PATH, PATH);
-        params.appendParameter(NAME + Conf::PRIORITY, QString::number(10));
-        params.appendParameter(NAME + Conf::LANG, QString("QtScript"));
-        QTest::newRow("1 param") << params << CONTENT;
+        params.appendParameter(Conf::CONF_PATH, CONF_FILE1);
+        params.appendParameter(Conf::SCRIPT_PATH, SCRIPT_PATH);
+        QTest::newRow("file1") << params;
     }
     
-    // One script with no priority declared
     {
         Utils::ParameterSet params;
-        const QString NAME = "only_script";
-        params.appendParameter(Conf::NAME_PREFIX+"0", NAME);
-        params.appendParameter(NAME + Conf::PATH, PATH);
-        params.appendParameter(NAME + Conf::LANG, QString("QtScript"));
-        QTest::newRow("1 param no priority") << params << CONTENT;
-    }
-    
-    // One script with from-file option
-    {
-        Utils::ParameterSet params;
-        const QString NAME = "only_script";
-        params.appendParameter(Conf::NAME_PREFIX+"0", NAME);
-        params.appendParameter(NAME + Conf::PATH, PATH);
-        params.appendParameter(NAME + Conf::LANG, QString("QtScript"));
-        params.appendParameter(NAME + Conf::FROM_FILE, QString::number(1));
-        QTest::newRow("1 param from file") << params << CONTENT;
-    }
-    
-    // 10 scripts
-    {
-        Utils::ParameterSet params;
-        for (int i=0; i<10; ++i){
-            const QString N = QString::number(i);
-            const QString NAME = QString("name") + N;
-            params.appendParameter(Conf::NAME_PREFIX+N, NAME);
-            params.appendParameter(NAME+Conf::PATH, PATH);
-            params.appendParameter(NAME+Conf::PRIORITY, N);
-            params.appendParameter(NAME+Conf::LANG, QString("QtScript"));
-        }
-        QTest::newRow("10 params") << params << CONTENT;
+        params.appendParameter(Conf::CONF_PATH, CONF_FILE2);
+        params.appendParameter(Conf::SCRIPT_PATH, SCRIPT_PATH);
+        QTest::newRow("file2") << params;
     }
 }
 
@@ -253,22 +211,52 @@ void ScriptBankTest::badQuerryTest()
 {
     // Build an empty ScriptBank
     using namespace SignalHandler;
-    std::shared_ptr<ScriptBankInterface> bank;
-    try{
-        bank.reset( ScriptBankBuilder::create(Utils::ParameterSet()) );
-    }
-    catch (ScriptBankBuilderError&){
-        QFAIL("Builder failed with valid configuration");
-    }
-    catch (...){
-        QFAIL("Builder threw unknown type of exception");
-    }
-    QVERIFY2(bank != nullptr, "Bank was not created.");
+    std::shared_ptr<ScriptBankInterface> bank(new ScriptBank());
     
     // Verify
     QVERIFY_EXCEPTION_THROWN(bank->getScript("not_exist"), UnknownScript);
     QVERIFY_EXCEPTION_THROWN(bank->getLanguage("not_exist"), UnknownScript);
     QVERIFY_EXCEPTION_THROWN(bank->getPriorityOf("not_exist"), UnknownScript);
+}
+
+
+void ScriptBankTest::createConfFiles()
+{
+    using namespace SignalHandler;
+    QFile conf1(CONF_FILE1);
+    conf1.open(QIODevice::WriteOnly);
+    conf1.write("<signals>\n");
+    for (int i=0; i<10; ++i){
+        QString line;
+        line = QString("<signal %1=\"%2\" %3=\"%4\" %5=\"%6\" %7=\"%8\" %9=\"%10\"/>\n")
+                .arg(Conf::SIGNAL_NAME).arg(QString("signal")+QString::number(i))
+                .arg(Conf::SIGNAL_PATH).arg("/signal"+QString::number(i)+".txt")
+                .arg(Conf::SIGNAL_LANG).arg("QtScript")
+                .arg(Conf::SIGNAL_PRIORITY).arg(QString::number(i))
+                .arg(Conf::SIGNAL_TO_MEM).arg("false");
+        conf1.write(line.toStdString().c_str());        
+    }
+    conf1.write("</signals>\n");
+    conf1.close();
+    
+    QFile conf2(CONF_FILE2);
+    conf2.open(QIODevice::WriteOnly);
+    conf2.write("<signals>\n");
+    for (int i=0; i<10; ++i){
+        QString line;
+        line = QString("<signal %1=\"%2\" %3=\"%4\" %5=\"%6\"/>\n")
+                .arg(Conf::SIGNAL_NAME).arg(QString("signal")+QString::number(i))
+                .arg(Conf::SIGNAL_PATH).arg("/signal"+QString::number(i)+".txt")
+                .arg(Conf::SIGNAL_LANG).arg("QtScript");
+        conf2.write(line.toStdString().c_str());
+    }
+    conf2.write("</signals>\n");
+    conf2.close();
+    
+    QFile conf3(INVALID_FILE);
+    conf3.open(QIODevice::WriteOnly);
+    conf3.write("This is not a valid xml file <7<890d7<0x<>>>></>Z");
+    conf3.close();
 }
 
 

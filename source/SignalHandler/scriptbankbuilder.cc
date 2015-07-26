@@ -27,8 +27,9 @@ ScriptBankInterface*ScriptBankBuilder::create(const Utils::ParameterSet& params)
     
     try{
         // Parse XML-file
-        QString conf_path = params.parameter<QString>(Conf::CONF_PATH);
-        QString script_path = params.parameter<QString>(Conf::SCRIPT_PATH);
+        QString conf_path, script_path;
+        conf_path = params.parameter<QString>(Conf::CONF_PATH.toLower());
+        script_path = params.parameter<QString>(Conf::SCRIPT_PATH.toLower());
         
         QFile f(conf_path);
         if (!f.open(QIODevice::ReadOnly) ){
@@ -47,7 +48,7 @@ ScriptBankInterface*ScriptBankBuilder::create(const Utils::ParameterSet& params)
         for (auto it = data.begin(); it != data.end(); ++it){
             it.value().script = script_path + it.value().script;
             if (it.value().from_file){
-                if (QFile::exists(it.value().script) ){
+                if (!QFile::exists(it.value().script) ){
                     throw ScriptBankBuilderError(it.value().script + 
                                                  " does not exist.");
                 }
