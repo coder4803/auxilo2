@@ -7,6 +7,7 @@
 #include "scriptrunner.hh"
 #include "businesslogic.hh"
 #include "configuration.hh"
+#include "connection/connection.h"
 #include <QDebug>
 
 namespace SignalHandler
@@ -24,6 +25,8 @@ SignalHandlerBuilder::~SignalHandlerBuilder()
 
 ModelInterface* SignalHandlerBuilder::create()
 {
+    Utils::Connection::setHost("127.0.0.1");
+    
     qDebug() << "Starting to build system.";
     // Get initial configuration.
     std::unique_ptr<ConfigurationReader> conf_reader(new ConfigurationReader);

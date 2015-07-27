@@ -28,12 +28,7 @@ SignalReader::SignalReader(std::shared_ptr<SignalQueue> queue,
 {
     Q_ASSERT (queue != nullptr);
     Q_ASSERT (lib != nullptr);
-    
-    // Connect to messaging server. Set host address.
-    if (!Utils::Connection::isConnected()){
-        Utils::Connection::setHost("127.0.0.1");
-    }
-    
+
     // Register to subject.
     if (subject_ != nullptr){
         subject_->registerClient(this);

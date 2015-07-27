@@ -36,7 +36,6 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 INCLUDEPATH += ../../
 INCLUDEPATH += ../../interfaces
 INCLUDEPATH += ../../exceptions
-INCLUDEPATH += ../../../../externals/include/
 INCLUDEPATH += ../../../utils/messagegroup/
 INCLUDEPATH += ../../../utils/messages/
 
@@ -46,5 +45,4 @@ DEPENDPATH += ../../exceptions
 
 LIBS += -L../../../../build/lib/ -lmessagegroup
 LIBS += -L../../../../build/lib/ -lmessages
-LIBS += -L../../../../externals/lib/ -lqamqp
 

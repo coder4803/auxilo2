@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
+QT       += testlib network
 
 QT       -= gui
 
@@ -27,7 +27,6 @@ INCLUDEPATH += ../../
 INCLUDEPATH += ../../interfaces
 INCLUDEPATH += ../../communication
 INCLUDEPATH += ../../exceptions
-INCLUDEPATH += ../../../../externals/include/
 INCLUDEPATH += ../../../utils/messagegroup/
 INCLUDEPATH += ../../../utils/messages/
 
@@ -38,4 +37,3 @@ DEPENDPATH += ../../exceptions
 
 LIBS += -L../../../../build/lib/ -lmessagegroup
 LIBS += -L../../../../build/lib/ -lmessages
-LIBS += -L../../../../externals/lib/ -lqamqp

@@ -274,8 +274,8 @@ void ConfigurationReaderTest::concurrentConfigurationTest()
     QVERIFY2( std::find_if(messages.begin(), messages.end(),
                            [&conf](ConfMsgPtr msg)
                 {   
-                  return msg->parameteSet().featureName()==conf.featureName() &&
-                        msg->parameteSet().parameters()==conf.parameters();
+                  return msg->parameterSet().featureName()==conf.featureName() &&
+                        msg->parameterSet().parameters()==conf.parameters();
                   
                 }
               ) != messages.end(),

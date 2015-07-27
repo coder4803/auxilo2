@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core script xml
+QT       += core script xml network
 
 QT       -= gui
 
@@ -24,7 +24,6 @@ INCLUDEPATH     += ../utils/messages/
 
 LIBS            += -L../../build/lib/ -lmessagegroup
 LIBS            += -L../../build/lib/ -lmessages
-LIBS            += -L$$PWD/../../externals/lib/ -lqamqp
 
 
 TEMPLATE = app

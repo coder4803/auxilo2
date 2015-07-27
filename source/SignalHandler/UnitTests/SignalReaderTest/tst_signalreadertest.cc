@@ -82,6 +82,7 @@ private:
 
 SignalReaderTest::SignalReaderTest()
 {
+    Utils::Connection::setHost("127.0.0.1");
 }
 
 

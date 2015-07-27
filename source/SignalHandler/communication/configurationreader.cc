@@ -16,9 +16,6 @@ ConfigurationReader::ConfigurationReader(QObject* parent) :
     QObject(parent), conf_data_(), responseGroup_(nullptr), mx_(), cv_(),
     retry_timer_()
 {
-    if (!Utils::Connection::isConnected()){
-        Utils::Connection::setHost("127.0.0.1");
-    }
 }
 
 
@@ -40,9 +37,10 @@ void ConfigurationReader::start(const QString& group_name)
     
     // Wait for configuration received.
     std::unique_lock<std::mutex> lock(mx_);
-    
+    qDebug() << "Waiting for response group to be ready.";
     connect(responseGroup_, SIGNAL(ready()), 
             this, SLOT(onResponseGroupReady()) );
+    
     
     connect(responseGroup_, SIGNAL(messageReceived(QByteArray,QString)),
             this, SLOT(onConfMessageReceived(QByteArray)), 
@@ -52,6 +50,7 @@ void ConfigurationReader::start(const QString& group_name)
         cv_.wait(lock);
     }
     lock.unlock();
+    qDebug() << "Configuration received.";
 }
 
 
@@ -68,7 +67,7 @@ void ConfigurationReader::onConfMessageReceived(QByteArray data)
         retry_timer_.stop();
     
     std::unique_lock<std::mutex> lock(mx_);
-    conf_data_ = Utils::ConfResponseMessage(data).parameteSet();
+    conf_data_ = Utils::ConfResponseMessage(data).parameterSet();
     lock.unlock();
     cv_.notify_one();
     emit this->configurationUpdated();
@@ -79,7 +78,7 @@ void ConfigurationReader::onResponseGroupReady()
 {
     Utils::ConfRequestMessage req_msg(RESPONSE_GROUP_NAME_,FEATURE_NAME_,true);
     Utils::MessageGroup::publish(req_msg, Utils::CONF_REQUEST_GROUP);
-    
+    qDebug() << "ConRequest sent.";
     if (!retry_timer_.isActive()){
         connect(&retry_timer_, SIGNAL(timeout()),
                 this, SLOT(onResponseGroupReady()) );

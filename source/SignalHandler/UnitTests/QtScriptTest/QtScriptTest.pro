@@ -36,6 +36,5 @@ DEPENDPATH += ../../exceptions \
               ../../ScriptLangWrapper \
               ../../ScriptAPI
 
-INCLUDEPATH     += ../../externals/include/
 INCLUDEPATH     += ../utils/messagegroup/
 INCLUDEPATH     += ../utils/messages/

@@ -5,11 +5,6 @@ TestSender::TestSender(const std::vector<Utils::SignalMessage>& messages):
     QObject(), send_group_(nullptr), ack_group_(nullptr), msgs_(messages),
     mx_(), cv_()
 {
-    // Host address
-    Utils::Connection::setHost("127.0.0.1");
-    if (!Utils::Connection::isConnected()){
-        emit testFailed("No connection!");
-    }
 }
 
 TestSender::~TestSender()
