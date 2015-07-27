@@ -8,4 +8,5 @@ DESTDIR         = build/bin/
 SUBDIRS         = stateholder \
                   confmanager \
                   plugininterfaces \
-                  interface
+                  interface \
+                  messagebroker

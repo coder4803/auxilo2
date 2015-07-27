@@ -7,12 +7,6 @@
 #include "statechangedmessage.h"
 #include "logmessage.h"
 
-const QString Device::CONF_RESPONSE_POST_FIX("_confResponse");
-const QString Device::STATE_RESPONSE_POST_FIX("_stateResponse");
-const QString Device::SET_STATE_POST_FIX("_setState");
-const QString Device::SIGNAL_ACK_POST_FIX("_signalAck");
-const QString Device::SET_STATE_ACK_POST_FIX("_setStateAck");
-
 Device::Device(QString name,
                Plugins::CommunicationInterface* communicationPlugin,
                const Utils::ParameterSet& communicationParameters,
@@ -66,7 +60,7 @@ void Device::handleConfResponseMessage(QByteArray payload)
 {
    Utils::ConfResponseMessage response(payload);
 
-   Utils::ParameterSet parameters = response.parameteSet();
+   Utils::ParameterSet parameters = response.parameterSet();
    m_protocol->handleParameters(parameters);
 }
 
@@ -123,14 +117,14 @@ void Device::handleSetStateAckMessage(QByteArray payload)
 
 void Device::requestDeviceParameters(QString deviceName)
 {
-   QString responseGroupName = m_name + CONF_RESPONSE_POST_FIX;
+   QString responseGroupName = m_name + Utils::CONF_RESPONSE_POST_FIX;
    Utils::ConfRequestMessage request(responseGroupName, deviceName, false);
    emit publish(request.data(), Utils::CONF_REQUEST_GROUP);
 }
 
 void Device::requestStateValue(QString stateName)
 {
-   QString responseGroupName = m_name + STATE_RESPONSE_POST_FIX;
+   QString responseGroupName = m_name + Utils::STATE_RESPONSE_POST_FIX;
    Utils::RequestStateMessage request(responseGroupName, stateName);
    emit publish(request.data(), Utils::REQUEST_STATE_GROUP);
 }
@@ -141,7 +135,7 @@ void Device::setStateValue(QString stateName,
 {
    QString responseGroupName;
    if (ackRequired) {
-      responseGroupName = m_name + SET_STATE_POST_FIX;
+      responseGroupName = m_name + Utils::SET_STATE_ACK_POST_FIX;
    }
 
    Utils::SetStateMessage message(stateName, value, responseGroupName);
@@ -160,7 +154,7 @@ void Device::sendSignal(QString name,
 {
    QString ackGroupName;
    if (ackRequired) {
-      ackGroupName = m_name + SIGNAL_ACK_POST_FIX;
+      ackGroupName = m_name + Utils::SIGNAL_ACK_POST_FIX;
    }
 
    Utils::SignalMessage message(name, m_name, parameters, ackGroupName);
@@ -223,14 +217,16 @@ bool Device::createProtocol()
 void Device::initMessageGroups()
 {
    // Listen for configuration response messages.
-   m_confResponseGroup = new Utils::MessageGroup(m_name + CONF_RESPONSE_POST_FIX,
+   m_confResponseGroup = new Utils::MessageGroup(m_name +
+                                                 Utils::CONF_RESPONSE_POST_FIX,
                                                  Utils::MessageGroup::Subscriber,
                                                  this);
    connect(m_confResponseGroup, SIGNAL(messageReceived(QByteArray,QString)),
            this, SLOT(handleConfResponseMessage(QByteArray)));
 
    // Listen for state response messages.
-   m_stateResponseGroup = new Utils::MessageGroup(m_name + STATE_RESPONSE_POST_FIX,
+   m_stateResponseGroup = new Utils::MessageGroup(m_name +
+                                                  Utils::STATE_RESPONSE_POST_FIX,
                                                   Utils::MessageGroup::Subscriber,
                                                   this);
    connect(m_stateResponseGroup, SIGNAL(messageReceived(QByteArray,QString)),
@@ -252,14 +248,16 @@ void Device::initMessageGroups()
            this, SLOT(handleStateChangedMessage(QByteArray)));
 
    // Listen for signal ack message.
-   m_signalAckGroup = new Utils::MessageGroup(m_name + SIGNAL_ACK_POST_FIX,
+   m_signalAckGroup = new Utils::MessageGroup(m_name +
+                                              Utils::SIGNAL_ACK_POST_FIX,
                                               Utils::MessageGroup::Subscriber,
                                               this);
    connect(m_signalAckGroup, SIGNAL(messageReceived(QByteArray,QString)),
            this, SLOT(handleSignalAckMessage(QByteArray)));
 
    // Listen for set state ack message.
-   m_setStateAckGroup = new Utils::MessageGroup(m_name + SET_STATE_ACK_POST_FIX,
+   m_setStateAckGroup = new Utils::MessageGroup(m_name +
+                                                Utils::SET_STATE_ACK_POST_FIX,
                                                 Utils::MessageGroup::Subscriber,
                                                 this);
    connect(m_signalAckGroup, SIGNAL(messageReceived(QByteArray,QString)),

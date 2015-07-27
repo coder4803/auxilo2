@@ -6,6 +6,7 @@
 
 QT              += core
 QT              -= gui
+QT              += network
 
 TARGET          = messagegroupexample
 CONFIG          += console
@@ -17,7 +18,6 @@ INCLUDEPATH     += ../../../externals/include/
 INCLUDEPATH     += ../../utils/messagegroup/
 
 LIBS            += -L../../../build/lib/ -lmessagegroup
-LIBS            += -L$$PWD/../../../externals/lib/ -lqamqp
 
 SOURCES         += main.cpp \
                    messager.cpp

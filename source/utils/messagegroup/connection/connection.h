@@ -1,53 +1,87 @@
 #include <QObject>
 #include <QTimer>
 #include <QMutex>
-
-#include "amqp/amqp.h"
+#include <QHash>
+#include <QSet>
+#include <QTcpSocket>
 
 #ifndef UTILS_CONNECTION_H
 #define UTILS_CONNECTION_H
 
 namespace Utils {
 
+class MessageGroup;
+
 /*!
  * \brief The Connection class
- * Class handles connection to RabbitMQ beam.
+ * Class handles connection to Message broker.
  */
 class Connection : public QObject
 {
    Q_OBJECT
-   Q_DISABLE_COPY(Connection)
 public:
    /*!
-    * \brief getClient returns pointer to QAMQP::Client object.
-    * This method should be used only by MessageGroup class!
-    * \return Pointer to QAMQP::Client.
+    * \brief Returns instance of Connection.
+    * \return Instance of connection.
     */
-   static QAMQP::Client* getClient();
+   static Connection* getInstance();
+
+   /*!
+    * \brief Deletes Connection instance.
+    */
+   static void deleteInstance();
 
    /*!
     * \brief setHost can be used to define RabbitMQ server address and port.
-    * Note that this method must be called before creating SigalGroups.
-    * However it is not necessary to call this function at all if default
-    * values are fine (5672@127.0.0.1).
-    * Calling this function will create instance of Connection and connect
-    * to RabbitMQ server.
-    * \param address RabbitMQ server address
-    * \param port RabbitMQ server port
+    * It is not necessary to call this function at all if default
+    * values are fine (13803@127.0.0.1).
+    * Calling this function will create instance of Connection.
+    * \param address Message broker address
+    * \param port Message broker port
     */
    static void setHost(QString address,
                        quint16 port = DEFAULT_PORT);
 
    /*!
-    * \brief isConnected can be used to check if connection exists.
-    * \return True if connection is ok, otherwise false.
+    * \brief Tells if connection to messagebroker is established.
+    * \return True if connection is established to message broker,
+    * otherwise false.
     */
-   static bool isConnected();
+   bool isConnected() const;
+
+   /*!
+    * \brief Registers message group to connection system.
+    * \param groupName Name of message group.
+    * \param messageGroup Pointer to MessageGroup instance to register.
+    */
+   void registerMessageGroup(QString groupName,
+                             MessageGroup* messageGroup);
+
+   /*!
+    * \brief Unregister message group from connection system.
+    * \param groupName Name of message group.
+    * \param messageGroup Pointer to MessageGroup instance to unregister.
+    */
+   void unregisterMessageGroup(QString groupName,
+                               MessageGroup* messageGroup);
+
+   /*!
+    * \brief Sends message to message system.
+    * \param payload Message payload.
+    * \return True on success, false on failure.
+    */
+   bool sendMessage(QByteArray payload);
+
+signals:
+   void connected();
+
+public slots:
+   void connectToHost();
 
 private slots:
-   void connectToBeam();
    void onConnected();
    void onDisconnected();
+   void onMessageReceived();
 
 private:
    static const QString DEFAULT_ADDRESS;
@@ -55,22 +89,21 @@ private:
    static const quint16 DEFAULT_RETRY_INTERVAL;
 
    // Singleton class
-   Connection(QString address,
-              quint16 port);
+   explicit Connection();
    ~Connection();
 
-   static bool instanceExists();
-   static Connection* instance(QString address = DEFAULT_ADDRESS,
-                               quint16 port = DEFAULT_PORT);
-
-   QAMQP::Client* client();
-
-   static QMutex m_mutex;
+   static QMutex m_instanceMutex;
    static Connection* m_instance;
-   QAMQP::Client* m_client;
 
-   quint32 m_retryInterval;
+   static QString m_address;
+   static quint16 m_port;
+
+   QMutex m_socketMutex;
+   QTcpSocket* m_socket;
    QTimer m_connectionTimer;
+
+   QByteArray m_dataBuffer;
+   QHash<QString, QSet<MessageGroup*> > m_groups;
 };
 
 } // Utils

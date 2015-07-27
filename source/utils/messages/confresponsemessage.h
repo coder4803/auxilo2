@@ -156,7 +156,7 @@ public:
     * \brief Returns set of parameters in response message.
     * \return Parameters in ParameterSet.
     */
-   const ParameterSet& parameteSet() { return m_parameterSet; }
+   const ParameterSet& parameterSet() const { return m_parameterSet; }
 
    /*!
     * \brief Returns message in binary format.
@@ -213,7 +213,7 @@ T ParameterSet::parameter(QString name) const
    }
 
    // Check if value can be converted
-   if (!value.canConvert<T>()) {
+   if (!value.canConvert<T>() || !value.convert((int)QVariant(T()).type())) {
       qCritical("Value can't be converted to desired type");
       throw QException();
    }

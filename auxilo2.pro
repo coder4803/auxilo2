@@ -8,4 +8,5 @@ DESTDIR         = build/bin/
 SUBDIRS         = source/utils \
                   source/examples \
                   source/core \
-                  source/plugins
+                  source/plugins \
+                  source/tools

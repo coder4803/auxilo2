@@ -23,7 +23,6 @@ HEADERS         += interface.h \
 LIBS            += -L../../../build/lib/ -lmessages \
                    -L../../../build/lib/ -lmessagegroup \
                    -L../../../build/lib/ -lcommunication \
-                   -L../../../build/lib/ -lprotocol \
-                   -L$$PWD/../../../externals/lib/ -lqamqp
+                   -L../../../build/lib/ -lprotocol
 
 DESTDIR         = ../../../build/bin/
