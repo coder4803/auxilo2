@@ -1,3 +1,10 @@
+/* configuration.hh
+ * This header contains constants used in SignalHandler configuration.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 26-July-2015
+ */
+
 #ifndef CONFIGURATION_HH
 #define CONFIGURATION_HH
 

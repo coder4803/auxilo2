@@ -7,7 +7,7 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 06-Mar-2015
- * Last modified: 31-Mar-2015
+ * Last modified: 26-July-2015
  */
 
 #ifndef SCRIPTBANKBUILDER_HH
@@ -45,6 +45,15 @@ public:
     //! Default copy-assignment operator.
     ScriptBankBuilder& operator=(const ScriptBankBuilder&) = default;
     
+    /*!
+     * \brief Creates new instance of ScriptBankInterface implementation.
+     * \param params Configuration parameters from ConfManager.
+     * \return new instance of ScriptBankInterface implementation. Ownership is
+     *  passed to the caller.
+     * \pre None.
+     * \exception ScriptBankBuilderError, if params is not a valid configuration
+     *  or some other error occurs.
+     */
     static ScriptBankInterface* create(const Utils::ParameterSet& params);
     
     
