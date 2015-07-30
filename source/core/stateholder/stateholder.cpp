@@ -147,6 +147,10 @@ void StateHolder::handleStateChangedAckMessage(QByteArray payload)
 
    Utils::StateChangedAckMessage message(payload);
 
+   if (message.result() != Utils::StateChangedAckMessage::SUCCEEDED) {
+      return;
+   }
+
    foreach (State* state, m_states) {
       if (state->isWaitingForAck(message.ackId())) {
          return;
