@@ -115,10 +115,10 @@ void Device::handleSetStateAckMessage(QByteArray payload)
    m_protocol->handleSetStateAck(message.result(), message.ackId());
 }
 
-void Device::requestDeviceParameters(QString deviceName)
+void Device::requestDeviceParameters()
 {
    QString responseGroupName = m_name + Utils::CONF_RESPONSE_POST_FIX;
-   Utils::ConfRequestMessage request(responseGroupName, deviceName, false);
+   Utils::ConfRequestMessage request(responseGroupName, m_name, false);
    emit publish(request.data(), Utils::CONF_REQUEST_GROUP);
 }
 
@@ -200,8 +200,8 @@ bool Device::createProtocol()
    m_protocol->setCommunication(m_communication);
 
    // Handle signals emitted by protocol.
-   connect(m_protocol, SIGNAL(requestDeviceParameters(QString)),
-           this, SLOT(requestDeviceParameters(QString)));
+   connect(m_protocol, SIGNAL(requestDeviceParameters()),
+           this, SLOT(requestDeviceParameters()));
    connect(m_protocol, SIGNAL(setStateValue(QString,QVariant,bool)),
            this, SLOT(setStateValue(QString,QVariant,bool)));
    connect(m_protocol, SIGNAL(requestStateValue(QString)),

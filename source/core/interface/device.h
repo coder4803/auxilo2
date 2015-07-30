@@ -107,9 +107,8 @@ private slots:
 
    /*!
     * \brief Sends request for device parameters.
-    * \param deviceName Name of device to request configuration for.
     */
-   void requestDeviceParameters(QString deviceName);
+   void requestDeviceParameters();
 
    /*!
     * \brief Sends request for a state value.

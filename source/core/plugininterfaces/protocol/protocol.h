@@ -175,9 +175,8 @@ protected slots:
 signals:
    /*!
     * \brief This signal is used to request device parameters.
-    * \param deviceName Name of device.
     */
-   void requestDeviceParameters(QString deviceName);
+   void requestDeviceParameters();
 
    /*!
     * \brief This signal is used to request state value from state holder.
