@@ -55,6 +55,12 @@ void DetailModel::setDetailData(Globals::MessageType messageType,
    case Globals::SetStateAckMessage:
       parseSetStateAckMessage(data);
       break;
+   case Globals::StateChangedMessage:
+      parseStateChangedMessage(data);
+      break;
+   case Globals::StateChangedAckMessage:
+      parseStateChangedAckMessage(data);
+      break;
    default:
       break;
    }
@@ -103,6 +109,7 @@ void DetailModel::parseSignalMessage(const QByteArray& data)
    Utils::SignalMessage message(data);
 
    newRow("Name", message.signalName());
+   newRow("Sender", message.senderName());
    newRow("Parameters", message.parameters());
 
    if (!message.ackGroup().isEmpty()) {
@@ -158,8 +165,11 @@ void DetailModel::parseSetStateMessage(const QByteArray& data)
 
    newRow("Name", message.name());
    newRow("Value", message.value());
-   newRow("AckGroup", message.ackGroup());
-   newRow("AckId", message.ackId());
+
+   if (!message.ackGroup().isEmpty()) {
+      newRow("AckGroup", message.ackGroup());
+      newRow("AckId", message.ackId());
+   }
 }
 
 void DetailModel::parseSetStateAckMessage(const QByteArray& data)
@@ -176,8 +186,11 @@ void DetailModel::parseStateChangedMessage(const QByteArray& data)
 
    newRow("Label", message.label());
    newRow("Value", message.value());
-   newRow("AckGroup", message.ackGroup());
-   newRow("AckId", message.ackId());
+
+   if (!message.ackGroup().isEmpty()) {
+      newRow("AckGroup", message.ackGroup());
+      newRow("AckId", message.ackId());
+   }
 }
 
 void DetailModel::parseStateChangedAckMessage(const QByteArray& data)

@@ -16,11 +16,11 @@ public:
    void setDetailData(Globals::MessageType messageType,
                       const QByteArray& data);
 
-   void newRow(QString name, QVariant value);
-
    void clearContent();
 
 private:
+   void newRow(QString name, QVariant value);
+
    void parseConfRequestMessage(const QByteArray& data);
    void parseConfResponseMessage(const QByteArray& data);
    void parseSignalMessage(const QByteArray& data);
