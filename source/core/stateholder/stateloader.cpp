@@ -81,7 +81,8 @@ bool StateLoader::startElement(const QString& namespaceURI,
          }
 
          try {
-            m_deviceLabel = readMadatoryAttribute<QString>(attributes, "label");
+            m_deviceLabel = readOptionalAttribute<QString>(attributes, "label",
+                                                           m_state->name());
             m_deviceUpdateInterval = readOptionalAttribute<quint32>(attributes,
                                      "updateInterval", DEFAULT_UPDATE_INTERVAL);
          } catch (QException& e) {
