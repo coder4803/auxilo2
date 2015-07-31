@@ -46,6 +46,14 @@ public:
     ScriptBankBuilder& operator=(const ScriptBankBuilder&) = default;
     
     /*!
+     * \brief Creates an empty ScriptBankInterface implementation.
+     * \return New instance of ScriptBankInterface implementation. Ownership
+     *  is passed to the caller.
+     * \pre None.
+     */
+    static ScriptBankInterface* create();
+    
+    /*!
      * \brief Creates new instance of ScriptBankInterface implementation.
      * \param params Configuration parameters from ConfManager.
      * \return new instance of ScriptBankInterface implementation. Ownership is

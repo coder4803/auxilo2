@@ -17,7 +17,8 @@ ScriptRunner::ScriptRunner(std::shared_ptr<SignalQueue> queue,
                            ScriptUpdateSubject* subject) :
     
     queue_(queue), lib_(lib), pool_(pool), subject_(subject),
-    runner_id_(runner_counter_++), services_(nullptr), update_mx_()
+    runner_id_(runner_counter_++), services_(nullptr), update_mx_(),
+    end_flag_(false)
 {
     Q_ASSERT(queue != nullptr);
     Q_ASSERT(lib != nullptr);
@@ -58,10 +59,15 @@ void ScriptRunner::setScriptUpdateSubject(ScriptUpdateSubject* sub)
 void ScriptRunner::start()
 {
     typedef ScriptLangWrapperPool::ScriptLangWrapperPtr ScriptLangWrapperPtr;
+    end_flag_.store(false);
     
-    while (true)
+    while (!end_flag_.load())
     {
-        Signal s = queue_->pop();
+        Signal s;
+        if ( !queue_->try_pop(s, std::chrono::milliseconds(1000) ) ){
+            qDebug() << "SignalQueue timed out for runner" << runner_id_;
+            continue;
+        }
         
         std::unique_lock<std::mutex> lock(update_mx_);
         QString lang = lib_->getLanguage( s.getScriptID() );
@@ -106,6 +112,12 @@ void ScriptRunner::start()
                                         Utils::SignalAckMessage::SUCCEEDED);
         Utils::MessageGroup::publish(ack_msg, s.getAckInfo().ackGroup);
     }
+}
+
+
+void ScriptRunner::stop()
+{
+    end_flag_.store(true);
 }
 
 

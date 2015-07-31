@@ -1,5 +1,6 @@
 #include "businesslogic.hh"
 #include "scriptbankbuilder.hh"
+#include "configuration.hh"
 #include <QDebug>
 
 namespace SignalHandler
@@ -7,41 +8,43 @@ namespace SignalHandler
 
 BusinessLogic::BusinessLogic(std::unique_ptr<SignalReader>&& signal_reader, 
                              std::unique_ptr<ConfigurationReader>&& conf_reader, 
-                             std::vector<std::unique_ptr<ScriptRunner>>&& workers, 
+                             std::unique_ptr<ScriptRunnerPool>&& worker_pool, 
                              std::unique_ptr<ScriptBankInterface>&& library, 
                              QObject* parent) : 
     QObject(parent), ModelInterface(), ScriptUpdateSubject(), 
     PriorityUpdateSubject(), sig_reader_( std::move(signal_reader) ), 
-    conf_reader_( std::move(conf_reader) ), workers_( std::move(workers) ), 
+    conf_reader_( std::move(conf_reader) ), worker_pool( std::move(worker_pool) ), 
     library_( std::move(library) ), script_observers_(), 
-    priority_observers_(), threads_(workers.size()), mx_()
+    priority_observers_(), threads_(), workers_(), mx_()
 {
     sig_reader_->setPrioritySubject(this);
-    for (std::unique_ptr<ScriptRunner>& worker : workers_){
-        worker->setScriptUpdateSubject(this);
-    }
     
-    connect(conf_reader.get(), SIGNAL(configurationUpdated()),
+    connect(conf_reader_.get(), SIGNAL(configurationUpdated()),
             this, SLOT(onConfigurationReceived()), Qt::DirectConnection);
+    conf_reader_->start();
 }
+
 
 BusinessLogic::~BusinessLogic()
 {
     
 }
 
+
 void BusinessLogic::start()
 {
     qDebug() << "Starting...";
     
-    for (unsigned i=0; i<threads_.size(); ++i){
+    threads_.resize( workers_.size() );
+    
+    for (unsigned i=0; i<workers_.size(); ++i){
         threads_[i] = std::move(std::thread(&ScriptRunner::start, 
                                             workers_[i].get()) );
-        threads_[i].detach();
     }
     
     qDebug() << "Workers are running.";
 }
+
 
 void BusinessLogic::stop()
 {
@@ -49,12 +52,14 @@ void BusinessLogic::stop()
     sig_reader_->stop();
 }
 
+
 void BusinessLogic::registerObserver(ScriptUpdateObserver* obs)
 {
     std::lock_guard<std::mutex> lock(mx_);
     script_observers_.insert(obs);
     obs->notifyOnScriptUpdate(library_.get());
 }
+
 
 void BusinessLogic::unregisterObserver(ScriptUpdateObserver* obs)
 {
@@ -70,25 +75,49 @@ void BusinessLogic::registerClient(PriorityUpdateObserver* client)
     client->notifyOnPriorityUpdate(library_.get());
 }
 
+
 void BusinessLogic::unregisterClient(PriorityUpdateObserver* client)
 {
     std::lock_guard<std::mutex> lock(mx_);
     priority_observers_.erase(client);
 }
 
+
 void BusinessLogic::onConfigurationReceived()
 {
     qDebug() << "Setting new configuration...";
     
     // 1. Build new ScriptBank with confMessage.
+    Utils::ParameterSet conf = conf_reader_->getConfiguration();
     std::unique_ptr<ScriptBankInterface> new_bank;
     try{
-        new_bank.reset(ScriptBankBuilder::create(conf_reader_->getConfiguration()));
+        new_bank.reset(ScriptBankBuilder::create(conf));
     }
     catch(ScriptBankBuilderError& e){
         qDebug() << "Configuration failed!";
         qDebug() << "Error with configuration:" << e.getMessage();
         return;
+    }
+    
+    // check worker count
+    unsigned worker_count = Conf::DEFAULT_WORKERS;
+    if (conf.contains(Conf::WORKERS_TAG)){
+        worker_count = conf.parameter<unsigned>(Conf::WORKERS_TAG);
+    }
+    while (worker_count < workers_.size()){
+        // Quit extra threads
+        workers_.back()->stop();
+        threads_.back().join();
+        threads_.pop_back();
+        workers_.pop_back();
+    }
+    while (worker_count > workers_.size()){
+        // Create more workers.
+        workers_.push_back( std::move( worker_pool->reserve() ) );
+        workers_.back()->setScriptUpdateSubject(this);
+        workers_.back()->notifyOnScriptUpdate(library_.get());
+        threads_.push_back( std::thread(&ScriptRunner::start,
+                                        workers_.back().get() ) );
     }
     
     // 2. Notify all observers.

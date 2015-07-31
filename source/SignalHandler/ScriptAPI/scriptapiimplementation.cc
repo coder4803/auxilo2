@@ -14,7 +14,7 @@ namespace SignalHandler
 ScriptApiImplementation::ScriptApiImplementation(const ScriptLibrary* lib, 
                                                  ScriptUpdateSubject* subject, 
                                                  const QString& namingSuffix):
-    ScriptAPI(), ScriptUpdateObserver(), lib_(lib), subject_(subject),
+    QObject(), ScriptAPI(), ScriptUpdateObserver(), lib_(lib), subject_(subject),
     reqGroup_(nullptr), ackGroup_(nullptr),
     reqGroupName_(QString("SignalHandlerStateReq") + namingSuffix),
     ackGroupName_(QString("SignalHandlerStateAck") + namingSuffix),
@@ -195,7 +195,7 @@ void ScriptApiImplementation::notifyOnScriptUpdate(const ScriptLibrary* new_lib)
 }
 
 
-void ScriptApiImplementation::onStateReqReturned(const QByteArray& data)
+void ScriptApiImplementation::onStateReqReturned(QByteArray data)
 {
     waitMx_.lock();
     pendingReq_ = Utils::StateResponseMessage(data);
@@ -204,7 +204,7 @@ void ScriptApiImplementation::onStateReqReturned(const QByteArray& data)
 }
 
 
-void ScriptApiImplementation::onStateChangeAck(const QByteArray& data)
+void ScriptApiImplementation::onStateChangeAck(QByteArray data)
 {
     waitMx_.lock();
     pendingAck_ = Utils::SetStateAckMessage(data);

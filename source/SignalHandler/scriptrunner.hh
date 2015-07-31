@@ -8,6 +8,7 @@
 #include "signalqueue.hh"
 #include "ScriptAPI/scriptapi.hh"
 #include <mutex>
+#include <atomic>
 #include <memory>
 
 
@@ -33,6 +34,8 @@ public:
     
     void start();
     
+    void stop();
+    
     void notifyOnScriptUpdate(const ScriptLibrary* new_lib);
     
     
@@ -45,6 +48,7 @@ private:
     int runner_id_;
     ScriptAPI* services_;
     std::mutex update_mx_;
+    std::atomic<bool> end_flag_;
     
     static int runner_counter_;
     

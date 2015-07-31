@@ -15,6 +15,7 @@
 #include "interfaces/viewinterface.hh"
 #include "communication/signalreader.hh"
 #include "communication/configurationreader.hh"
+#include "scriptrunnerpool.hh"
 #include "scriptrunner.hh"
 
 
@@ -33,7 +34,7 @@ public:
 
     BusinessLogic(std::unique_ptr<SignalReader>&& signal_reader,
                   std::unique_ptr<ConfigurationReader>&& conf_reader,
-                  std::vector<std::unique_ptr<ScriptRunner> >&& workers,
+                  std::unique_ptr<ScriptRunnerPool>&& worker_pool,
                   std::unique_ptr<ScriptBankInterface>&& library,
                   QObject* parent = nullptr);
     
@@ -67,11 +68,12 @@ private:
     
     std::unique_ptr<SignalReader> sig_reader_;
     std::unique_ptr<ConfigurationReader> conf_reader_;
-    std::vector<std::unique_ptr<ScriptRunner> > workers_;
+    std::unique_ptr<ScriptRunnerPool> worker_pool;
     std::unique_ptr<ScriptBankInterface> library_;
     std::unordered_set<ScriptUpdateObserver*> script_observers_;
     std::unordered_set<PriorityUpdateObserver*> priority_observers_;
     std::vector<std::thread> threads_;
+    std::vector<std::unique_ptr<ScriptRunner>> workers_;
     std::mutex mx_;
 };
 

@@ -7,13 +7,13 @@
 namespace SignalHandler
 {
 
-const QString ConfigurationReader::RESPONSE_GROUP_NAME_ ("SignalHandlerConf");
-const QString ConfigurationReader::FEATURE_NAME_ ("SignalHandler");
+const QString ConfigurationReader::RESPONSE_GROUP_NAME_ ("signalHandlerConf");
+const QString ConfigurationReader::FEATURE_NAME_ ("signalHandler");
 const unsigned ConfigurationReader::RETRY_INTERVAL_ (2000);
 
 
 ConfigurationReader::ConfigurationReader(QObject* parent) :
-    QObject(parent), conf_data_(), responseGroup_(nullptr), mx_(), cv_(),
+    QObject(parent), conf_data_(), responseGroup_(nullptr), mx_(),
     retry_timer_()
 {
 }
@@ -36,21 +36,15 @@ void ConfigurationReader::start(const QString& group_name)
                                              this);
     
     // Wait for configuration received.
-    std::unique_lock<std::mutex> lock(mx_);
     qDebug() << "Waiting for response group to be ready.";
     connect(responseGroup_, SIGNAL(ready()), 
-            this, SLOT(onResponseGroupReady()) );
+            this, SLOT(onResponseGroupReady()),
+            Qt::DirectConnection);
     
     
     connect(responseGroup_, SIGNAL(messageReceived(QByteArray,QString)),
             this, SLOT(onConfMessageReceived(QByteArray)), 
             Qt::DirectConnection);
-    
-    while (conf_data_.parameters().empty()){
-        cv_.wait(lock);
-    }
-    lock.unlock();
-    qDebug() << "Configuration received.";
 }
 
 
@@ -67,9 +61,15 @@ void ConfigurationReader::onConfMessageReceived(QByteArray data)
         retry_timer_.stop();
     
     std::unique_lock<std::mutex> lock(mx_);
+    Utils::ConfResponseMessage msg(data);
+    if (msg.result() == Utils::ConfResponseMessage::Result::INVALID_PARAMETERS){
+        qDebug() << "Invalid conf parameters";
+    }
+    else if (msg.result() == Utils::ConfResponseMessage::Result::NO_PARAMETERS){
+        qDebug() << "No conf parameters";
+    }
     conf_data_ = Utils::ConfResponseMessage(data).parameterSet();
     lock.unlock();
-    cv_.notify_one();
     emit this->configurationUpdated();
 }
 

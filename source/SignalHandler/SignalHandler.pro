@@ -47,7 +47,8 @@ SOURCES += main.cc \
     ScriptLangWrapper/scriptapiqobjectwrapper.cc \
     communication/configurationreader.cc \
     businesslogic.cc \
-    confxmlhandler.cc
+    confxmlhandler.cc \
+    scriptrunnerpool.cc
 
 HEADERS += \
     signal.hh \
@@ -80,4 +81,5 @@ HEADERS += \
     communication/configurationreader.hh \
     businesslogic.hh \
     configuration.hh \
-    confxmlhandler.hh
+    confxmlhandler.hh \
+    scriptrunnerpool.hh

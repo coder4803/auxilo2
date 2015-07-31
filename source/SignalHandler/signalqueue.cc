@@ -25,6 +25,23 @@ Signal SignalQueue::pop()
 }
 
 
+bool SignalQueue::try_pop(Signal& s, std::chrono::milliseconds timeout)
+{
+    std::unique_lock<std::recursive_mutex> lock(mx_);
+    
+    while ( this->empty() ){
+        if ( not_empty_cv_.wait_for(lock, timeout) == std::cv_status::timeout ){
+            return false;
+        }
+    }
+    
+    s = queue_.front();
+    queue_.pop_front();
+    lock.unlock();
+    return true;
+}
+
+
 void SignalQueue::push(const Signal& s)
 {
     mx_.lock();

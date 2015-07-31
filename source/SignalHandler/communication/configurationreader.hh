@@ -88,7 +88,6 @@ private:
     Utils::ParameterSet conf_data_;
     Utils::MessageGroup* responseGroup_;
     mutable std::mutex mx_;
-    std::condition_variable cv_;
     QTimer retry_timer_;
     
     static const QString RESPONSE_GROUP_NAME_;

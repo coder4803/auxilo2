@@ -21,6 +21,13 @@
 namespace SignalHandler
 {
 
+
+ScriptBankInterface*ScriptBankBuilder::create()
+{
+    return new ScriptBank();
+}
+
+
 ScriptBankInterface*ScriptBankBuilder::create(const Utils::ParameterSet& params)
 {
     ScriptBankInterface::ScriptData data;

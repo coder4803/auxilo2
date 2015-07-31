@@ -13,6 +13,7 @@
 
 #include "signal.hh"
 #include <list>
+#include <chrono>
 #include <mutex>
 #include <condition_variable>
 
@@ -56,6 +57,15 @@ public:
      * Concurrency: This method is thread safe.
      */
     Signal pop();
+    
+    /*!
+     * \brief try_pop Try to pop next Signal until timeout.
+     * \param s On success, popped Signal is assigned here.
+     * \param timeout How long poping next signal is tried.
+     * \return true, if Signal was popped successfully, else false.
+     * \pre timeout > 0
+     */
+    bool try_pop(Signal& s, std::chrono::milliseconds timeout);
     
     /*!
      * \brief push Adds a new signal into the queue

@@ -19,6 +19,8 @@ namespace SignalHandler
 class ScriptApiImplementation : 
         public QObject, public ScriptAPI, public ScriptUpdateObserver
 {
+    Q_OBJECT
+    
 public:
     
     /*!
@@ -69,8 +71,8 @@ public:
     
 private Q_SLOTS:
     
-    void onStateReqReturned(const QByteArray& data);
-    void onStateChangeAck(const QByteArray& data);
+    void onStateReqReturned(QByteArray data);
+    void onStateChangeAck(QByteArray data);
   
     
 private:
