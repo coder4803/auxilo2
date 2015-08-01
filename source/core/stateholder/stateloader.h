@@ -75,23 +75,20 @@ private:
    //! Default value for state update interval.
    static const quint32 DEFAULT_UPDATE_INTERVAL;
 
+   //! Constant for stateholder element name.
+   static const QString ELEMENT_STATE;
+
+   //! Constant for state element name.
+   static const QString ELEMENT_STATEHOLDER;
+
    //! Boolean indicator if we are reading configurations.
    bool m_readingConfiguration;
-
-   //! Boolean indicator if we are reading a device configuration.
-   bool m_parsingDevice;
 
    //! State under reading.
    State* m_state;
 
    //! String between element tags.
    QString m_data;
-
-   //! Device name holder.
-   QString m_deviceName;
-
-   //! Device label holder (label is alias for a state understund by device).
-   QString m_deviceLabel;
 
    //! Device update interval holder (how often device is tried to inform about
    //! changed state until succeeded).
@@ -113,7 +110,7 @@ private:
     * \return Value of attribute.
     */
    template <class T>
-   T readMadatoryAttribute(const QXmlAttributes& attributes,
+   T readMandatoryAttribute(const QXmlAttributes& attributes,
                            const QString& name);
 
    /*!

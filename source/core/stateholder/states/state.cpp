@@ -37,16 +37,21 @@ State::~State()
    m_devices.clear();
 }
 
-void State::addDevice(const QString name,
-                      const QString label,
+void State::addDevice(const QString& name,
+                      const QString& label,
                       quint32 updateInterval)
 {
    Device* device = new Device(label, QVariant(), updateInterval);
    m_devices.insert(name, device);
 }
 
-bool State::setOption(const QString name,
-                      const QString value)
+void State::addSignal(const QString& name)
+{
+   m_signals << name;
+}
+
+bool State::setOption(const QString& name,
+                      const QString& value)
 {
    Q_UNUSED(value);
 

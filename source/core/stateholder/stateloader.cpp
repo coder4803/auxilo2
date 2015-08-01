@@ -8,9 +8,11 @@ namespace Core {
 
 const quint32 StateLoader::DEFAULT_UPDATE_INTERVAL = 5;
 
+const QString StateLoader::ELEMENT_STATE("state");
+const QString StateLoader::ELEMENT_STATEHOLDER("stateholder");
+
 StateLoader::StateLoader(QHash<QString, State*>& states) :
    m_readingConfiguration(false),
-   m_parsingDevice(false),
    m_state(NULL),
    m_deviceUpdateInterval(0),
    m_states(states)
@@ -30,7 +32,7 @@ bool StateLoader::startElement(const QString& namespaceURI,
    Q_UNUSED(localName);
 
    // Everything has to be declared between <stateholder> and </stateholder>
-   if (qName.toLower() == "stateholder") {
+   if (qName.toLower() == ELEMENT_STATEHOLDER) {
       m_readingConfiguration = true;
       m_state = NULL;
       return true;
@@ -42,7 +44,7 @@ bool StateLoader::startElement(const QString& namespaceURI,
    }
 
    // Parse state start tag
-   if (qName.toLower() == "state") {
+   if (qName.toLower() == ELEMENT_STATE) {
       if (m_state) {
          m_errorStr = QString("state can't be defined inside another state.");
          return false;
@@ -52,8 +54,8 @@ bool StateLoader::startElement(const QString& namespaceURI,
       QString name;
       bool persisted = false;
       try {
-         type = readMadatoryAttribute<QString>(attributes, "type");
-         name = readMadatoryAttribute<QString>(attributes, "name");
+         type = readMandatoryAttribute<QString>(attributes, "type");
+         name = readMandatoryAttribute<QString>(attributes, "name");
          persisted = readOptionalAttribute<bool>(attributes, "persisted", false);
       } catch (QException& e) {
          return false;
@@ -74,25 +76,27 @@ bool StateLoader::startElement(const QString& namespaceURI,
    } else if (m_state) {
       // Here we parse elements between state start and end tags.
       if (qName.toLower() == "device") {
-         if (m_parsingDevice) {
-            m_errorStr = QString("devices can't be defined "
-                                 "inside another device");
-            return false;
-         }
-
          try {
-            m_deviceLabel = readOptionalAttribute<QString>(attributes, "label",
+            QString name = readMandatoryAttribute<QString>(attributes, "name");
+            QString label = readOptionalAttribute<QString>(attributes, "label",
                                                            m_state->name());
-            m_deviceUpdateInterval = readOptionalAttribute<quint32>(attributes,
+            quint32 updateInterval = readOptionalAttribute<quint32>(attributes,
                                      "updateInterval", DEFAULT_UPDATE_INTERVAL);
+
+            m_state->addDevice(name, label, updateInterval);
          } catch (QException& e) {
             return false;
          }
-
-         m_parsingDevice = true;
+      } else if (qName.toLower() == "signal") {
+         try {
+            QString name = readMandatoryAttribute<QString>(attributes, "name");
+            m_state->addSignal(name);
+         } catch (QException& e) {
+            return false;
+         }
       }
    } else {
-      m_errorStr = QString("unrecognized element: %1").arg(qName);
+      m_errorStr = QString("Unrecognized element: %1").arg(qName);
       return false;
    }
 
@@ -106,7 +110,7 @@ bool StateLoader::endElement(const QString& namespaceURI,
    Q_UNUSED(namespaceURI);
    Q_UNUSED(localName);
 
-   if (qName.toLower() == "stateholder") {
+   if (qName.toLower() == ELEMENT_STATEHOLDER) {
       m_readingConfiguration = false;
       return true;
    }
@@ -117,7 +121,7 @@ bool StateLoader::endElement(const QString& namespaceURI,
    }
 
    // Handle state end element
-   if (qName.toLower() == "state") {
+   if (qName.toLower() == ELEMENT_STATE) {
       if (!m_state->verifyOptions()) {
          m_errorStr = QString("error while verifying options");
          return false;
@@ -133,10 +137,9 @@ bool StateLoader::endElement(const QString& namespaceURI,
       }
 
       // Handle device end element
-      if (qName.toLower() == "device") {
-         m_state->addDevice(m_data, m_deviceLabel, m_deviceUpdateInterval);
-         m_parsingDevice = false;
-      } else {
+      if (qName.toLower() != "device" &&
+          qName.toLower() != "signal")
+      {
          if (!m_state->setOption(qName, m_data)) {
             m_errorStr = QString("invalid option: %1 (value: %2)")
                                 .arg(qName).arg(m_data);
@@ -175,8 +178,8 @@ QString StateLoader::getErrorMsg() const
 }
 
 template <class T>
-T StateLoader::readMadatoryAttribute(const QXmlAttributes& attributes,
-                                     const QString& name)
+T StateLoader::readMandatoryAttribute(const QXmlAttributes& attributes,
+                                      const QString& name)
 {
    // Check if attribute is missing.
    if (attributes.index(name) == -1) {

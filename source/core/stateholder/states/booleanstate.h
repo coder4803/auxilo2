@@ -28,8 +28,8 @@ public:
     * \param value Value of option.
     * \return True if option is valid, otherwise false.
     */
-   bool setOption(const QString name,
-                  const QString value);
+   bool setOption(const QString& name,
+                  const QString& value);
 
    /*!
     * \brief Sets state value.
