@@ -109,8 +109,10 @@ void DetailModel::parseSignalMessage(const QByteArray& data)
    Utils::SignalMessage message(data);
 
    newRow("Name", message.signalName());
-   newRow("Sender", message.senderName());
-   newRow("Parameters", message.parameters());
+
+   for (int i = 0; i < message.parameters().size(); ++i) {
+      newRow(QString("Parameter %1").arg(i + 1), message.parameters().at(i));
+   }
 
    if (!message.ackGroup().isEmpty()) {
       newRow("AckGroup", message.ackGroup());
