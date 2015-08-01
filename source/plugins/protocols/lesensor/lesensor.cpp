@@ -69,7 +69,7 @@ void LESensor::disconnected(qint32 connectionId)
    Q_UNUSED(connectionId)
 }
 
-void LESensor::dataReceived(const QByteArray& data,
+void LESensor::dataReceived(QByteArray data,
                             qint32 connectionId)
 {
    Q_UNUSED(connectionId)

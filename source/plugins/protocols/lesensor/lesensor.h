@@ -94,7 +94,7 @@ protected slots:
     * \param data Received data.
     * \param connectionId Unused.
     */
-   void dataReceived(const QByteArray& data,
+   void dataReceived(QByteArray data,
                      qint32 connectionId);
 
 private:

@@ -81,7 +81,7 @@ signals:
     * that can have multiple connections. This is common with server
     * connections. Use >= 0. -1 means undefined (or only one connection).
     */
-   void dataReceived(const QByteArray& data,
+   void dataReceived(QByteArray data,
                      qint32 connectionId);
 };
 
