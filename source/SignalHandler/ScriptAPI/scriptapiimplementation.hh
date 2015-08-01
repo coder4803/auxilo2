@@ -1,3 +1,11 @@
+/* scriptapiimplementation.hh
+ * 
+ * This header defines the ScriptApiImplementation class: the concrete 
+ * implementation for the ScriptAPI interface.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #ifndef SCRIPTAPIIMPLEMENTATION_HH
 #define SCRIPTAPIIMPLEMENTATION_HH
 
@@ -16,6 +24,10 @@
 namespace SignalHandler 
 {
 
+/*!
+ * \brief The ScriptApiImplementation class
+ *  Implements the ScriptAPI interface.
+ */
 class ScriptApiImplementation : 
         public QObject, public ScriptAPI, public ScriptUpdateObserver
 {

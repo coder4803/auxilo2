@@ -1,3 +1,10 @@
+/* scriptrunnerpool.cc
+ * This is the implementation file for the ScriptRunnerPool class defined in
+ * scriptrunnerpool.hh.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #include "scriptrunnerpool.hh"
 #include <QDebug>
 
@@ -38,4 +45,4 @@ void ScriptRunnerPool::release(std::unique_ptr<ScriptRunner>&& runner)
     runners_.push_back(std::move(runner));
 }
 
-}
+} // Namespace SignalHandler

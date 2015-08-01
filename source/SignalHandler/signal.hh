@@ -91,6 +91,10 @@ public:
      */
     QStringList getParameters() const;
     
+    /*!
+     * \brief Get acknowledgement information.
+     * \return AckInfo object holding information needed to respond to sender.
+     */
     AckInfo getAckInfo() const;
     
     /*!

@@ -22,9 +22,11 @@ ConfXmlHandler::ConfXmlHandler(ScriptBankInterface::ScriptData* result):
     Q_ASSERT (result_ != nullptr);
 }
 
+
 ConfXmlHandler::~ConfXmlHandler()
 {
 }
+
 
 bool ConfXmlHandler::startElement(const QString& namespaceURI, 
                                   const QString& localName, 
@@ -60,6 +62,7 @@ bool ConfXmlHandler::startElement(const QString& namespaceURI,
     }
 }
 
+
 bool ConfXmlHandler::endElement(const QString& namespaceURI, 
                                 const QString& localName, 
                                 const QString& qName)
@@ -93,6 +96,7 @@ bool ConfXmlHandler::fatalError(const QXmlParseException& exception)
             .arg(exception.columnNumber());
     return false;
 }
+
 
 QString ConfXmlHandler::errorString() const
 {
@@ -191,4 +195,4 @@ bool ConfXmlHandler::readSignal(const QXmlAttributes& atts)
 }
 
 
-}
+} // Namespace SignalHandler

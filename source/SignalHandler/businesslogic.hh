@@ -1,3 +1,11 @@
+/* businesslogic.hh
+ * 
+ * This header file defines the SignalHandler::BusinessLogic class that works
+ * as a hub class binding central SignalHandler components togeather.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #ifndef BUSINESSLOGIC_HH
 #define BUSINESSLOGIC_HH
 
@@ -22,6 +30,11 @@
 namespace SignalHandler
 {
 
+/*!
+ * \brief The BusinessLogic class
+ *  This is a 'hub class' binding central objects togeather. Object of this 
+ *  class controls configuration updates and program lifetime.
+ */
 class BusinessLogic : 
         public QObject, 
         public SignalHandler::ModelInterface,
@@ -32,6 +45,14 @@ class BusinessLogic :
 
 public:
 
+    /*!
+     * \brief Constructor
+     * \param signal_reader Receives signal messages.
+     * \param conf_reader Receives configuration messages.
+     * \param worker_pool Script runner pool.
+     * \param library Initial script bank.
+     * \param parent QObject's parent.
+     */
     BusinessLogic(std::unique_ptr<SignalReader>&& signal_reader,
                   std::unique_ptr<ConfigurationReader>&& conf_reader,
                   std::unique_ptr<ScriptRunnerPool>&& worker_pool,
@@ -61,6 +82,12 @@ public:
     
 private Q_SLOTS:
     
+    /*!
+     * \brief Reacts on new configuration message.
+     * \post tries to set new configuration. On success, old Script bank is
+     *  replaced and all observers are notified. On failure SignalHandler falls
+     *  back using previous script bank.
+     */
     void onConfigurationReceived();
     
     

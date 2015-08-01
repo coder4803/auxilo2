@@ -1,3 +1,11 @@
+/* configurationreader.hh
+ * 
+ * This header defines the ConfigurationReader class that is responsiple for
+ * receiving configuration messages and storeing latest configuration.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #ifndef CONFIGURATIONREADER_HH
 #define CONFIGURATIONREADER_HH
 

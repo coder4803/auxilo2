@@ -1,3 +1,10 @@
+/* signalhandlerbuilder.cc
+ * This is the implementation file for the SignalHandlerBuilder class defined
+ * if signalhandlerbuilder.hh.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #include "signalhandlerbuilder.hh"
 #include "scriptbank.hh"
 #include "scriptbankbuilder.hh"
@@ -27,13 +34,12 @@ SignalHandlerBuilder::~SignalHandlerBuilder()
 ModelInterface* SignalHandlerBuilder::create()
 {
     Utils::Connection::setHost("127.0.0.1");
-    
-    qDebug() << "Starting to build system.";
-    // Get initial configuration.
+
+    // Create empty ScriptBank for initial configuration.
     std::unique_ptr<ConfigurationReader> conf_reader(new ConfigurationReader);
     std::unique_ptr<ScriptBankInterface> bank( ScriptBankBuilder::create() );
     
-    // Create queue and signalreader.
+    // Create other central components
     std::shared_ptr<SignalQueue> queue(new SignalQueue);
     std::unique_ptr<SignalReader> sig_reader(new SignalReader(queue, 
                                                               bank.get()) );
@@ -46,7 +52,5 @@ ModelInterface* SignalHandlerBuilder::create()
     return new BusinessLogic(std::move(sig_reader), std::move(conf_reader), 
                              std::move(worker_pool), std::move(bank));
 }
-
-
 
 } // Namespace SignalHandler

@@ -15,6 +15,9 @@ namespace SignalHandler
 
 namespace Conf 
 {
+    //! Feature name in coreconfig-file.
+    const QString SIGNALHANDLER_FEATURE_NAME ("signalHandler");
+
     //! Define configuration file path with parameter "CONF_PATH"
     const QString CONF_PATH ("signalConfigurationFile");
 

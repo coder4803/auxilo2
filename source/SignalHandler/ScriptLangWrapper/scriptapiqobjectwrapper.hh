@@ -1,3 +1,11 @@
+/* scriptapiqobjectwrapper.hh
+ * 
+ * This header defines the ScriptApiQObjectWrapper class that wraps ScriptAPI
+ * into a QObject so that it could be used in a QtScript program.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #ifndef SCRIPTAPIQOBJECTWRAPPER_HH
 #define SCRIPTAPIQOBJECTWRAPPER_HH
 

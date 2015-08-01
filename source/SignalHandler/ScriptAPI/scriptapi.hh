@@ -1,6 +1,14 @@
 #ifndef SCRIPTAPI_HH
 #define SCRIPTAPI_HH
 
+
+/* scriptapi.hh
+ * 
+ * This header defines the abstract C++ interface for user scripts to use.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #include <QString>
 #include <QStringList>
 #include <QMap>

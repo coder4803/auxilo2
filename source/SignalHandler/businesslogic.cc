@@ -1,3 +1,11 @@
+/* businesslogic.cc
+ * 
+ * This is the implementation file for the BusinessLogic class defined in
+ * businesslogic.cc.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #include "businesslogic.hh"
 #include "scriptbankbuilder.hh"
 #include "configuration.hh"
@@ -13,12 +21,12 @@ BusinessLogic::BusinessLogic(std::unique_ptr<SignalReader>&& signal_reader,
                              QObject* parent) : 
     QObject(parent), ModelInterface(), ScriptUpdateSubject(), 
     PriorityUpdateSubject(), sig_reader_( std::move(signal_reader) ), 
-    conf_reader_( std::move(conf_reader) ), worker_pool( std::move(worker_pool) ), 
+    conf_reader_( std::move(conf_reader) ), worker_pool(std::move(worker_pool)), 
     library_( std::move(library) ), script_observers_(), 
     priority_observers_(), threads_(), workers_(), mx_()
 {
+    // Request initial configuration.
     sig_reader_->setPrioritySubject(this);
-    
     connect(conf_reader_.get(), SIGNAL(configurationUpdated()),
             this, SLOT(onConfigurationReceived()), Qt::DirectConnection);
     conf_reader_->start();
@@ -27,7 +35,14 @@ BusinessLogic::BusinessLogic(std::unique_ptr<SignalReader>&& signal_reader,
 
 BusinessLogic::~BusinessLogic()
 {
-    
+    // Finish joinable threads.
+    for (unsigned i=0; i<workers_.size(); ++i){
+        workers_[i]->stop();
+    }
+    for (unsigned i=0; i<threads_.size(); ++i){
+        threads_[i].join();
+    }
+    threads_.clear();
 }
 
 
@@ -41,15 +56,20 @@ void BusinessLogic::start()
         threads_[i] = std::move(std::thread(&ScriptRunner::start, 
                                             workers_[i].get()) );
     }
-    
-    qDebug() << "Workers are running.";
 }
 
 
 void BusinessLogic::stop()
 {
-    qDebug() << "Stopping...";
+    // Stop receiving signals and finish joinable threads.
     sig_reader_->stop();
+    for (unsigned i=0; i<workers_.size(); ++i){
+        workers_[i]->stop();
+    }
+    for (unsigned i=0; i<threads_.size(); ++i){
+        threads_[i].join();
+    }
+    threads_.clear();
 }
 
 
@@ -99,13 +119,13 @@ void BusinessLogic::onConfigurationReceived()
         return;
     }
     
-    // check worker count
+    // 2. Check worker count. Destroy or create more if neccessary.
     unsigned worker_count = Conf::DEFAULT_WORKERS;
     if (conf.contains(Conf::WORKERS_TAG)){
         worker_count = conf.parameter<unsigned>(Conf::WORKERS_TAG);
     }
     while (worker_count < workers_.size()){
-        // Quit extra threads
+        // Destroy extra workers.
         workers_.back()->stop();
         threads_.back().join();
         threads_.pop_back();
@@ -120,7 +140,7 @@ void BusinessLogic::onConfigurationReceived()
                                         workers_.back().get() ) );
     }
     
-    // 2. Notify all observers.
+    // 3. Notify all observers.
     std::unique_lock<std::mutex> lock(mx_);
     for (PriorityUpdateObserver* obs : priority_observers_){
         obs->notifyOnPriorityUpdate( new_bank.get() );
@@ -129,19 +149,16 @@ void BusinessLogic::onConfigurationReceived()
         obs->notifyOnScriptUpdate( new_bank.get() );
     }
     
-    // 3. replace old library with the new one.
+    // 4. replace old library with the new one.
     new_bank.swap(library_);
     lock.unlock();
     
     qDebug() << "New configuration has been set.";
     if (!sig_reader_->isStarted()){
         sig_reader_->start();
-        qDebug() << "Ready to receive signals.";
     }
     
 }
 
-
-
-}
+} // Namespace SignalHandler
 

@@ -1,3 +1,11 @@
+/* scriptapiqobjectwrapper.cc
+ * 
+ * This is the implementation file for the ScriptApiQObjectWrapper class defined
+ * in scriptapiqobjectwrapper.hh.
+ * 
+ * Author: Perttu Paarlahti:    perttu.paarlahti@gmail.com
+ */
+
 #include "scriptapiqobjectwrapper.hh"
 #include <QDebug>
 

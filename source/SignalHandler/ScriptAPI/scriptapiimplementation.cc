@@ -1,3 +1,11 @@
+/* scriptapiimplementation.cc
+ * 
+ * This is the implementation file for the ScriptApiImplementation class defined
+ * in scriptapiimplementation.hh.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #include "scriptapiimplementation.hh"
 #include "requeststatemessage.h"
 #include "setstatemessage.h"

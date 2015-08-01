@@ -21,6 +21,7 @@
 /*!
  * \brief The ConsoleUI class
  *  The console user interface.
+ * \deprecated This class is deprecated because it does not work in a Qt-app.
  */
 class ConsoleUI : public SignalHandler::ViewInterface
 {

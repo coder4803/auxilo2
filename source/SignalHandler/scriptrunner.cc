@@ -22,6 +22,7 @@ ScriptRunner::ScriptRunner(std::shared_ptr<SignalQueue> queue,
 {
     Q_ASSERT(queue != nullptr);
     Q_ASSERT(lib != nullptr);
+    Q_ASSERT(pool != nullptr);
     
     if (subject_ != nullptr){
         subject_->registerObserver(this);
@@ -58,6 +59,8 @@ void ScriptRunner::setScriptUpdateSubject(ScriptUpdateSubject* sub)
 
 void ScriptRunner::start()
 {
+    Q_ASSERT (subject_ != nullptr);
+    
     typedef ScriptLangWrapperPool::ScriptLangWrapperPtr ScriptLangWrapperPtr;
     end_flag_.store(false);
     
@@ -128,6 +131,4 @@ void ScriptRunner::notifyOnScriptUpdate(const ScriptLibrary* new_lib)
     update_mx_.unlock();
 }
 
-
-
-}
+} // Namespace SignalHandler.

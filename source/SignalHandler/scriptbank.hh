@@ -7,7 +7,6 @@
  * 
  * Author: Perttu Paarlahti (perttu.paarlahti@gmail.com)
  * Created: 05-Mar-2015
- * Last Modified: 31-Mar-2015
  */
 
 
