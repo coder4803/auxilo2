@@ -13,21 +13,19 @@ CONFIG   += console
 CONFIG   -= app_bundle
 CONFIG   += c++11
 
-INCLUDEPATH     += /ScriptLangWrapper
-INCLUDEPATH     += /exceptions
-INCLUDEPATH     += /interfaces
-INCLUDEPATH     += /communication
-INCLUDEPATH     += /ScriptAPI
-INCLUDEPATH     += ../../externals/include/
-INCLUDEPATH     += ../utils/messagegroup/
-INCLUDEPATH     += ../utils/messages/
+INCLUDEPATH     += ../../utils/messagegroup/ \
+                   ../../utils/messages/ \
+                   /ScriptLangWrapper \
+                   /exceptions \
+                   /interfaces \
+                   /communication \
+                   /ScriptAPI
 
-LIBS            += -L../../build/lib/ -lmessagegroup
-LIBS            += -L../../build/lib/ -lmessages
 
+LIBS            += -L../../../build/lib/ -lmessagegroup \
+                   -L../../../build/lib/ -lmessages
 
 TEMPLATE = app
-
 
 SOURCES += main.cc \
     signal.cc \
@@ -42,7 +40,6 @@ SOURCES += main.cc \
     ScriptLangWrapper/qtscriptwrapper.cc \
     ScriptLangWrapper/scriptlangwrapperfactory.cc \
     ScriptAPI/scriptapiimplementation.cc \
-    consoleui.cc \
     signalhandlerbuilder.cc \
     ScriptLangWrapper/scriptapiqobjectwrapper.cc \
     communication/configurationreader.cc \
@@ -73,8 +70,6 @@ HEADERS += \
     ScriptLangWrapper/qtscriptwrapper.hh \
     ScriptAPI/scriptapi.hh \
     ScriptAPI/scriptapiimplementation.hh \
-    interfaces/viewinterface.hh \
-    consoleui.hh \
     interfaces/modelinterface.hh \
     signalhandlerbuilder.hh \
     ScriptLangWrapper/scriptapiqobjectwrapper.hh \
@@ -83,3 +78,5 @@ HEADERS += \
     configuration.hh \
     confxmlhandler.hh \
     scriptrunnerpool.hh
+
+DESTDIR         = ../../../build/bin/

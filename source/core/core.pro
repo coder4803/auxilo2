@@ -9,4 +9,5 @@ SUBDIRS         = stateholder \
                   confmanager \
                   plugininterfaces \
                   interface \
-                  messagebroker
+                  messagebroker \
+                  SignalHandler
