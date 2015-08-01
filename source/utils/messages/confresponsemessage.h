@@ -191,6 +191,7 @@ T ParameterSet::parameter(QString name,
 template <class T>
 T ParameterSet::parameter(QString name) const
 {
+   name = name.toLower();
    if (!m_parameters.contains(name)) {
       qCritical("Missing mandatory parameter: %s", name.toLatin1().data());
       throw QException();
