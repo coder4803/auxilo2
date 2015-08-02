@@ -41,7 +41,7 @@ Interface::~Interface()
    qCritical("Program is terminated.");
 }
 
-void Interface::onPublish(const QByteArray& message,
+void Interface::onPublish(QByteArray message,
                           QString group)
 {
    Utils::MessageGroup::publish(message, group);

@@ -15,6 +15,14 @@ StateChangedMessage::StateChangedMessage(QString label,
    }
 }
 
+StateChangedMessage::StateChangedMessage(const StateChangedMessage& other) :
+   m_label(other.label()),
+   m_value(other.value()),
+   m_ackGroup(other.ackGroup()),
+   m_ackId(other.ackId())
+{
+}
+
 StateChangedMessage::StateChangedMessage(QByteArray data)
 {
    QDataStream stream(data);

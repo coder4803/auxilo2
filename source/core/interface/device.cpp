@@ -19,6 +19,7 @@ Device::Device(QString name,
    m_name(name),
    m_communication(NULL),
    m_protocol(NULL),
+   m_lastStateChangedMessage(QString(), QVariant(), QString()),
    m_confResponseGroup(NULL),
    m_stateResponseGroup(NULL),
    m_signalGroup(NULL),
@@ -96,11 +97,9 @@ void Device::handleStateChangedMessage(QByteArray payload)
    QString label = message.label();
    QVariant value = message.value();
 
-   Utils::StateChangedAckMessage::Result result =
-         m_protocol->handleStateChange(label, value);
+   m_lastStateChangedMessage = message;
 
-   Utils::StateChangedAckMessage ack = message.createAckMessage(result);
-   emit publish(ack.data(), message.ackGroup());
+   m_protocol->handleStateChange(label, value);
 }
 
 void Device::handleSignalAckMessage(QByteArray payload)
@@ -167,6 +166,26 @@ void Device::sendSignal(QString name,
    }
 }
 
+void Device::acknowledgeStateChange(Utils::StateChangedAckMessage::Result result,
+                                    QVariant stateValue)
+{
+   if (!m_lastStateChangedMessage.ackGroup().isEmpty()) {
+      if (result == Utils::StateChangedAckMessage::SUCCEEDED &&
+          stateValue != m_lastStateChangedMessage.value())
+      {
+         result = Utils::StateChangedAckMessage::FAILED;
+      }
+
+      Utils::StateChangedAckMessage ackMessage =
+            m_lastStateChangedMessage.createAckMessage(result);
+
+      emit publish(ackMessage.data(), m_lastStateChangedMessage.ackGroup());
+
+      m_lastStateChangedMessage =
+            Utils::StateChangedMessage(QString(), QVariant(), QString());
+   }
+}
+
 void Device::sendLog(QString message,
                      Utils::LogMessage::LogType type)
 {
@@ -208,6 +227,10 @@ bool Device::createProtocol()
            this, SLOT(requestStateValue(QString)));
    connect(m_protocol, SIGNAL(sendSignal(QString,QStringList,bool)),
            this, SLOT(sendSignal(QString,QStringList,bool)));
+   connect(m_protocol, SIGNAL(acknowledgeStateChange(
+           Utils::StateChangedAckMessage::Result,QVariant)),
+           this, SLOT(acknowledgeStateChange(
+           Utils::StateChangedAckMessage::Result,QVariant)));
    connect(m_protocol, SIGNAL(sendLog(QString,Utils::LogMessage::LogType)),
            this, SLOT(sendLog(QString,Utils::LogMessage::LogType)));
 

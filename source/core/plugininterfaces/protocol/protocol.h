@@ -90,11 +90,9 @@ public:
     * of handling.
     * \param label Device's label for state name.
     * \param value State value.
-    * \return Result of handling state change message.
     */
-   virtual Utils::StateChangedAckMessage::Result
-   handleStateChange(const QString& label,
-                     const QVariant& value) = 0;
+   virtual void handleStateChange(const QString& label,
+                                  const QVariant& value) = 0;
 
    /*!
     * \brief This method should handle signal acknowledge message.
@@ -203,6 +201,14 @@ signals:
    void sendSignal(QString name,
                    QStringList parameters,
                    bool ackRequired = false);
+
+   /*!
+    * \brief This signal is used to send acknowledge to state change message.
+    * \param result Result of handling state change message
+    * \param value Current state value on device.
+    */
+   void acknowledgeStateChange(Utils::StateChangedAckMessage::Result result,
+                               QVariant value);
 
    /*!
     * \brief This signal is used to send log message.

@@ -56,7 +56,7 @@ signals:
     * \param message Payload of message.
     * \param group Name fo group.
     */
-   void publish(const QByteArray& message, QString group);
+   void publish(QByteArray message, QString group);
 
 private slots:
    /* ######################
@@ -137,6 +137,14 @@ private slots:
                    bool ackRequired = false);
 
    /*!
+    * \brief Sends acknowledge message for StateChanged message if required.
+    * \param result Result of handling StateChanged message.
+    * \param stateValue Current state value.
+    */
+   void acknowledgeStateChange(Utils::StateChangedAckMessage::Result result,
+                               QVariant stateValue);
+
+   /*!
     * \brief Sends log message.
     * \param message Log message (payload).
     * \param type Type of log message.
@@ -185,6 +193,9 @@ private:
 
    //! Protocol used by this device.
    Plugins::Protocol* m_protocol;
+
+   //! Last received StateChangeMessage (for ack purposes).
+   Utils::StateChangedMessage m_lastStateChangedMessage;
 
    // Message groups.
    Utils::MessageGroup* m_confResponseGroup;

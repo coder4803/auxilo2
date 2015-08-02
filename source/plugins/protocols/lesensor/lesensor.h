@@ -54,11 +54,9 @@ public:
     * \brief Empty implementation.
     * \param label Unused.
     * \param value Unused.
-    * \return Always INVALID_LABEL.
     */
-   Utils::StateChangedAckMessage::Result
-   handleStateChange(const QString& label,
-                     const QVariant& value);
+   void handleStateChange(const QString& label,
+                          const QVariant& value);
 
    /*!
     * \brief Empty implementation.
