@@ -51,17 +51,14 @@ public:
    /*!
     * \brief Writes data to group.
     * \param data Data to write.
-    * \return Returns true if group is ready (ready-signal is emitted),
-    * otherwise false.
     */
-   bool publish(const QByteArray data);
+   void publish(const QByteArray data);
 
    /*!
     * \brief Writes message to group.
     * \param message Message to write.
-    * \return Returns true if message was sent successfully.
     */
-   bool publish(const Message& message);
+   void publish(const Message& message);
 
    /*!
     * \brief Writes data to specified group.
@@ -69,9 +66,8 @@ public:
     * (i.e. reply and ack).
     * \param message Data to write.
     * \param group Target group name.
-    * \return Returns true if message was sent successfully.
     */
-   static bool publish(const QByteArray data,
+   static void publish(const QByteArray data,
                        const QString group);
 
    /*!
@@ -80,9 +76,8 @@ public:
     * (i.e. reply and ack).
     * \param message Message to write.
     * \param group Target group name.
-    * \return Returns true if message was sent successfully.
     */
-   static bool publish(const Message& message,
+   static void publish(const Message& message,
                        const QString group);
 
 signals:
