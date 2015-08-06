@@ -33,6 +33,12 @@ public:
     */
    SignalMessage(QByteArray data);
 
+   //! Copy-constructor
+   SignalMessage(const SignalMessage& other);
+
+   //! Copy-assignment
+   SignalMessage operator=(const SignalMessage& other);
+
    /*!
     * \brief Append parameter to parameter list.
     * \param value Parameter's value.

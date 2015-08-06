@@ -32,6 +32,12 @@ public:
     */
    ConfRequestMessage(QByteArray data);
 
+   //! Copy-constructor
+   ConfRequestMessage(const ConfRequestMessage& other);
+
+   //! Copy-assignment
+   ConfRequestMessage operator=(const ConfRequestMessage& other);
+
    /*!
     * \brief Returns response group name.
     * \return Group name to send state response.

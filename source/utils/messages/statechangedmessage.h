@@ -27,18 +27,18 @@ public:
                        QString ackGroup = QString());
 
    /*!
-    * \brief Copy constructor.
-    * \param other Object to copy.
-    */
-   StateChangedMessage(const StateChangedMessage& other);
-
-   /*!
     * \brief Constructor.
     * This constructor is used to create state change message from
     * received binary data.
     * \param data Received binary data.
     */
    StateChangedMessage(QByteArray data);
+
+   //! Copy-constructor
+   StateChangedMessage(const StateChangedMessage& other);
+
+   //! Copy-assignment
+   StateChangedMessage operator=(const StateChangedMessage& other);
 
    /*!
     * \brief Retuns label. Label is alias for state name.

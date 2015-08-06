@@ -16,6 +16,7 @@ SOURCES         += orvibosockets20plugin.cpp \
 HEADERS         += orvibosockets20plugin.h \
                    orvibosockets20.h
 
-LIBS            += -L../../../../build/lib/ -lprotocol
+LIBS            += -L../../../../build/lib/ -lprotocol \
+                   -L../../../build/lib/ -lmessages
 
 DESTDIR         = ../../../../build/bin/plugins/protocol/

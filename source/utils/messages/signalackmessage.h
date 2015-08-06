@@ -38,6 +38,12 @@ public:
     */
    SignalAckMessage(QByteArray data);
 
+   //! Copy-constructor
+   SignalAckMessage(const SignalAckMessage& other);
+
+   //! Copy-assignment
+   SignalAckMessage operator=(const SignalAckMessage& other);
+
    /*!
     * \brief Returns acknowledge id.
     * \return Acknowledge id.

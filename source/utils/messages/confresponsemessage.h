@@ -29,6 +29,12 @@ public:
     */
    ParameterSet(QString featureName);
 
+   //! Copy-constructor
+   ParameterSet(const ParameterSet& other);
+
+   //! Copy-assignment
+   ParameterSet operator=(const ParameterSet& other);
+
    /*!
     * \brief Sets parameter feature name.
     * \param featureName Parameter feature name.
@@ -139,6 +145,12 @@ public:
     * \param payload Received binary data.
     */
    ConfResponseMessage(const QByteArray& payload);
+
+   //! Copy-constructor
+   ConfResponseMessage(const ConfResponseMessage& other);
+
+   //! Copy-assignment
+   ConfResponseMessage operator=(const ConfResponseMessage& other);
 
    /*!
     * \brief Sets result of request.

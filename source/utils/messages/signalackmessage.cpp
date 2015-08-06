@@ -23,6 +23,23 @@ SignalAckMessage::SignalAckMessage(QByteArray data) :
    m_result = static_cast<Result>(tmp);
 }
 
+SignalAckMessage::SignalAckMessage(const SignalAckMessage& other) :
+   m_ackId(other.ackId()),
+   m_result(other.result())
+{
+}
+
+SignalAckMessage
+SignalAckMessage::operator=(const SignalAckMessage& other)
+{
+   if (&other != this) {
+      m_ackId = other.ackId();
+      m_result = other.result();
+   }
+
+   return *this;
+}
+
 QByteArray SignalAckMessage::data() const
 {
    QByteArray message;

@@ -8,6 +8,23 @@ ParameterSet::ParameterSet()
 {
 }
 
+ParameterSet::ParameterSet(const ParameterSet& other) :
+   m_featureName(other.featureName()),
+   m_parameters(other.parameters())
+{
+}
+
+ParameterSet
+ParameterSet::operator=(const ParameterSet& other)
+{
+   if (&other != this) {
+      m_featureName = other.featureName();
+      m_parameters = other.parameters();
+   }
+
+   return *this;
+}
+
 ParameterSet::ParameterSet(QString featureName) :
    m_featureName(featureName)
 {
@@ -109,6 +126,23 @@ ConfResponseMessage::ConfResponseMessage(const QByteArray& payload) :
 
       m_parameterSet.appendParameter(name, value);
    }
+}
+
+ConfResponseMessage::ConfResponseMessage(const ConfResponseMessage& other) :
+   m_parameterSet(other.parameterSet()),
+   m_result(other.result())
+{
+}
+
+ConfResponseMessage
+ConfResponseMessage::operator=(const ConfResponseMessage& other)
+{
+   if (&other != this) {
+      m_parameterSet = other.parameterSet();
+      m_result = other.result();
+   }
+
+   return *this;
 }
 
 QByteArray ConfResponseMessage::data() const

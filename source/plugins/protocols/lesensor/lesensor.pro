@@ -16,6 +16,7 @@ SOURCES         += lesensorplugin.cpp \
 HEADERS         += lesensorplugin.h \
                    lesensor.h
 
-LIBS            += -L../../../../build/lib/ -lprotocol
+LIBS            += -L../../../../build/lib/ -lprotocol \
+                   -L../../../build/lib/ -lmessages
 
 DESTDIR         = ../../../../build/bin/plugins/protocol/

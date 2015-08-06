@@ -19,6 +19,25 @@ ConfRequestMessage::ConfRequestMessage(QByteArray data)
    stream >> m_coreFeature;
 }
 
+ConfRequestMessage::ConfRequestMessage(const ConfRequestMessage& other) :
+   m_responseGroup(other.responseGroup()),
+   m_featureName(other.featureName()),
+   m_coreFeature(other.isCoreFeature())
+{
+}
+
+ConfRequestMessage
+ConfRequestMessage::operator=(const ConfRequestMessage& other)
+{
+   if (&other != this) {
+      m_responseGroup = other.responseGroup();
+      m_featureName = other.featureName();
+      m_coreFeature = other.isCoreFeature();
+   }
+
+   return *this;
+}
+
 QByteArray ConfRequestMessage::data() const
 {
    QByteArray message;
