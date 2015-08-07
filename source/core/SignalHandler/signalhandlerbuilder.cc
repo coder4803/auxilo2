@@ -31,9 +31,9 @@ SignalHandlerBuilder::~SignalHandlerBuilder()
 }
 
 
-ModelInterface* SignalHandlerBuilder::create()
+ModelInterface* SignalHandlerBuilder::create(const QString& serverAddress)
 {
-    Utils::Connection::setHost("127.0.0.1");
+    Utils::Connection::setHost(serverAddress);
 
     // Create empty ScriptBank for initial configuration.
     std::unique_ptr<ConfigurationReader> conf_reader(new ConfigurationReader);

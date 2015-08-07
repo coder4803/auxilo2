@@ -83,7 +83,7 @@ Utils::StateResponseMessage::State
 ScriptApiImplementation::getStateOf(const QString& stateName)
 {
     Utils::RequestStateMessage msg(reqGroupName_, stateName);
-    Utils::MessageGroup::publish(msg, "StateHolder???");
+    Utils::MessageGroup::publish(msg, Utils::REQUEST_STATE_GROUP);
     
     // Wait for response...
     std::unique_lock<std::mutex> lock(waitMx_);
@@ -103,7 +103,7 @@ ScriptAPI::StateMap
 ScriptApiImplementation::getStates(const QStringList& states)
 {
     Utils::RequestStateMessage msg(reqGroupName_, states);
-    Utils::MessageGroup::publish(msg, "StateHolder???");
+    Utils::MessageGroup::publish(msg, Utils::REQUEST_STATE_GROUP);
     
     // Wait for response...
     std::unique_lock<std::mutex> lock(waitMx_);  
@@ -139,7 +139,7 @@ int ScriptApiImplementation::setState(const QString& stateName,
                                       const QVariant& value)
 {
     Utils::SetStateMessage msg(stateName, value, ackGroupName_);
-    Utils::MessageGroup::publish(msg, "StateHolder???");
+    Utils::MessageGroup::publish(msg, Utils::SET_STATE_GROUP);
     
     // Wait for response...
     std::unique_lock<std::mutex> lock(waitMx_);

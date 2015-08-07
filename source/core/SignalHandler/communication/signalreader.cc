@@ -72,9 +72,8 @@ void SignalReader::start(const QString& group_name)
 
 bool SignalReader::isStarted() const
 {
-    update_mx_.lock();
+    std::lock_guard<std::mutex> lock(update_mx_);
     return group_ != nullptr;
-    update_mx_.unlock();
 }
 
 
@@ -92,9 +91,8 @@ void SignalReader::notifyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib)
 {
     // Change used priority library.
     Q_ASSERT(new_lib != nullptr);
-    update_mx_.lock();
+    std::lock_guard<std::mutex> lock(update_mx_);
     lib_ = new_lib;
-    update_mx_.unlock();
 }
 
 

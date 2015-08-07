@@ -45,7 +45,7 @@ public:
      * \return New instance of model implementation. Ownership is passed to the
      *  caller.
      */
-    ModelInterface* create();
+    ModelInterface* create(const QString& serverAddress);
 };
 
 } // Namespace SignalHandler

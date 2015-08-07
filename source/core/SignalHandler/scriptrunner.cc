@@ -63,12 +63,12 @@ void ScriptRunner::start()
     
     typedef ScriptLangWrapperPool::ScriptLangWrapperPtr ScriptLangWrapperPtr;
     end_flag_.store(false);
+    qDebug() << "Worker" << runner_id_ << "Started";
     
     while (!end_flag_.load())
     {
         Signal s;
         if ( !queue_->try_pop(s, std::chrono::milliseconds(1000) ) ){
-            qDebug() << "SignalQueue timed out for runner" << runner_id_;
             continue;
         }
         
