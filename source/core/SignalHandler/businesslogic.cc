@@ -116,6 +116,7 @@ void BusinessLogic::onConfigurationReceived()
     catch(ScriptBankBuilderError& e){
         qDebug() << "Configuration failed!";
         qDebug() << "Error with configuration:" << e.getMessage();
+        conf_reader_->restart();
         return;
     }
     

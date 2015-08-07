@@ -59,6 +59,12 @@ public:
     void start(const QString& group_name = Utils::CONF_REQUEST_GROUP);
     
     /*!
+     * \brief Start requesting configuration again. This could be used, if 
+     *  earlier received configuration was invalid.
+     */
+    void restart();
+    
+    /*!
      * \brief Get latest configuration.
      * \return ParameterSet that holds SignalHandler configuration.
      * \pre None.

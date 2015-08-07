@@ -57,6 +57,12 @@ void ConfigurationReader::start(const QString& group_name)
 }
 
 
+void ConfigurationReader::restart()
+{
+    retry_timer_.start();
+}
+
+
 Utils::ParameterSet ConfigurationReader::getConfiguration() const
 {
     std::lock_guard<std::mutex> lock(mx_);
@@ -91,7 +97,8 @@ void ConfigurationReader::onResponseGroupReady()
     if (!retry_timer_.isActive()){
         connect(&retry_timer_, SIGNAL(timeout()),
                 this, SLOT(onResponseGroupReady()) );
-        retry_timer_.start(RETRY_INTERVAL_);
+        retry_timer_.setInterval(RETRY_INTERVAL_);
+        retry_timer_.start();
     }
 }
 
