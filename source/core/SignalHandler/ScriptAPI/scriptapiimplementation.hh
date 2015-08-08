@@ -64,6 +64,8 @@ public:
      */
     void setSubject(ScriptUpdateSubject* sub);
     
+    void setSender(const QString& name);
+    
     // ScriptApi interface implementations. See scriptapi.hh for documentation.
     
     virtual QDateTime dateTimeNow() const;
@@ -75,7 +77,10 @@ public:
     
     virtual int setState(const QString& stateName, const QVariant& value);
     
-    virtual int sendSignal(const QString& signalName, const QStringList& args);
+    virtual int sendSignal(const QString& signalName, const QStringList& args,
+                           const QString& target = QString() );
+    
+    virtual QString getSender() const;
     
     // Implements the ScriptUpdateObserver interface.
     virtual void notifyOnScriptUpdate(const ScriptLibrary* new_lib);
@@ -97,6 +102,7 @@ private:
     QString ackGroupName_;
     Utils::StateResponseMessage pendingReq_;
     Utils::SetStateAckMessage pendingAck_;
+    QString senderName_;
     
     std::mutex updateMx_;
     std::mutex waitMx_;

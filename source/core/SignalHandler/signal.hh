@@ -36,9 +36,10 @@ public:
     {
         QString ackGroup;
         quint32 ackID;
+        QString senderName;
         
         AckInfo();
-        AckInfo(const QString& group, quint32 id);
+        AckInfo(const QString& group, quint32 id, const QString& sender);
     };
     
     /*!

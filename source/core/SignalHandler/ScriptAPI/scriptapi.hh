@@ -78,7 +78,15 @@ public:
      * \return 0 if signal was handled successfully.
      */
     virtual int sendSignal(const QString& signalName, 
-                           const QStringList& args) = 0;
+                           const QStringList& args,
+                           const QString& target = QString() ) = 0;
+    
+    /*!
+     * \brief Get sender name.
+     * \return Name of the sender of the signal.
+     * \pre None.
+     */
+    virtual QString getSender() const = 0;
 };
 
 }

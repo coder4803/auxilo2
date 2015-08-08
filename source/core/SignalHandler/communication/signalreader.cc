@@ -114,7 +114,7 @@ void SignalReader::onMessageReceived(QByteArray data)
     }
 
     // Add signal to the queue.
-    Signal::AckInfo ack_info(msg.ackGroup(), msg.ackId());
+    Signal::AckInfo ack_info(msg.ackGroup(), msg.ackId(), msg.senderName());
     Signal s(priority, msg.signalName(), msg.parameters(), ack_info);
     queue_->push(s);
 }

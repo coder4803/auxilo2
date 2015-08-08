@@ -66,12 +66,12 @@ bool Signal::operator<(const Signal& rhs) const
 }
 
 
-Signal::AckInfo::AckInfo() : ackGroup(), ackID(0)
+Signal::AckInfo::AckInfo() : ackGroup(), ackID(0), senderName()
 {
 }
 
-Signal::AckInfo::AckInfo(const QString& group, quint32 id):
-    ackGroup(group), ackID(id)
+Signal::AckInfo::AckInfo(const QString& group, quint32 id, const QString& sender):
+    ackGroup(group), ackID(id), senderName(sender)
 {
 }
 

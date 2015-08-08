@@ -9,6 +9,7 @@
 #include "scriptapiimplementation.hh"
 #include "requeststatemessage.h"
 #include "setstatemessage.h"
+#include "signalmessage.h"
 #include "ScriptLangWrapper/scriptlangwrapperfactory.hh"
 #include "exceptions/scriptrunexceptions.hh"
 #include <ctime>
@@ -22,12 +23,12 @@ namespace SignalHandler
 ScriptApiImplementation::ScriptApiImplementation(const ScriptLibrary* lib, 
                                                  ScriptUpdateSubject* subject, 
                                                  const QString& namingSuffix):
-    QObject(), ScriptAPI(), ScriptUpdateObserver(), lib_(lib), subject_(subject),
-    reqGroup_(nullptr), ackGroup_(nullptr),
+    QObject(), ScriptAPI(), ScriptUpdateObserver(),
+    lib_(lib), subject_(subject), reqGroup_(nullptr), ackGroup_(nullptr),
     reqGroupName_(QString("SignalHandlerStateReq") + namingSuffix),
     ackGroupName_(QString("SignalHandlerStateAck") + namingSuffix),
     pendingReq_(), pendingAck_(0, Utils::SetStateAckMessage::FAILED),
-    updateMx_(), waitMx_(), cv_()
+    senderName_(), updateMx_(), waitMx_(), cv_()
 {
     Q_ASSERT(lib != nullptr);
     
@@ -70,6 +71,12 @@ void ScriptApiImplementation::setSubject(ScriptUpdateSubject* sub)
     }
     subject_ = sub;
     subject_->registerObserver(this);
+}
+
+
+void ScriptApiImplementation::setSender(const QString& name)
+{
+    senderName_ = name;
 }
 
 
@@ -161,8 +168,17 @@ int ScriptApiImplementation::setState(const QString& stateName,
 }
 
 int ScriptApiImplementation::sendSignal(const QString& signalName, 
-                                        const QStringList& args)
+                                        const QStringList& args, 
+                                        const QString& target)
 {
+    if (!target.isEmpty()){
+        // Send signal to a device
+        Utils::SignalMessage msg(signalName, "SignalHandler", args);
+        Utils::MessageGroup::publish(msg, target+Utils::SIGNAL_POST_FIX);
+        return;
+    }
+    // Run another script:
+    
     // Get script info
     QString lang, script;
     try {
@@ -191,6 +207,12 @@ int ScriptApiImplementation::sendSignal(const QString& signalName,
     }
     
     return 0;
+}
+
+
+QString ScriptApiImplementation::getSender() const
+{
+    return senderName_;
 }
 
 

@@ -1,3 +1,11 @@
+/* scriptrunner.cc
+ * 
+ * This is the implementation file for the ScriptRunner class defined in
+ * scriptrunner.hh.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #include "scriptrunner.hh"
 #include <QDebug>
 #include "messagegroup.h"
@@ -86,6 +94,10 @@ void ScriptRunner::start()
             continue;
         }
         
+        // Set sender to ScriptApi
+        QString sender = s.getAckInfo().senderName;
+        dynamic_cast<ScriptApiImplementation*>(services_)->setSender(sender);
+        // Run the script.
         try
         {
             interpreter->run( script, s.getParameters(), services_);
