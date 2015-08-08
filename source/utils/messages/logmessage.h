@@ -41,6 +41,12 @@ public:
     */
    LogMessage(QByteArray data);
 
+   //! Copy-constructor
+   LogMessage(const LogMessage& other);
+
+   //! Copy-assignment
+   LogMessage operator=(const LogMessage& other);
+
    /*!
     * \brief Returns log message string.
     * \return Log message string.

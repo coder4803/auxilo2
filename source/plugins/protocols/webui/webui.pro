@@ -1,7 +1,7 @@
 QT              -= gui
 QT              += network
 
-TARGET          = lesensor
+TARGET          = webui
 TEMPLATE        = lib
 CONFIG          += plugin
 
@@ -10,11 +10,11 @@ INCLUDEPATH     += ../../../core/interface \
                    ../../../core/plugininterfaces \
                    ../../../core/plugininterfaces/protocol
 
-SOURCES         += lesensorplugin.cpp \
-                   lesensor.cpp
+SOURCES         += webuiplugin.cpp \
+                   webui.cpp
 
-HEADERS         += lesensorplugin.h \
-                   lesensor.h
+HEADERS         += webuiplugin.h \
+                   webui.h
 
 LIBS            += -L../../../../build/lib/ -lprotocol \
                    -L../../../build/lib/ -lmessages

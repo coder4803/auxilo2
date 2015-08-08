@@ -68,9 +68,8 @@ public:
    /*!
     * \brief Sends message to message system.
     * \param payload Message payload.
-    * \return True on success, false on failure.
     */
-   bool sendMessage(QByteArray payload);
+   Q_INVOKABLE void sendMessage(QByteArray payload);
 
 signals:
    void connected();

@@ -15,8 +15,8 @@ BooleanState::BooleanState(QString name,
 {
 }
 
-bool BooleanState::setOption(const QString name,
-                             const QString value)
+bool BooleanState::setOption(const QString& name,
+                             const QString& value)
 {
    // Default option is used to set states default value at the beginning.
    if (name.toLower() == "default") {

@@ -1,7 +1,7 @@
 QT              -= gui
 QT              += network
 
-TARGET          = lesensor
+TARGET          = orvibosockets20
 TEMPLATE        = lib
 CONFIG          += plugin
 
@@ -10,11 +10,11 @@ INCLUDEPATH     += ../../../core/interface \
                    ../../../core/plugininterfaces \
                    ../../../core/plugininterfaces/protocol
 
-SOURCES         += lesensorplugin.cpp \
-                   lesensor.cpp
+SOURCES         += orvibosockets20plugin.cpp \
+                   orvibosockets20.cpp
 
-HEADERS         += lesensorplugin.h \
-                   lesensor.h
+HEADERS         += orvibosockets20plugin.h \
+                   orvibosockets20.h
 
 LIBS            += -L../../../../build/lib/ -lprotocol \
                    -L../../../build/lib/ -lmessages

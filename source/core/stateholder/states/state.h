@@ -43,9 +43,15 @@ public:
     * \param updateInterval How often state is tried to update to device
     * (until succeeded).
     */
-   void addDevice(const QString name,
-                  const QString label,
+   void addDevice(const QString& name,
+                  const QString& label,
                   quint32 updateInterval);
+
+   /*!
+    * \brief Links signal to the state change.
+    * \param name Name of the signal.
+    */
+   void addSignal(const QString& name);
 
    /*!
     * \brief Sets an option. Each state has its own options.
@@ -53,8 +59,8 @@ public:
     * \param value Value of option.
     * \return True if option is valid, otherwise false.
     */
-   virtual bool setOption(const QString name,
-                          const QString value);
+   virtual bool setOption(const QString& name,
+                          const QString& value);
 
    /*!
     * \brief Verifys options.
@@ -96,10 +102,16 @@ public:
    virtual QVariant getState() const = 0;
 
    /*!
+    * \brief Returns list of linked lists.
+    * \return List of linked lists.
+    */
+   QStringList getSignals() const { return m_signals; }
+
+   /*!
     * \brief Returns state value.
     * \return State value.
     */
-   QString name() { return m_name; }
+   QString name() const { return m_name; }
 
 protected:
    /*!
@@ -171,6 +183,9 @@ private:
 
    //! Container for linked devices.
    QHash<QString, Device*> m_devices;
+
+   //! Container for linked signals.
+   QStringList m_signals;
 
    /*!
     * \brief Reads persited value from data base.

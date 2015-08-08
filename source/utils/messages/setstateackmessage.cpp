@@ -23,6 +23,23 @@ SetStateAckMessage::SetStateAckMessage(QByteArray data) :
    m_result = static_cast<Result>(tmp);
 }
 
+SetStateAckMessage::SetStateAckMessage(const SetStateAckMessage& other) :
+   m_ackId(other.ackId()),
+   m_result(other.result())
+{
+}
+
+SetStateAckMessage
+SetStateAckMessage::operator=(const SetStateAckMessage& other)
+{
+   if (&other != this) {
+      m_ackId = other.ackId();
+      m_result = other.result();
+   }
+
+   return *this;
+}
+
 QByteArray SetStateAckMessage::data() const
 {
    QByteArray message;

@@ -9,8 +9,8 @@ IntegerState::IntegerState(QString name,
 {
 }
 
-bool IntegerState::setOption(const QString name,
-                             const QString value)
+bool IntegerState::setOption(const QString& name,
+                             const QString& value)
 {
    if (name.toLower() == "default") {
       bool ok = false;

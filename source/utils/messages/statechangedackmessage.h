@@ -41,6 +41,12 @@ public:
     */
    StateChangedAckMessage(QByteArray data);
 
+   //! Copy-constructor
+   StateChangedAckMessage(const StateChangedAckMessage& other);
+
+   //! Copy-assignment
+   StateChangedAckMessage operator=(const StateChangedAckMessage& other);
+
    /*!
     * \brief Returns result of acknowledge.
     * \return Acknowledge result.

@@ -4,6 +4,32 @@
 
 namespace Utils {
 
+StateResponseMessage::State::State(bool Available,
+      QVariant Value,
+      bool DevicesAreUpToDate) :
+   available(Available),
+   value(Value),
+   devicesAreUpToDate(DevicesAreUpToDate)
+{}
+
+StateResponseMessage::State::State(const State& other) :
+   available(other.available),
+   value(other.value),
+   devicesAreUpToDate(other.devicesAreUpToDate)
+{}
+
+StateResponseMessage::State
+StateResponseMessage::State::operator=(const StateResponseMessage::State& other)
+{
+   if (&other != this) {
+      available = other.available;
+      value = other.value;
+      devicesAreUpToDate = other.devicesAreUpToDate;
+   }
+
+   return *this;
+}
+
 StateResponseMessage::StateResponseMessage()
 {
 }
@@ -33,6 +59,25 @@ StateResponseMessage::StateResponseMessage(const QByteArray& payload)
          m_states.insert(name, new State(false));
       }
    }
+}
+
+StateResponseMessage::StateResponseMessage(const StateResponseMessage &other)
+{
+   foreach (State* state, other.states()) {
+      this->appendState(other.states().key(state), *state);
+   }
+}
+
+StateResponseMessage
+StateResponseMessage::operator=(const StateResponseMessage &other)
+{
+   if (&other != this) {
+      foreach (State* state, other.states()) {
+         this->appendState(other.states().key(state), *state);
+      }
+   }
+
+   return *this;
 }
 
 StateResponseMessage::~StateResponseMessage()

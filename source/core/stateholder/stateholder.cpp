@@ -13,6 +13,7 @@
 #include "requeststatemessage.h"
 #include "stateresponsemessage.h"
 #include "statechangedackmessage.h"
+#include "signalmessage.h"
 
 #include "states/state.h"
 #include "stateloader.h"
@@ -99,9 +100,12 @@ void StateHolder::handleSetStateMessage(QByteArray payload)
 
    // If state exists
    if (m_states.contains(message.name())) {
+      State* state = m_states.value(message.name());
+      QVariant oldStateValue = state->getState();
+
       // Set state value
       Utils::SetStateAckMessage::Result result = Utils::SetStateAckMessage::FAILED;
-      if (m_states.value(message.name())->setState(message.value())) {
+      if (state->setState(message.value())) {
          result = Utils::SetStateAckMessage::SUCCEEDED;
       }
 
@@ -109,6 +113,18 @@ void StateHolder::handleSetStateMessage(QByteArray payload)
       if (!message.ackGroup().isEmpty()) {
          Utils::MessageGroup::publish(message.createAckMessage(result),
                                      message.ackGroup());
+      }
+
+      // Send linked signals
+      foreach (QString signalName, state->getSignals()) {
+         QStringList parameters;
+
+         // Add old and new values as parameters
+         parameters << state->getState().toString();
+         parameters << oldStateValue.toString();
+
+         Utils::SignalMessage message(signalName, "stateholder", parameters);
+         Utils::MessageGroup::publish(message, Utils::SIGNAL_HANDLER_GROUP);
       }
    }
 }
@@ -146,6 +162,10 @@ void StateHolder::handleStateChangedAckMessage(QByteArray payload)
    // (QHash that links ackId to device).
 
    Utils::StateChangedAckMessage message(payload);
+
+   if (message.result() != Utils::StateChangedAckMessage::SUCCEEDED) {
+      return;
+   }
 
    foreach (State* state, m_states) {
       if (state->isWaitingForAck(message.ackId())) {

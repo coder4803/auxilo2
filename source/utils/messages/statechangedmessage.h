@@ -34,6 +34,12 @@ public:
     */
    StateChangedMessage(QByteArray data);
 
+   //! Copy-constructor
+   StateChangedMessage(const StateChangedMessage& other);
+
+   //! Copy-assignment
+   StateChangedMessage operator=(const StateChangedMessage& other);
+
    /*!
     * \brief Retuns label. Label is alias for state name.
     * \return Label.

@@ -34,6 +34,12 @@ public:
     */
    SetStateMessage(QByteArray data);
 
+   //! Copy-constructor
+   SetStateMessage(const SetStateMessage& other);
+
+   //! Copy-assignment
+   SetStateMessage operator=(const SetStateMessage& other);
+
    /*!
     * \brief Returns state name.
     * \return State name.

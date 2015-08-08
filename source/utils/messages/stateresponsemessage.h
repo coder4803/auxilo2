@@ -23,21 +23,23 @@ public:
    {
       /*!
        * \brief Creates state from scratch.
-       * \param Available Does state exist.
+       * \param Available Does state exist?
        * \param Value State's value.
-       * \param DevicesAreUpToDate Are linked devices up to date.
+       * \param DevicesAreUpToDate Are linked devices up to date?
        */
       State(bool Available = false,
             QVariant Value = QVariant(),
-            bool DevicesAreUpToDate = false) :
-         available(Available),
-         value(Value),
-         devicesAreUpToDate(DevicesAreUpToDate)
-      {}
+            bool DevicesAreUpToDate = false);
 
-      bool available;          //!< Does state exist.
+      //! Copy-constructor
+      State(const State& other);
+
+      //! Copy-assignment
+      State operator=(const State& other);
+
+      bool available;          //!< Does state exist?
       QVariant value;          //!< State's value.
-      bool devicesAreUpToDate; //!< Are linked devices up to date.
+      bool devicesAreUpToDate; //!< Are linked devices up to date?
    };
 
    /*!
@@ -51,6 +53,12 @@ public:
     * \param payload Received binary data.
     */
    StateResponseMessage(const QByteArray& payload);
+
+   //! Copy-constructor
+   StateResponseMessage(const StateResponseMessage& other);
+
+   //! Copy-assignment
+   StateResponseMessage operator=(const StateResponseMessage &other);
 
    /*!
     * \brief Destructor.

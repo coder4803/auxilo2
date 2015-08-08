@@ -22,6 +22,23 @@ StateChangedAckMessage::StateChangedAckMessage(QByteArray data)
    m_result = static_cast<Result>(tmp);
 }
 
+StateChangedAckMessage::StateChangedAckMessage(const StateChangedAckMessage& other) :
+   m_ackId(other.ackId()),
+   m_result(other.result())
+{
+}
+
+StateChangedAckMessage
+StateChangedAckMessage::operator=(const StateChangedAckMessage& other)
+{
+   if (&other != this) {
+      m_ackId = other.ackId();
+      m_result = other.result();
+   }
+
+   return *this;
+}
+
 QByteArray StateChangedAckMessage::data() const
 {
    QByteArray message;

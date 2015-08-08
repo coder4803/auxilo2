@@ -35,6 +35,29 @@ SignalMessage::SignalMessage(QByteArray data) :
    }
 }
 
+SignalMessage::SignalMessage(const SignalMessage& other) :
+   m_signalName(other.signalName()),
+   m_senderName(other.senderName()),
+   m_parameters(other.parameters()),
+   m_ackGroup(other.ackGroup()),
+   m_ackId(other.ackId())
+{
+}
+
+SignalMessage
+SignalMessage::operator=(const SignalMessage& other)
+{
+   if (&other != this) {
+      m_signalName = other.signalName();
+      m_senderName = other.senderName();
+      m_parameters = other.parameters();
+      m_ackGroup = other.ackGroup();
+      m_ackId = other.ackId();
+   }
+
+   return *this;
+}
+
 QString SignalMessage::parameter(quint8 index) const
 {
    Q_ASSERT(m_parameters.size() > index);

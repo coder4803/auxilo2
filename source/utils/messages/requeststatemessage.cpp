@@ -23,6 +23,23 @@ RequestStateMessage::RequestStateMessage(QByteArray data)
    stream >> m_states;
 }
 
+RequestStateMessage::RequestStateMessage(const RequestStateMessage& other) :
+   m_responseGroup(other.responseGroup()),
+   m_states(other.states())
+{
+}
+
+RequestStateMessage
+RequestStateMessage::operator=(const RequestStateMessage& other)
+{
+   if (&other != this) {
+      m_responseGroup = other.responseGroup();
+      m_states = other.states();
+   }
+
+   return *this;
+}
+
 void RequestStateMessage::appendState(QString state)
 {
    m_states.append(state);

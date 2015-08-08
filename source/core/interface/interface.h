@@ -40,7 +40,7 @@ private slots:
     * \param message Message to publish.
     * \param group Name of group the message is published to.
     */
-   void onPublish(const QByteArray& message, QString group);
+   void onPublish(const QByteArray message, QString group);
 
    /*!
     * \brief Sends configuration request to RabbitMQ system.

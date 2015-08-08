@@ -29,6 +29,12 @@ public:
     */
    ParameterSet(QString featureName);
 
+   //! Copy-constructor
+   ParameterSet(const ParameterSet& other);
+
+   //! Copy-assignment
+   ParameterSet operator=(const ParameterSet& other);
+
    /*!
     * \brief Sets parameter feature name.
     * \param featureName Parameter feature name.
@@ -140,6 +146,12 @@ public:
     */
    ConfResponseMessage(const QByteArray& payload);
 
+   //! Copy-constructor
+   ConfResponseMessage(const ConfResponseMessage& other);
+
+   //! Copy-assignment
+   ConfResponseMessage operator=(const ConfResponseMessage& other);
+
    /*!
     * \brief Sets result of request.
     * \param result Result of request.
@@ -191,6 +203,7 @@ T ParameterSet::parameter(QString name,
 template <class T>
 T ParameterSet::parameter(QString name) const
 {
+   name = name.toLower();
    if (!m_parameters.contains(name)) {
       qCritical("Missing mandatory parameter: %s", name.toLatin1().data());
       throw QException();

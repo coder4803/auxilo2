@@ -40,6 +40,12 @@ public:
     */
    RequestStateMessage(QByteArray data);
 
+   //! Copy-constructor
+   RequestStateMessage(const RequestStateMessage& other);
+
+   //! Copy-assignment
+   RequestStateMessage operator=(const RequestStateMessage& other);
+
    /*!
     * \brief Appends state to state request list.
     * \param state Name of state to request.

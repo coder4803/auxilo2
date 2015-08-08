@@ -37,6 +37,12 @@ public:
     */
    SetStateAckMessage(QByteArray data);
 
+   //! Copy-constructor
+   SetStateAckMessage(const SetStateAckMessage& other);
+
+   //! Copy-assignment
+   SetStateAckMessage operator=(const SetStateAckMessage& other);
+
    /*!
     * \brief Returns acknowledge id.
     * \return Acknowledge id.

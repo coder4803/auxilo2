@@ -71,7 +71,8 @@ void Connection::registerMessageGroup(QString groupName,
    stream << static_cast<quint8>(Utils::Join);
    stream << groupName;
 
-   sendMessage(data);
+   QMetaObject::invokeMethod(Connection::getInstance(), "sendMessage",
+                             Q_ARG(QByteArray, data));
 }
 
 void Connection::unregisterMessageGroup(QString groupName,
@@ -83,22 +84,19 @@ void Connection::unregisterMessageGroup(QString groupName,
    }
 }
 
-bool Connection::sendMessage(QByteArray payload)
+void Connection::sendMessage(QByteArray payload)
 {
    QMutexLocker locker(&m_socketMutex);
 
    if (m_socket->state() != QAbstractSocket::ConnectedState) {
       qDebug("Not connected to message broker.");
-      return false;
+      return;
    }
 
    if (m_socket->write(payload) < payload.size()) {
       qDebug("Error while sending data.");
       m_socket->disconnectFromHost();
-      return false;
    }
-
-   return true;
 }
 
 void Connection::connectToHost()
@@ -168,7 +166,7 @@ void Connection::onMessageReceived()
          break;
       }
 
-      // Remove message from buffer.
+      // Mark data as handled.
       bytesHandled = stream.device()->pos();
 
       // Emit message to all group instances.
@@ -177,12 +175,15 @@ void Connection::onMessageReceived()
       }
    }
 
+   // Remove handled data from buffer.
    m_dataBuffer = m_dataBuffer.mid(bytesHandled);
 }
 
 Connection::Connection() :
    m_socket(NULL)
 {
+   qRegisterMetaType<QByteArray>("QByteArray");
+
    connectToHost();
    connect(&m_connectionTimer, SIGNAL(timeout()),
            this, SLOT(connectToHost()));

@@ -90,11 +90,9 @@ public:
     * of handling.
     * \param label Device's label for state name.
     * \param value State value.
-    * \return Result of handling state change message.
     */
-   virtual Utils::StateChangedAckMessage::Result
-   handleStateChange(const QString& label,
-                     const QVariant& value) = 0;
+   virtual void handleStateChange(const QString& label,
+                                  const QVariant& value) = 0;
 
    /*!
     * \brief This method should handle signal acknowledge message.
@@ -169,15 +167,14 @@ protected slots:
     * that can have multiple connections. This is common with server
     * connections. Use >= 0. -1 means undefined (or only one connection).
     */
-   virtual void dataReceived(const QByteArray& data,
+   virtual void dataReceived(QByteArray data,
                              qint32 connectionId) = 0;
 
 signals:
    /*!
     * \brief This signal is used to request device parameters.
-    * \param deviceName Name of device.
     */
-   void requestDeviceParameters(QString deviceName);
+   void requestDeviceParameters();
 
    /*!
     * \brief This signal is used to request state value from state holder.
@@ -204,6 +201,14 @@ signals:
    void sendSignal(QString name,
                    QStringList parameters,
                    bool ackRequired = false);
+
+   /*!
+    * \brief This signal is used to send acknowledge to state change message.
+    * \param result Result of handling state change message
+    * \param value Current state value on device.
+    */
+   void acknowledgeStateChange(Utils::StateChangedAckMessage::Result result,
+                               QVariant value);
 
    /*!
     * \brief This signal is used to send log message.

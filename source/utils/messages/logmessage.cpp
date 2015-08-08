@@ -25,6 +25,25 @@ LogMessage::LogMessage(QByteArray data)
    stream >> m_sender;
 }
 
+LogMessage::LogMessage(const LogMessage& other) :
+   m_message(other.message()),
+   m_type(other.type()),
+   m_sender(other.sender())
+{
+}
+
+LogMessage
+LogMessage::operator=(const LogMessage& other)
+{
+   if (&other != this) {
+      m_message = other.message();
+      m_type = other.type();
+      m_sender = other.sender();
+   }
+
+   return *this;
+}
+
 QByteArray LogMessage::data() const
 {
    QByteArray message;

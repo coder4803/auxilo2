@@ -11,7 +11,9 @@ MessageGroup::MessageGroup(QString name, GroupType type, QObject* parent) :
     m_type(type),
     m_ready(false)
 {
-   if (Connection::getInstance()->isConnected()) {
+   if (Connection::getInstance()->isConnected() &&
+       m_type != Utils::MessageGroup::Publisher)
+   {
       Connection::getInstance()->registerMessageGroup(m_name, this);
    }
 
@@ -21,15 +23,14 @@ MessageGroup::MessageGroup(QString name, GroupType type, QObject* parent) :
 
 MessageGroup::~MessageGroup()
 {
-   Connection::getInstance()->unregisterMessageGroup(m_name, this);
+   if (m_type != Utils::MessageGroup::Publisher) {
+      Connection::getInstance()->unregisterMessageGroup(m_name, this);
+   }
 }
 
-bool MessageGroup::publish(const QByteArray data)
+void MessageGroup::publish(const QByteArray data)
 {
-   if (m_type == Subscriber) {
-      qDebug("Subscriber type groups can not be used to publish messages.");
-      return false;
-   }
+   Q_ASSERT(m_type != Subscriber);
 
    QByteArray message;
    QDataStream stream(&message, QIODevice::WriteOnly);
@@ -38,26 +39,22 @@ bool MessageGroup::publish(const QByteArray data)
    stream << m_name;
    stream << data;
 
-   if (!Connection::getInstance()->sendMessage(message)) {
-      qDebug("Failed to publish message! Is connection ok?");
-      return false;
-   }
-
-   return true;
+   QMetaObject::invokeMethod(Connection::getInstance(), "sendMessage",
+                             Q_ARG(QByteArray, message));
 }
 
-bool MessageGroup::publish(const Message& message)
+void MessageGroup::publish(const Message& message)
 {
    return publish(message.data());
 }
 
-bool MessageGroup::publish(const QByteArray data, QString group)
+void MessageGroup::publish(const QByteArray data, QString group)
 {
    MessageGroup messageGroup(group, Publisher);
    return messageGroup.publish(data);
 }
 
-bool MessageGroup::publish(const Message& message, QString group)
+void MessageGroup::publish(const Message& message, QString group)
 {
    return publish(message.data(), group);
 }

@@ -36,13 +36,13 @@ LESensor::handleSignal(const QString& name,
    return Utils::SignalAckMessage::SIGNAL_NOT_FOUND;
 }
 
-Utils::StateChangedAckMessage::Result
-LESensor::handleStateChange(const QString& label,
-                            const QVariant& value)
+void LESensor::handleStateChange(const QString& label,
+                                 const QVariant& value)
 {
    Q_UNUSED(label)
    Q_UNUSED(value)
-   return Utils::StateChangedAckMessage::INVALID_LABEL;
+   emit acknowledgeStateChange(Utils::StateChangedAckMessage::INVALID_LABEL,
+                               value);
 }
 
 void LESensor::handleSignalAck(Utils::SignalAckMessage::Result result,
@@ -69,7 +69,7 @@ void LESensor::disconnected(qint32 connectionId)
    Q_UNUSED(connectionId)
 }
 
-void LESensor::dataReceived(const QByteArray& data,
+void LESensor::dataReceived(QByteArray data,
                             qint32 connectionId)
 {
    Q_UNUSED(connectionId)

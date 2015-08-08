@@ -31,6 +31,27 @@ SetStateMessage::SetStateMessage(QByteArray data) :
    }
 }
 
+SetStateMessage::SetStateMessage(const SetStateMessage& other) :
+   m_name(other.name()),
+   m_value(other.value()),
+   m_ackGroup(other.ackGroup()),
+   m_ackId(other.ackId())
+{
+}
+
+SetStateMessage
+SetStateMessage::operator=(const SetStateMessage& other)
+{
+   if (&other != this) {
+      m_name = other.name();
+      m_value = other.value();
+      m_ackGroup = other.ackGroup();
+      m_ackId = other.ackId();
+   }
+
+   return *this;
+}
+
 SetStateAckMessage SetStateMessage::createAckMessage(SetStateAckMessage::Result result) const
 {
    return SetStateAckMessage(m_ackId, result);

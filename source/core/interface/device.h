@@ -56,7 +56,7 @@ signals:
     * \param message Payload of message.
     * \param group Name fo group.
     */
-   void publish(const QByteArray& message, QString group);
+   void publish(QByteArray message, QString group);
 
 private slots:
    /* ######################
@@ -107,9 +107,8 @@ private slots:
 
    /*!
     * \brief Sends request for device parameters.
-    * \param deviceName Name of device to request configuration for.
     */
-   void requestDeviceParameters(QString deviceName);
+   void requestDeviceParameters();
 
    /*!
     * \brief Sends request for a state value.
@@ -136,6 +135,14 @@ private slots:
    void sendSignal(QString name,
                    QStringList parameters,
                    bool ackRequired = false);
+
+   /*!
+    * \brief Sends acknowledge message for StateChanged message if required.
+    * \param result Result of handling StateChanged message.
+    * \param stateValue Current state value.
+    */
+   void acknowledgeStateChange(Utils::StateChangedAckMessage::Result result,
+                               QVariant stateValue);
 
    /*!
     * \brief Sends log message.
@@ -186,6 +193,9 @@ private:
 
    //! Protocol used by this device.
    Plugins::Protocol* m_protocol;
+
+   //! Last received StateChangeMessage (for ack purposes).
+   Utils::StateChangedMessage m_lastStateChangedMessage;
 
    // Message groups.
    Utils::MessageGroup* m_confResponseGroup;

@@ -1,17 +1,18 @@
 #include <QTimer>
+#include <QSet>
 
 #include "protocol.h"
 
-#ifndef LESENSOR_H
-#define LESENSOR_H
+#ifndef WEBUI_H
+#define WEBUI_H
 
 namespace Plugins {
 
 /*!
- * \brief The LESensor class.
- * This class describes LESensor protocol.
+ * \brief The WebUI class.
+ * This class describes WebUI protocol.
  */
-class LESensor : public Protocol
+class WebUI : public Protocol
 {
    Q_OBJECT
 public:
@@ -20,10 +21,10 @@ public:
     * \param parameters Unused.
     * \param parent Parent object.
     */
-   explicit LESensor(Utils::ParameterSet parameters,
+   explicit WebUI(Utils::ParameterSet parameters,
                      QObject* parent = NULL);
    //! Destructor.
-   ~LESensor();
+   ~WebUI();
 
    /*!
     * \brief Empty implementation.
@@ -96,38 +97,46 @@ protected slots:
                      qint32 connectionId);
 
 private:
-   /*!
-    * \brief Parses temperature message.
-    * \param message Message payload.
-    */
-   void parseTemperature(QString message);
+   struct User
+   {
+      QByteArray buffer;
+      QSet<QString> registeredStates;
+      QSet<QString> requestedStates;
+   };
 
    /*!
-    * \brief Parses brightness message.
+    * \brief Parses register message.
     * \param message Message payload.
     */
-   void parseBrightness(QString message);
+   void parseReg(QString message,
+                 User* user);
 
    /*!
-    * \brief Parses motion message.
+    * \brief Parses get message.
     * \param message Message payload.
     */
-   void parseMotion(QString message);
+   void parseGet(QString message,
+                 User* user);
 
    /*!
-    * \brief Parses enter message.
+    * \brief Parses set message.
     * \param message Message payload.
     */
-   void parseEnter(QString message);
+   void parseSet(QString message);
 
    /*!
-    * \brief Parses leave message.
+    * \brief Parses error message.
     * \param message Message payload.
     */
-   void parseLeave(QString message);
+   void parseErr(QString message);
 
-   //! Buffer for received data.
-   QByteArray m_buffer;
+   void requestStates(QSet<QString> states);
+
+   void sendErrorMessage(QString message,
+                         int connectionId);
+
+   //! List of users
+   QHash<qint32, User*> m_users;
 };
 
 } // Plugins
