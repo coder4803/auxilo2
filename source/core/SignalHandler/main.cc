@@ -2,9 +2,11 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <memory>
+#include <mutex>
 #include "signalhandlerbuilder.hh"
 
 bool verbose(false);
+std::mutex print_mx_;
 
 void messageHandler(QtMsgType type, const QMessageLogContext& context,
                     const QString& msg)
@@ -14,16 +16,24 @@ void messageHandler(QtMsgType type, const QMessageLogContext& context,
     case QtDebugMsg:
     case QtWarningMsg:
         if (verbose){
+            std::lock_guard<std::mutex> lock(print_mx_);
             printf("%s\n", msg.toLatin1().data());
         }
         break;
         
     case QtCriticalMsg:
-       printf("%s\n", msg.toLatin1().data());
-       break;
+    {
+        std::lock_guard<std::mutex> lock(print_mx_);
+        printf("%s\n", msg.toLatin1().data());
+        break;
+    }
     case QtFatalMsg:
-       printf("%s\n", msg.toLatin1().data());
-       abort();
+    {
+        std::unique_lock<std::mutex> lock(print_mx_);
+        printf("%s\n", msg.toLatin1().data());
+        lock.unlock();
+        abort();
+    }
     default:
         break;
     }
@@ -31,6 +41,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext& context,
 
 void help()
 {
+    std::lock_guard<std::mutex> lock(print_mx_);
     qCritical("Help:");
     qCritical("-v:        Enable debug messages.");
     qCritical("--server:  Set message server address.");

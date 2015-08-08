@@ -175,7 +175,7 @@ int ScriptApiImplementation::sendSignal(const QString& signalName,
         // Send signal to a device
         Utils::SignalMessage msg(signalName, "SignalHandler", args);
         Utils::MessageGroup::publish(msg, target+Utils::SIGNAL_POST_FIX);
-        return;
+        return 0;
     }
     // Run another script:
     
