@@ -9,7 +9,6 @@
 #define SIGNALHANDLERBUILDER_HH
 
 #include "interfaces/modelinterface.hh"
-#include "interfaces/viewinterface.hh"
 #include "message.h"
 #include <QObject>
 #include <mutex>

@@ -4,44 +4,11 @@
 #include <memory>
 #include <mutex>
 #include "signalhandlerbuilder.hh"
+#include "UserInterface/userinterface.hh"
 
-bool verbose(false);
-std::mutex print_mx_;
-
-void messageHandler(QtMsgType type, const QMessageLogContext& context,
-                    const QString& msg)
-{
-    Q_UNUSED(context);
-    switch (type) {
-    case QtDebugMsg:
-    case QtWarningMsg:
-        if (verbose){
-            std::lock_guard<std::mutex> lock(print_mx_);
-            printf("%s\n", msg.toLatin1().data());
-        }
-        break;
-        
-    case QtCriticalMsg:
-    {
-        std::lock_guard<std::mutex> lock(print_mx_);
-        printf("%s\n", msg.toLatin1().data());
-        break;
-    }
-    case QtFatalMsg:
-    {
-        std::unique_lock<std::mutex> lock(print_mx_);
-        printf("%s\n", msg.toLatin1().data());
-        lock.unlock();
-        abort();
-    }
-    default:
-        break;
-    }
-}
 
 void help()
 {
-    std::lock_guard<std::mutex> lock(print_mx_);
     qCritical("Help:");
     qCritical("-v:        Enable debug messages.");
     qCritical("--server:  Set message server address.");
@@ -50,23 +17,29 @@ void help()
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    std::unique_ptr<SignalHandler::ModelInterface> model;
     
+    // Print help if requested.
     if (a.arguments().contains("--help") || a.arguments().contains("-h")){
         help();
-    }
-    if (a.arguments().contains("-v")){
-        verbose = true;
+        return 0;
     }
     
-    qInstallMessageHandler(messageHandler);
+    // Create user interface.
+    UserInterface::initUI(a.arguments());
     
+    // Find message server address.
     QString address = "127.0.0.1";
     int index = a.arguments().indexOf("--server");
     if (index != -1){
+        if (a.arguments().length() <= index+1){
+            UserInterface::getInstance()->fatal("Invalid commandline argumets: "
+                                                "Server address not defined.");
+        }
         address = a.arguments().value(index+1);
     }
     
+    // Create business logic.
+    std::unique_ptr<SignalHandler::ModelInterface> model;
     try {
         model.reset( SignalHandler::SignalHandlerBuilder().create(address) );
         model->start();

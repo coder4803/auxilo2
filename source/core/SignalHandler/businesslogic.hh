@@ -20,7 +20,6 @@
 #include "interfaces/scriptbankinterface.hh"
 #include "interfaces/scriptupdatesubject.hh"
 #include "interfaces/priorityupdatesubject.hh"
-#include "interfaces/viewinterface.hh"
 #include "communication/signalreader.hh"
 #include "communication/configurationreader.hh"
 #include "scriptrunnerpool.hh"

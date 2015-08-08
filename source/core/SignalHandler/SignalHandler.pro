@@ -22,6 +22,7 @@ INCLUDEPATH     += ../../utils/messagegroup/ \
                    /ScriptAPI
 
 
+
 LIBS            += -L../../../build/lib/ -lmessagegroup \
                    -L../../../build/lib/ -lmessages
 
@@ -45,7 +46,10 @@ SOURCES += main.cc \
     communication/configurationreader.cc \
     businesslogic.cc \
     confxmlhandler.cc \
-    scriptrunnerpool.cc
+    scriptrunnerpool.cc \
+    UserInterface/consoleui.cc \
+    UserInterface/uifactory.cc \
+    UserInterface/userinterface.cc
 
 HEADERS += \
     signal.hh \
@@ -77,6 +81,10 @@ HEADERS += \
     businesslogic.hh \
     configuration.hh \
     confxmlhandler.hh \
-    scriptrunnerpool.hh
+    scriptrunnerpool.hh \
+    UserInterface/viewinterface.hh \
+    UserInterface/consoleui.hh \
+    UserInterface/uifactory.hh \
+    UserInterface/userinterface.hh
 
 DESTDIR         = ../../../build/bin/

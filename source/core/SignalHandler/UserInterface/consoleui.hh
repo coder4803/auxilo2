@@ -11,17 +11,13 @@
 #ifndef CONSOLEUI_HH
 #define CONSOLEUI_HH
 
-#include "interfaces/viewinterface.hh"
-#include "interfaces/modelinterface.hh"
-#include <istream>
-#include <ostream>
+#include "viewinterface.hh"
 #include <mutex>
 
 
 /*!
  * \brief The ConsoleUI class
  *  The console user interface.
- * \deprecated This class is deprecated because it does not work in a Qt-app.
  */
 class ConsoleUI : public SignalHandler::ViewInterface
 {
@@ -32,7 +28,7 @@ public:
      * \param input The input stream for user commands.
      * \param output The output stream for messages.
      */
-    ConsoleUI(std::istream* input, std::ostream* output);
+    ConsoleUI(bool verbose);
     
     //! Destructor.
     virtual ~ConsoleUI();
@@ -44,22 +40,41 @@ public:
     ConsoleUI& operator =(ConsoleUI&&) = delete;
     
     // Implements the ViewInterface interface.
-    virtual void showMessage(const std::string& msg);
     
     /*!
-     * \brief exec Start main loop.
-     * \return 0 on successful run.
-     * \pre -
-     * \post UI is responsive.
+     * \brief Displays msg wheather 'verbose' is set or not.
+     *  This is equivalent to qCritical() << msg.
+     * \param msg Message to be displayed.
+     * \pre None.
      */
-    int exec();
+    virtual void critical(const QString& msg);
     
-private:
+    /*!
+     * \brief Display debug message.
+     * \param msg Message.
+     * \pre None.
+     * \post Displays message if 'verbose' is set. This is equivalent to
+     *  qDebug() << msg. 
+     */
+    virtual void debug(const QString& msg);
     
-    std::istream* input_;
-    std::ostream* output_;
-    std::recursive_mutex outputMx_;
-    SignalHandler::ModelInterface* model_;
+    /*!
+     * \brief Display warning message
+     * \param msg Message
+     * \pre None.
+     * \post Display msg if 'verbose' is set. This is equivalent to
+     *  qWarning() << msg;
+     */
+    virtual void warning(const QString& msg);
+    
+    /*!
+     * \brief Display fatal message and abort program.
+     * \param msg Message.
+     * \pre None
+     * \post Equivalent to qFatal(msg.toLatin1().data());
+     */
+    virtual void fatal(const QString& msg);
+    
 };
 
 #endif // CONSOLEUI_HH
