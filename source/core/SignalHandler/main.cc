@@ -1,5 +1,5 @@
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDebug>
 #include <memory>
 #include <mutex>
@@ -16,7 +16,7 @@ void help()
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
     
     // Print help if requested.
     if (a.arguments().contains("--help") || a.arguments().contains("-h")){
@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
         if (a.arguments().length() <= index+1){
             UserInterface::getInstance()->fatal("Invalid commandline argumets: "
                                                 "Server address not defined.");
+            return -1;
         }
         address = a.arguments().value(index+1);
     }

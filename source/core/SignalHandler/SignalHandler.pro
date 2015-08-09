@@ -4,13 +4,13 @@
 #
 #-------------------------------------------------
 
-QT       += core script xml network
+QT       += core script xml network widgets
 
-QT       -= gui
+QT       += gui
 
 TARGET = SignalHandler
 CONFIG   += console
-CONFIG   -= app_bundle
+CONFIG   += app_bundle
 CONFIG   += c++11
 
 INCLUDEPATH     += ../../utils/messagegroup/ \
@@ -49,7 +49,8 @@ SOURCES += main.cc \
     scriptrunnerpool.cc \
     UserInterface/consoleui.cc \
     UserInterface/uifactory.cc \
-    UserInterface/userinterface.cc
+    UserInterface/userinterface.cc \
+    UserInterface/graphicalui.cc
 
 HEADERS += \
     signal.hh \
@@ -85,6 +86,10 @@ HEADERS += \
     UserInterface/viewinterface.hh \
     UserInterface/consoleui.hh \
     UserInterface/uifactory.hh \
-    UserInterface/userinterface.hh
+    UserInterface/userinterface.hh \
+    UserInterface/graphicalui.hh
 
 DESTDIR         = ../../../build/bin/
+
+FORMS += \
+    UserInterface/graphicalui.ui

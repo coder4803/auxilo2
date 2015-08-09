@@ -35,14 +35,11 @@ BusinessLogic::BusinessLogic(std::unique_ptr<SignalReader>&& signal_reader,
 
 BusinessLogic::~BusinessLogic()
 {
-    // Finish joinable threads.
-    for (unsigned i=0; i<workers_.size(); ++i){
-        workers_[i]->stop();
-    }
-    for (unsigned i=0; i<threads_.size(); ++i){
-        threads_[i].join();
-    }
-    threads_.clear();
+    this->stop();
+    conf_reader_.reset();
+    sig_reader_.reset();
+    worker_pool.reset();
+    workers_.clear();
 }
 
 

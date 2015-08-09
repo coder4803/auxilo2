@@ -26,7 +26,9 @@ public:
      * \brief initUI Initialize UserInterface.
      * \param args Commandline arguments. These determine the used UI variation.
      * \pre Call this function once only.
-     * \post UserInterface singleton object is ready to be used.
+     * \post UserInterface singleton object is ready to be used. Calls to Qt's
+     *  printing methods (qDebug, qCritical, qWarning, qFatal) are redirected
+     *  to underlaying UI-variation.
      */
     static void initUI(const QStringList& args);
     
@@ -40,9 +42,9 @@ public:
     
     // Implements the ViewInterface   
     virtual void critical(const QString& msg);
-    virtual void debug(const QString &msg);
-    virtual void warning(const QString &msg);
-    virtual void fatal(const QString &msg);
+    virtual void debug(const QString& msg);
+    virtual void warning(const QString& msg);
+    virtual void fatal(const QString& msg);
     
     
 private:

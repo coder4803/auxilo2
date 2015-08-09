@@ -14,53 +14,10 @@
 #include <functional>
 #include <cstdio>
 
-namespace
+
+ConsoleUI::ConsoleUI(bool verbose) : 
+    SignalHandler::ViewInterface(), verbose_(verbose), mx_()
 {
-
-bool verbose_;
-std::mutex outputMx_;
-
-void messageHandler(QtMsgType type, 
-                    const QMessageLogContext& context, 
-                    const QString& msg)
-{
-    Q_UNUSED (context);
-    
-    switch (type) {
-    case QtWarningMsg:
-    case QtDebugMsg:
-        if (verbose_){
-            std::lock_guard<std::mutex> lock(outputMx_);
-            printf("%s\n", msg.toLatin1().data());
-        }
-        break;
-        
-    case QtCriticalMsg:
-    {
-        std::lock_guard<std::mutex> lock(outputMx_);
-        printf("%s\n", msg.toLatin1().data());
-    }
-        break;
-        
-    case QtFatalMsg:
-    {
-        std::lock_guard<std::mutex> lock(outputMx_);
-        printf("%s\n", msg.toLatin1().data());
-    }
-        abort();
-        
-    default:
-        break;
-    }
-}
-
-} // Anonymous namespace ends.
-
-
-ConsoleUI::ConsoleUI(bool verbose)
-{
-    verbose_ = verbose;
-    qInstallMessageHandler(messageHandler);
 }
 
 
@@ -71,21 +28,31 @@ ConsoleUI::~ConsoleUI()
 
 void ConsoleUI::critical(const QString& msg)
 {
-    qCritical() << msg;
+    std::lock_guard<std::mutex> lock(mx_);
+    printf("%s\n", msg.toLatin1().data());
 }
 
 void ConsoleUI::debug(const QString& msg)
 {
-    qDebug() << msg;
+    if (verbose_){
+        std::lock_guard<std::mutex> lock(mx_);
+        printf("%s\n", msg.toLatin1().data());
+    }
 }
 
 void ConsoleUI::warning(const QString& msg)
 {
-    qWarning() << msg;
+    if (verbose_){
+        std::lock_guard<std::mutex> lock(mx_);
+        printf("%s\n", msg.toLatin1().data());
+    }
 }
 
 
 void ConsoleUI::fatal(const QString& msg)
 {
-    qFatal(msg.toLatin1().data());
+    std::unique_lock<std::mutex> lock(mx_);
+    printf("%s\n", msg.toLatin1().data());
+    lock.unlock();
+    abort();
 }

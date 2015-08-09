@@ -4,8 +4,42 @@
 
 std::unique_ptr<UserInterface> UserInterface::instance_(nullptr);
 
+namespace
+{
+
+void messageHandler(QtMsgType type, 
+                    const QMessageLogContext& context, 
+                    const QString& msg)
+{
+    Q_UNUSED (context);
+    
+    switch (type) {
+    case QtWarningMsg:
+        UserInterface::getInstance()->warning(msg);
+        break;
+        
+    case QtDebugMsg:
+        UserInterface::getInstance()->debug(msg);
+        break;
+        
+    case QtCriticalMsg:
+        UserInterface::getInstance()->critical(msg);
+        break;
+        
+    case QtFatalMsg:
+        UserInterface::getInstance()->critical(msg);
+        
+    default:
+        break;
+    }
+}
+
+} // Anonymous namespace ends.
+
+
 UserInterface::~UserInterface()
 {
+    
 }
 
 void UserInterface::initUI(const QStringList& args)
@@ -19,6 +53,7 @@ void UserInterface::initUI(const QStringList& args)
         return;
     }
     instance_.reset(new UserInterface( std::move(view) ));
+    qInstallMessageHandler(messageHandler);
 }
 
 UserInterface* UserInterface::getInstance()

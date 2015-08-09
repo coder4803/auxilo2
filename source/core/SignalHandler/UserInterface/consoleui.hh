@@ -75,6 +75,10 @@ public:
      */
     virtual void fatal(const QString& msg);
     
+private:
+    
+    bool verbose_;
+    std::mutex mx_;
 };
 
 #endif // CONSOLEUI_HH

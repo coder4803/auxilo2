@@ -2,6 +2,7 @@
 // Implementation headers here
 // ---------------------------
 #include "consoleui.hh"
+#include "graphicalui.hh"
 // ---------------------------
 
 SignalHandler::ViewInterface*UiFactory::create(const QStringList& args)
@@ -12,7 +13,9 @@ SignalHandler::ViewInterface*UiFactory::create(const QStringList& args)
     }
     
     // Select correct implementation.
-    
+    if (args.contains("-g") || args.contains("--graphic")){
+        return new GraphicalUI(verbose);
+    }
     // ConsoleUI is the default UI.
     return new ConsoleUI(verbose);
 }
