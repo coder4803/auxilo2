@@ -2,8 +2,12 @@
 #define USERINTERFACE_HH
 
 #include "viewinterface.hh"
+#include <QCoreApplication>
 #include <QStringList>
 #include <memory>
+
+namespace SignalHandler
+{
 
 /*!
  * \brief The UserInterface class
@@ -23,14 +27,17 @@ public:
     UserInterface& operator = (const UserInterface&) = delete;
     
     /*!
-     * \brief initUI Initialize UserInterface.
-     * \param args Commandline arguments. These determine the used UI variation.
-     * \pre Call this function once only.
-     * \post UserInterface singleton object is ready to be used. Calls to Qt's
-     *  printing methods (qDebug, qCritical, qWarning, qFatal) are redirected
-     *  to underlaying UI-variation.
+     * \brief Create instance of QCoreApplication and UserInterface.
+     * \param argc Program argument count.
+     * \param argv Program argument vector.
+     * \return Instance of QCoreApplication that is suitable for the used
+     *  ViewInterface. The caller takes the ownership.
+     * \pre argc > 0, argv != nullptr. Call this function once only.
+     *  There is no other instance of QCoreApplication created previously.
+     * \post QCoreApplication object is created. UserInterface is available. 
+     *  Qt's print methods are redirected to the used ViewInterface.
      */
-    static void initUI(const QStringList& args);
+    static QCoreApplication* initUI(int argc, char* argv[]);
     
     /*!
      * \brief Get instance of UserInterface.
@@ -52,8 +59,13 @@ private:
     // Constructor is private.
     UserInterface(std::unique_ptr<ViewInterface>&& view);
     
+    static QCoreApplication* loadPlugin(int argc, char* argv[], 
+                                        const QString& name, bool verbose);
+    
     static std::unique_ptr<UserInterface> instance_;
     std::unique_ptr<ViewInterface> view_;  // The underlaying ViewInterface.
 };
+
+} // Namespace SignalHandler.
 
 #endif // USERINTERFACE_HH

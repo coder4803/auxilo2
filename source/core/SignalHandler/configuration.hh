@@ -51,6 +51,8 @@ namespace Conf
     
     //! DEFAULT PRIORITY is used, if priority has not been defined.
     const unsigned DEFAULT_PRIORITY (2);
+    
+    const QString PLUGIN_PATH ("../lib/signalhandler/");
 
     
 } // Namespace SignalHandler::Conf

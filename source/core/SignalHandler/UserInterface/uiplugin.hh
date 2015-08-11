@@ -28,7 +28,7 @@ class UiPlugin
 public:
     
     //! Constructor
-    virtual UiPlugin() = default;
+    UiPlugin() = default;
     
     //! Destructor
     virtual ~UiPlugin() = default;

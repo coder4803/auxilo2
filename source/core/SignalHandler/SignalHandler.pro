@@ -48,7 +48,6 @@ SOURCES += main.cc \
     confxmlhandler.cc \
     scriptrunnerpool.cc \
     UserInterface/consoleui.cc \
-    UserInterface/uifactory.cc \
     UserInterface/userinterface.cc \
     UserInterface/graphicalui.cc
 
@@ -85,7 +84,6 @@ HEADERS += \
     scriptrunnerpool.hh \
     UserInterface/viewinterface.hh \
     UserInterface/consoleui.hh \
-    UserInterface/uifactory.hh \
     UserInterface/userinterface.hh \
     UserInterface/graphicalui.hh \
     UserInterface/uiplugin.hh

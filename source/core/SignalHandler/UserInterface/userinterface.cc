@@ -1,12 +1,21 @@
 #include "userinterface.hh"
-#include "uifactory.hh"
+#include "consoleui.hh"
+#include "uiplugin.hh"
+#include "configuration.hh"
 #include <QDebug>
+#include <QPluginLoader>
+#include <iterator>
+
+namespace SignalHandler
+{
+
 
 std::unique_ptr<UserInterface> UserInterface::instance_(nullptr);
 
 namespace
 {
 
+// Message handler redirects Qt's print functions to the ViewInterface.
 void messageHandler(QtMsgType type, 
                     const QMessageLogContext& context, 
                     const QString& msg)
@@ -42,19 +51,40 @@ UserInterface::~UserInterface()
     
 }
 
-void UserInterface::initUI(const QStringList& args)
+QCoreApplication* UserInterface::initUI(int argc, char* argv[])
 {
     Q_ASSERT(instance_ == nullptr);
+    Q_ASSERT(argc > 0);
+    Q_ASSERT(argv != nullptr);
     
-    std::unique_ptr<ViewInterface> view(nullptr);
-    view.reset( UiFactory::create(args) );
-    if (view == nullptr){
-        qFatal("Invalid commandline arguments");
-        return;
+    // Check verbose-parameter
+    auto it1 = std::find_if(argv, argv+argc,
+                            [](const char* s){return QString(s) == "-v";} );
+    bool verbose = it1==argv+argc ? false : true;
+    
+    // check if --ui parameter is set.
+    auto it = std::find_if(argv, argv+argc, 
+                           [](const char* s){return QString(s) == "--ui";} );
+    
+    if (it == argv+argc){
+        // Use default UI (ConsoleUI)
+        std::unique_ptr<QCoreApplication> app(new QCoreApplication(argc, argv));
+        std::unique_ptr<ViewInterface> view(new ConsoleUI(verbose));
+        instance_.reset(new UserInterface( std::move(view) ) );
+        return app.release();
     }
-    instance_.reset(new UserInterface( std::move(view) ));
+    
+    // Load selected Ui-plugin.
+    ++it;
+    if (it == argv+argc){
+        qFatal("Invalid commandline arguments.");
+    }
+    std::unique_ptr<QCoreApplication> app;
+    app.reset( UserInterface::loadPlugin(argc, argv, QString(*it), verbose) );
     qInstallMessageHandler(messageHandler);
+    return app.release();
 }
+
 
 UserInterface* UserInterface::getInstance()
 {
@@ -87,3 +117,28 @@ UserInterface::UserInterface(std::unique_ptr<ViewInterface>&& view) :
 {
 }
 
+
+QCoreApplication* UserInterface::loadPlugin(int argc, char* argv[], 
+                                            const QString& name, bool verbose)
+{
+    QPluginLoader loader( Conf::PLUGIN_PATH + "ui_" + name );
+    if (!loader.load()){
+        QString msg = QString("Failed to load ui-plugin: ") + name;
+        qFatal(msg.toLatin1().data());
+    }
+    
+    SignalHandler::UiPlugin* p = 
+            qobject_cast<SignalHandler::UiPlugin*>(loader.instance());
+    if (p == nullptr){
+        QString msg = QString("Failed to cast to UiPlugin: ") + name;
+        qFatal(msg.toLatin1().data());
+    }
+    
+    std::unique_ptr<QCoreApplication> app( p->createApp(argc, argv) );
+    std::unique_ptr<ViewInterface> view( p->createView(verbose) );
+    instance_.reset( new UserInterface( std::move(view) ) );
+    return app.release();
+}
+
+
+} // Namespace SignalHandler

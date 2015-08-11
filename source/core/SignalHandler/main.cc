@@ -16,27 +16,25 @@ void help()
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    std::unique_ptr<QCoreApplication> a(nullptr);
     
-    // Print help if requested.
-    if (a.arguments().contains("--help") || a.arguments().contains("-h")){
+    // Create user interface.
+    a.reset( SignalHandler::UserInterface::initUI(argc, argv) );
+    
+    if (a->arguments().contains("-h") || a->arguments().contains("--help")){
         help();
         return 0;
     }
     
-    // Create user interface.
-    UserInterface::initUI(a.arguments());
-    
     // Find message server address.
     QString address = "127.0.0.1";
-    int index = a.arguments().indexOf("--server");
+    int index = a->arguments().indexOf("--server");
     if (index != -1){
-        if (a.arguments().length() <= index+1){
-            UserInterface::getInstance()->fatal("Invalid commandline argumets: "
-                                                "Server address not defined.");
+        if (a->arguments().length() <= index+1){
+            qFatal("Invalid commandline argumets: Server address not defined.");
             return -1;
         }
-        address = a.arguments().value(index+1);
+        address = a->arguments().value(index+1);
     }
     
     // Create business logic.
@@ -47,8 +45,8 @@ int main(int argc, char *argv[])
     }
     catch (...){
         qCritical("Program initialization failed! Check configuration!");
-        a.exit();
+        return -1;
     }
 
-    return a.exec();
+    return a->exec();
 }
