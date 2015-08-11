@@ -87,7 +87,8 @@ HEADERS += \
     UserInterface/consoleui.hh \
     UserInterface/uifactory.hh \
     UserInterface/userinterface.hh \
-    UserInterface/graphicalui.hh
+    UserInterface/graphicalui.hh \
+    UserInterface/uiplugin.hh
 
 DESTDIR         = ../../../build/bin/
 
