@@ -1,3 +1,11 @@
+/* graphicalui.hh
+ * 
+ * This header file defines the GraphicalUi class. This class is a graphical 
+ * implementation of SignalHandler::ViewInterface
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #ifndef GRAPHICALUI_HH
 #define GRAPHICALUI_HH
 
@@ -9,13 +17,24 @@ namespace Ui {
 class GraphicalUI;
 }
 
+/*!
+ * \brief The GraphicalUI class
+ *  Graphical implementation of SignalHandler::ViewInterface.
+ */
 class GraphicalUI : public QMainWindow, public SignalHandler::ViewInterface
 {
     Q_OBJECT
     
 public:
+    
+    /*!
+     * \brief Constructor
+     * \param verbose Verbose flag for debug and warning messages.
+     * \param parent QMainWindow's parent.
+     */
     explicit GraphicalUI(bool verbose, QWidget *parent = 0);
     
+    //! Destructor.
     virtual ~GraphicalUI();
     
     // SignalHandler::ViewInterface Implementation:

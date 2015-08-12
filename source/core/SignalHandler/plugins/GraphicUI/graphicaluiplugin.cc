@@ -1,3 +1,12 @@
+/* graphicaluiplugin.cc
+ * 
+ * This is the implementation file for the GraphicalUiPlugin plugin class
+ * defined in graphicaluiplugin.hh.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Created: 12-Aug-2015
+ */ 
+
 #include "graphicaluiplugin.hh"
 #include "graphicalui.hh"
 #include <QApplication>

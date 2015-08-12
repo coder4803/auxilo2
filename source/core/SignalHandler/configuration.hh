@@ -52,6 +52,7 @@ namespace Conf
     //! DEFAULT PRIORITY is used, if priority has not been defined.
     const unsigned DEFAULT_PRIORITY (2);
     
+    //! Signalhandler plugin library path.
     const QString PLUGIN_PATH ("../lib/signalhandler/");
 
     

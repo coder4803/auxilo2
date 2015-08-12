@@ -1,3 +1,11 @@
+/* graphicalui.cc
+ * 
+ * This is the implementation file for the GraphicalUi class defined in 
+ * graphicalui.hh.
+ * 
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ */
+
 #include "graphicalui.hh"
 #include "ui_graphicalui.h"
 #include <QMessageBox>

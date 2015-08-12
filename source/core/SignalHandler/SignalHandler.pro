@@ -84,7 +84,8 @@ HEADERS += \
     UserInterface/viewinterface.hh \
     UserInterface/consoleui.hh \
     UserInterface/userinterface.hh \
-    UserInterface/uiplugin.hh
+    UserInterface/uiplugin.hh \
+    ScriptLangWrapper/interpreterplugin.hh
 
 DESTDIR         = ../../../build/bin/
 
