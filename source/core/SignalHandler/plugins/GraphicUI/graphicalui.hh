@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <mutex>
-#include "viewinterface.hh"
+#include "../../UserInterface/viewinterface.hh"
 
 namespace Ui {
 class GraphicalUI;

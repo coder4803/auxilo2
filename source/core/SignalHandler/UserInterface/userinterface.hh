@@ -37,7 +37,7 @@ public:
      * \post QCoreApplication object is created. UserInterface is available. 
      *  Qt's print methods are redirected to the used ViewInterface.
      */
-    static QCoreApplication* initUI(int argc, char* argv[]);
+    static QCoreApplication* initUI(int& argc, char* argv[]);
     
     /*!
      * \brief Get instance of UserInterface.
@@ -59,7 +59,7 @@ private:
     // Constructor is private.
     UserInterface(std::unique_ptr<ViewInterface>&& view);
     
-    static QCoreApplication* loadPlugin(int argc, char* argv[], 
+    static QCoreApplication* loadPlugin(int& argc, char* argv[], 
                                         const QString& name, bool verbose);
     
     static std::unique_ptr<UserInterface> instance_;

@@ -1,5 +1,4 @@
 
-#include <QApplication>
 #include <QDebug>
 #include <memory>
 #include <mutex>
@@ -12,6 +11,7 @@ void help()
     qCritical("Help:");
     qCritical("-v:        Enable debug messages.");
     qCritical("--server:  Set message server address.");
+    qCritical("--ui:      Use custom user interface.");
 }
 
 int main(int argc, char *argv[])

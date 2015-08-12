@@ -47,11 +47,11 @@ void messageHandler(QtMsgType type,
 
 
 UserInterface::~UserInterface()
-{
-    
+{   
 }
 
-QCoreApplication* UserInterface::initUI(int argc, char* argv[])
+
+QCoreApplication* UserInterface::initUI(int& argc, char* argv[])
 {
     Q_ASSERT(instance_ == nullptr);
     Q_ASSERT(argc > 0);
@@ -66,21 +66,23 @@ QCoreApplication* UserInterface::initUI(int argc, char* argv[])
     auto it = std::find_if(argv, argv+argc, 
                            [](const char* s){return QString(s) == "--ui";} );
     
+    // Create application and user interface.
+    std::unique_ptr<QCoreApplication> app(nullptr);
     if (it == argv+argc){
         // Use default UI (ConsoleUI)
-        std::unique_ptr<QCoreApplication> app(new QCoreApplication(argc, argv));
+        app.reset( new QCoreApplication(argc, argv) );
         std::unique_ptr<ViewInterface> view(new ConsoleUI(verbose));
         instance_.reset(new UserInterface( std::move(view) ) );
-        return app.release();
+    }
+    else {
+        // Load selected Ui-plugin.
+        ++it;
+        if (it == argv+argc){
+            qFatal("Invalid commandline arguments.");
+        }
+        app.reset(UserInterface::loadPlugin(argc, argv, QString(*it), verbose));
     }
     
-    // Load selected Ui-plugin.
-    ++it;
-    if (it == argv+argc){
-        qFatal("Invalid commandline arguments.");
-    }
-    std::unique_ptr<QCoreApplication> app;
-    app.reset( UserInterface::loadPlugin(argc, argv, QString(*it), verbose) );
     qInstallMessageHandler(messageHandler);
     return app.release();
 }
@@ -92,25 +94,30 @@ UserInterface* UserInterface::getInstance()
     return instance_.get();
 }
 
+
 void UserInterface::critical(const QString& msg)
 {
     view_->critical(msg);
 }
+
 
 void UserInterface::debug(const QString& msg)
 {
     view_->debug(msg);
 }
 
+
 void UserInterface::warning(const QString& msg)
 {
     view_->warning(msg);
 }
 
+
 void UserInterface::fatal(const QString& msg)
 {
     view_->fatal(msg);
 }
+
 
 UserInterface::UserInterface(std::unique_ptr<ViewInterface>&& view) :
     ViewInterface(), view_( std::move(view) )
@@ -118,10 +125,10 @@ UserInterface::UserInterface(std::unique_ptr<ViewInterface>&& view) :
 }
 
 
-QCoreApplication* UserInterface::loadPlugin(int argc, char* argv[], 
+QCoreApplication* UserInterface::loadPlugin(int& argc, char* argv[], 
                                             const QString& name, bool verbose)
 {
-    QPluginLoader loader( Conf::PLUGIN_PATH + "ui_" + name );
+    QPluginLoader loader( Conf::PLUGIN_PATH + "ui" + name );
     if (!loader.load()){
         QString msg = QString("Failed to load ui-plugin: ") + name;
         qFatal(msg.toLatin1().data());

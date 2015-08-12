@@ -43,7 +43,7 @@ public:
      *  lifetime.
      * \post Appropriate version of QCoreApplication is created.
      */
-    virtual QCoreApplication* createApp(int argc, char* argv[]) = 0;
+    virtual QCoreApplication* createApp(int& argc, char* argv[]) = 0;
     
     /*!
      * \brief Create instance of ViewInterface.
