@@ -13,6 +13,10 @@
 #define SCRIPTLANGWRAPPERFACTORY_HH
 
 #include "scriptlangwrapper.hh"
+#include "interpreterplugin.hh"
+#include <QHash>
+#include <mutex>
+#include <memory>
 
 
 namespace SignalHandler
@@ -27,9 +31,9 @@ class ScriptLangWrapperFactory
 public:
     
     //! Constructor
-    ScriptLangWrapperFactory() = default;
+    ScriptLangWrapperFactory();
     //! Destructor
-    ~ScriptLangWrapperFactory() = default;
+    ~ScriptLangWrapperFactory();
     
     /*!
      * \brief getInstance create new instance of ScriptLangWrapper.
@@ -40,6 +44,11 @@ public:
      * \pre -
      */
     ScriptLangWrapper* getInstance(const QString& langName) const;
+    
+private:
+    
+    static QHash<QString, std::shared_ptr<InterpreterPlugin> > plugins_;
+    static std::mutex mx_;
     
 };
 

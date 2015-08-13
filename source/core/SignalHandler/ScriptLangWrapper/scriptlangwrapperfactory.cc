@@ -10,29 +10,59 @@
  */
 
 #include "scriptlangwrapperfactory.hh"
+#include <QPluginLoader>
 #include <QDebug>
 
-// Add headers of concrete wrapper classes here
-// --------------------------------------------
-#include "qtscriptwrapper.hh"
-// --------------------------------------------
 
 
 namespace SignalHandler 
 {
 
+QHash<QString, std::shared_ptr<InterpreterPlugin> >
+ScriptLangWrapperFactory::plugins_;
+
+std::mutex ScriptLangWrapperFactory::mx_;
+
+
+ScriptLangWrapperFactory::ScriptLangWrapperFactory()
+{   
+}
+
+
+ScriptLangWrapperFactory::~ScriptLangWrapperFactory()
+{
+}
+
 
 ScriptLangWrapper*
 ScriptLangWrapperFactory::getInstance(const QString& langName) const
 {   
-    if (langName == QtScriptWrapper::LANG_NAME){
-        return new QtScriptWrapper;
+    std::unique_lock<std::mutex> lock(mx_);
+    if (plugins_.contains(langName)){
+        // Proper plugin has been loaded.
+        InterpreterPlugin* p = plugins_.value(langName).get();
+        lock.unlock();
+        return p->createInterpreter();
     }
     
-    // Add else-if -branches for new wrapper classes here
+    // Proper plugin has not been loaded, try to load it.
+    QString fileName = "../lib/signalhandler/interpreter" + langName;
+    QPluginLoader loader(fileName);
+    if (!loader.load()){
+        qWarning() << "Failed to load interpreter plugin: " << langName;
+        return nullptr;
+    }
     
-    // Language is not supported.
-    return nullptr;   
+    std::shared_ptr<InterpreterPlugin> p(nullptr);
+    p.reset(qobject_cast<InterpreterPlugin*>( loader.instance() ) );
+    if (p == nullptr){
+        qWarning() << "Failed to cast interpreter plugin: " << langName;
+        return nullptr;
+    }
+    
+    plugins_.insert( langName, p );
+    lock.unlock();
+    return p->createInterpreter();
 }
 
 

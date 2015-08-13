@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core script xml network
+QT       += core xml network
 
 QT       -= gui widgets
 
@@ -38,11 +38,9 @@ SOURCES += main.cc \
     ScriptLangWrapper/scriptlangwrapperpool.cc \
     communication/signalreader.cc \
     scriptrunner.cc \
-    ScriptLangWrapper/qtscriptwrapper.cc \
     ScriptLangWrapper/scriptlangwrapperfactory.cc \
     ScriptAPI/scriptapiimplementation.cc \
     signalhandlerbuilder.cc \
-    ScriptLangWrapper/scriptapiqobjectwrapper.cc \
     communication/configurationreader.cc \
     businesslogic.cc \
     confxmlhandler.cc \
@@ -70,12 +68,10 @@ HEADERS += \
     communication/signalreader.hh \
     scriptrunner.hh \
     exceptions/scriptrunexceptions.hh \
-    ScriptLangWrapper/qtscriptwrapper.hh \
     ScriptAPI/scriptapi.hh \
     ScriptAPI/scriptapiimplementation.hh \
     interfaces/modelinterface.hh \
     signalhandlerbuilder.hh \
-    ScriptLangWrapper/scriptapiqobjectwrapper.hh \
     communication/configurationreader.hh \
     businesslogic.hh \
     configuration.hh \
