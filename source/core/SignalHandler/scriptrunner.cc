@@ -10,8 +10,8 @@
 #include <QDebug>
 #include "messagegroup.h"
 #include "signalackmessage.h"
-#include "exceptions/scriptrunexceptions.hh"
-#include "ScriptAPI/scriptapiimplementation.hh"
+#include "ScriptInterpreter/scriptrunexceptions.hh"
+#include "ScriptInterpreter/scriptapiimplementation.hh"
 
 
 namespace SignalHandler
@@ -21,7 +21,7 @@ int ScriptRunner::runner_counter_ = 0;
 
 ScriptRunner::ScriptRunner(std::shared_ptr<SignalQueue> queue, 
                            const ScriptLibrary* lib, 
-                           std::shared_ptr<ScriptLangWrapperPool> pool, 
+                           std::shared_ptr<ScriptInterpreterPool> pool, 
                            ScriptUpdateSubject* subject) :
     
     queue_(queue), lib_(lib), pool_(pool), subject_(subject),
@@ -69,7 +69,7 @@ void ScriptRunner::start()
 {
     Q_ASSERT (subject_ != nullptr);
     
-    typedef ScriptLangWrapperPool::ScriptLangWrapperPtr ScriptLangWrapperPtr;
+    typedef ScriptInterpreterPool::InterpreterPtr ScriptLangWrapperPtr;
     end_flag_.store(false);
     qDebug() << "Worker" << runner_id_ << "Started";
     

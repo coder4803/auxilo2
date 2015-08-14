@@ -34,7 +34,7 @@ public:
      */
     ScriptRunnerPool(std::shared_ptr<SignalQueue> queue,
                      const ScriptLibrary* library,
-                     std::shared_ptr<ScriptLangWrapperPool> interpreter_pool);
+                     std::shared_ptr<ScriptInterpreterPool> interpreter_pool);
     
     /*!
      * \brief Destructor.
@@ -64,7 +64,7 @@ private:
     std::vector<std::unique_ptr<ScriptRunner> > runners_;
     std::shared_ptr<SignalQueue> queue_;
     const ScriptLibrary* library_;
-    std::shared_ptr<ScriptLangWrapperPool> wrapper_pool_;
+    std::shared_ptr<ScriptInterpreterPool> wrapper_pool_;
 };
 
 

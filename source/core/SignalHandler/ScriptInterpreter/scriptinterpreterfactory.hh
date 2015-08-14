@@ -1,18 +1,18 @@
 
-/* scriptlangwrapperfactory.hh
+/* scriptinterpreterfactory.hh
  * 
- * This is the header file for the ScriptLangWrapperFactory class that is
- * responsible for creating ScripLangWrapper subclass objects
+ * This is the header file for the ScriptInterpreterFactory class that is
+ * responsible for creating ScriptInterpreter subclass objects
  * 
  * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
  * Created: 01-April-2015
  * Last modified: 01-April-2015
  */
 
-#ifndef SCRIPTLANGWRAPPERFACTORY_HH
-#define SCRIPTLANGWRAPPERFACTORY_HH
+#ifndef SCRIPTINTERPRETERFACTORY_HH
+#define SCRIPTINTERPRETERFACTORY_HH
 
-#include "scriptlangwrapper.hh"
+#include "scriptinterpreter.hh"
 #include "interpreterplugin.hh"
 #include <QHash>
 #include <mutex>
@@ -26,14 +26,14 @@ namespace SignalHandler
  * \brief The ScripLangWrapperFactory class
  *  Factory class for ScripLangWrapper subclasses.
  */
-class ScriptLangWrapperFactory
+class ScriptInterpreterFactory
 {
 public:
     
     //! Constructor
-    ScriptLangWrapperFactory();
+    ScriptInterpreterFactory();
     //! Destructor
-    ~ScriptLangWrapperFactory();
+    ~ScriptInterpreterFactory();
     
     /*!
      * \brief getInstance create new instance of ScriptLangWrapper.
@@ -43,7 +43,7 @@ public:
      *  return nullptr.
      * \pre -
      */
-    ScriptLangWrapper* getInstance(const QString& langName) const;
+    ScriptInterpreter* getInstance(const QString& langName) const;
     
 private:
     
@@ -54,4 +54,4 @@ private:
 
 }
 
-#endif // SCRIPTLANGWRAPPERFACTORY_HH
+#endif // SCRIPTINTERPRETERFACTORY_HH

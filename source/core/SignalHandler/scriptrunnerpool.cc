@@ -14,7 +14,7 @@ namespace SignalHandler
 ScriptRunnerPool::
 ScriptRunnerPool(std::shared_ptr<SignalQueue> queue, 
                  const ScriptLibrary* library, 
-                 std::shared_ptr<ScriptLangWrapperPool> interpreter_pool) :
+                 std::shared_ptr<ScriptInterpreterPool> interpreter_pool) :
     runners_(), queue_(queue), library_(library), 
     wrapper_pool_(interpreter_pool)
 {

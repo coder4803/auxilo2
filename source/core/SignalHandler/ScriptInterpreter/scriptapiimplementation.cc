@@ -10,8 +10,8 @@
 #include "requeststatemessage.h"
 #include "setstatemessage.h"
 #include "signalmessage.h"
-#include "ScriptLangWrapper/scriptlangwrapperfactory.hh"
-#include "exceptions/scriptrunexceptions.hh"
+#include "scriptinterpreterfactory.hh"
+#include "scriptrunexceptions.hh"
 #include <ctime>
 #include <memory>
 #include <chrono>
@@ -192,8 +192,8 @@ int ScriptApiImplementation::sendSignal(const QString& signalName,
     }
     
     // Run script.
-    std::unique_ptr<ScriptLangWrapper> interpreter;
-    interpreter.reset( ScriptLangWrapperFactory().getInstance(lang) );
+    std::unique_ptr<ScriptInterpreter> interpreter;
+    interpreter.reset( ScriptInterpreterFactory().getInstance(lang) );
     if (interpreter == nullptr){
         // Language not supported
         return -1;

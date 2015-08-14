@@ -1,18 +1,18 @@
 
-/* scriptlangwrapperpool.hh
+/* scriptinterpreterpool.hh
  * 
- * This header defines the ScriptLangWrapperPool class, the concurrent object 
- * pool for ScriptLangWrapper subclass objects.
+ * This header defines the ScriptInterpreterPool class, the concurrent object 
+ * pool for ScriptInterpreter subclass objects.
  * 
  * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
  * Created: 01-Apri-2015
  * Last modified: 01-April-2015
  */
 
-#ifndef SCRIPTLANGWRAPPERPOOL_HH
-#define SCRIPTLANGWRAPPERPOOL_HH
+#ifndef SCRIPTINTERPRETERPOOL_HH
+#define SCRIPTINTERPRETERPOOL_HH
 
-#include "scriptlangwrapper.hh"
+#include "scriptinterpreter.hh"
 #include <memory>
 #include <map>
 #include <mutex>
@@ -26,24 +26,24 @@ namespace SignalHandler {
  * \brief The ScriptLangWrapperPool class
  *  Concurrent object pool for ScriptLangWrapper objects.
  */
-class ScriptLangWrapperPool
+class ScriptInterpreterPool
 {
 public:
     
-    typedef std::unique_ptr<ScriptLangWrapper> ScriptLangWrapperPtr;
+    typedef std::unique_ptr<ScriptInterpreter> InterpreterPtr;
     
     //! Constructor
-    ScriptLangWrapperPool();
+    ScriptInterpreterPool();
     //! Destructor
-    ~ScriptLangWrapperPool();
+    ~ScriptInterpreterPool();
     
     //! Copy- and move-constructor are forbidden.
-    ScriptLangWrapperPool(const ScriptLangWrapperPool&) = delete;
-    ScriptLangWrapperPool(ScriptLangWrapperPool&&) = delete;
+    ScriptInterpreterPool(const ScriptInterpreterPool&) = delete;
+    ScriptInterpreterPool(ScriptInterpreterPool&&) = delete;
     
     //! Copy- and move-assignment operators are forbidden.
-    ScriptLangWrapperPool& operator=(const ScriptLangWrapperPool&) = delete;
-    ScriptLangWrapperPool& operator=(ScriptLangWrapperPool&&) = delete;
+    ScriptInterpreterPool& operator=(const ScriptInterpreterPool&) = delete;
+    ScriptInterpreterPool& operator=(ScriptInterpreterPool&&) = delete;
     
     /*!
      * \brief reserve retrive one interpreter.
@@ -55,7 +55,7 @@ public:
      * 
      * Thread safety: This method is thread safe.
      */
-    ScriptLangWrapperPtr reserve(const QString& langName);
+    InterpreterPtr reserve(const QString& langName);
     
     /*!
      * \brief release Return wrapper back to the pool.
@@ -65,16 +65,16 @@ public:
      * 
      * Thread safety: This method is thread safe.
      */
-    void release(ScriptLangWrapperPtr&& wrapper);
+    void release(InterpreterPtr&& wrapper);
     
     
 private:
     
-    std::multimap<QString, ScriptLangWrapperPtr> data_;
+    std::multimap<QString, InterpreterPtr> data_;
     std::mutex mx_;
 };
 
 
 } // Namespace SignalHandler
 
-#endif // SCRIPTLANGWRAPPERPOOL_HH
+#endif // SCRIPTINTERPRETERPOOL_HH

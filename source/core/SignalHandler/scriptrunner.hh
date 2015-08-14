@@ -12,9 +12,9 @@
 #include "interfaces/scriptupdateobserver.hh"
 #include "interfaces/scriptupdatesubject.hh"
 #include "interfaces/scriptlibrary.hh"
-#include "ScriptLangWrapper/scriptlangwrapperpool.hh"
+#include "ScriptInterpreter/scriptinterpreterpool.hh"
 #include "signalqueue.hh"
-#include "ScriptAPI/scriptapi.hh"
+#include "ScriptInterpreter/scriptapi.hh"
 #include <mutex>
 #include <atomic>
 #include <memory>
@@ -41,7 +41,7 @@ public:
      */
     ScriptRunner(std::shared_ptr<SignalQueue> queue, 
                  const ScriptLibrary* lib,
-                 std::shared_ptr<ScriptLangWrapperPool> pool,
+                 std::shared_ptr<ScriptInterpreterPool> pool,
                  ScriptUpdateSubject* subject = nullptr);
     
     /*!
@@ -81,7 +81,7 @@ private:
     
     std::shared_ptr<SignalQueue> queue_;
     const ScriptLibrary* lib_;
-    std::shared_ptr<ScriptLangWrapperPool> pool_;
+    std::shared_ptr<ScriptInterpreterPool> pool_;
     ScriptUpdateSubject* subject_;
     int runner_id_;
     ScriptAPI* services_;

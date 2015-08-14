@@ -43,7 +43,7 @@ ModelInterface* SignalHandlerBuilder::create(const QString& serverAddress)
     std::shared_ptr<SignalQueue> queue(new SignalQueue);
     std::unique_ptr<SignalReader> sig_reader(new SignalReader(queue, 
                                                               bank.get()) );
-    std::shared_ptr<ScriptLangWrapperPool> pool(new ScriptLangWrapperPool);
+    std::shared_ptr<ScriptInterpreterPool> pool(new ScriptInterpreterPool);
     
     std::unique_ptr<ScriptRunnerPool> worker_pool(new ScriptRunnerPool(queue,
                                                                        bank.get(),

@@ -1,15 +1,15 @@
 
-/* scriptlangwrapperfactory.cc
+/* scriptinterpreterfactory.cc
  * 
- * This is the implementation file for the ScriptLangWrapperFactory class 
- * defined in scriptlangwrapperfactory.hh
+ * This is the implementation file for the ScriptInterpreterFactory class 
+ * defined in scriptinterpreterfactory.hh
  * 
  * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
  * Created: 01-April-2015
  * Last modified: 01-April-2015
  */
 
-#include "scriptlangwrapperfactory.hh"
+#include "scriptinterpreterfactory.hh"
 #include <QPluginLoader>
 #include <QDebug>
 
@@ -19,23 +19,23 @@ namespace SignalHandler
 {
 
 QHash<QString, std::shared_ptr<InterpreterPlugin> >
-ScriptLangWrapperFactory::plugins_;
+ScriptInterpreterFactory::plugins_;
 
-std::mutex ScriptLangWrapperFactory::mx_;
+std::mutex ScriptInterpreterFactory::mx_;
 
 
-ScriptLangWrapperFactory::ScriptLangWrapperFactory()
+ScriptInterpreterFactory::ScriptInterpreterFactory()
 {   
 }
 
 
-ScriptLangWrapperFactory::~ScriptLangWrapperFactory()
+ScriptInterpreterFactory::~ScriptInterpreterFactory()
 {
 }
 
 
-ScriptLangWrapper*
-ScriptLangWrapperFactory::getInstance(const QString& langName) const
+ScriptInterpreter*
+ScriptInterpreterFactory::getInstance(const QString& langName) const
 {   
     std::unique_lock<std::mutex> lock(mx_);
     if (plugins_.contains(langName)){
@@ -46,7 +46,7 @@ ScriptLangWrapperFactory::getInstance(const QString& langName) const
     }
     
     // Proper plugin has not been loaded, try to load it.
-    QString fileName = "../lib/signalhandler/interpreter" + langName;
+    QString fileName = "../lib/signalhandler/" + langName + "interpreter";
     QPluginLoader loader(fileName);
     if (!loader.load()){
         qWarning() << "Failed to load interpreter plugin: " << langName;

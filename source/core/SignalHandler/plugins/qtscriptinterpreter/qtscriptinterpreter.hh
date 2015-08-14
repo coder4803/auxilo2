@@ -1,44 +1,43 @@
-/* qtscriptwrapper.hh
+/* qtscriptinterpreter.hh
  * 
- * This header defines the QtScriptWrapper class that is responsible for 
+ * This header defines the QtScriptInterpreter class that is responsible for 
  * executeing QScript code.
  * 
  * Author: Perttu Paarlahti:    perttu.paarlahti@gmail.com
  * Last Modified: 27-May-2015
  */
 
-#ifndef QTSCRIPTWRAPPER_HH
-#define QTSCRIPTWRAPPER_HH
+#ifndef QTSCRIPTINTERPRETER_HH
+#define QTSCRIPTINTERPRETER_HH
 
-#include "scriptlangwrapper.hh"
-#include "../exceptions/scriptrunexceptions.hh"
+#include "scriptinterpreter.hh"
+#include "scriptrunexceptions.hh"
+#include "scriptapi.hh"
 #include <QtScript/QScriptEngine>
 
-namespace SignalHandler 
+namespace QtScriptPlugin 
 {
+
 
 /*!
  * \brief The QtScriptWrapper class
  * This class is responsible for executeing QtScript code.
  */
-class QtScriptWrapper : public ScriptLangWrapper
+class QtScriptInterpreter : public SignalHandler::ScriptInterpreter
 {
 public:
-    
-    //! QtScript langueage ID
-    static const char* LANG_NAME;
     
     /*!
      * \brief Constructor
      * \pre -
      * \post New QtScriptWrapper is ready to be used.
      */
-    QtScriptWrapper();
+    QtScriptInterpreter();
     
     /*!
      * \brief Destructor.
      */
-    virtual ~QtScriptWrapper();
+    virtual ~QtScriptInterpreter();
     
     /*!
      * \brief Runs the given script using the given arguments and ScriptAPI.
@@ -50,19 +49,18 @@ public:
      * \post Script is executed.
      * \post Exception guarantee: Strong guarantee.
      * \exception InvalidParameters if given arguments were invalid.
-     * \exception BadScript if script was invalid to be executed.
+     * \exception BadScript if script was invalid.
      */
     virtual int run(const QString& script, const QStringList& args,
-                    ScriptAPI* services);
+                    SignalHandler::ScriptAPI* services);
     
     /*!
      * \brief return QtScript language ID.
      * \return QtScriptWrapper::LANG_NAME.
      */
-    virtual QString getLangID() const;
-    
+    virtual QString getLangID() const;   
 };
 
-} // Namespace SignalHandler.
+} // Namespace QtScriptPlugin
 
-#endif // QTSCRIPTWRAPPER_HH
+#endif // QTSCRIPTINTERPRETER_HH

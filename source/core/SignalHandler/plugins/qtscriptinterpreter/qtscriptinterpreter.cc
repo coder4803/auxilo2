@@ -7,33 +7,33 @@
  * Last Modified: 27-May-2015
  */
 
-#include "qtscriptwrapper.hh"
-#include "scriptapiqobjectwrapper.hh"
+#include "qtscriptinterpreter.hh"
+#include "scriptapiadapter.hh"
+#include "scriptrunexceptions.hh"
 #include <QDebug>
 
-namespace SignalHandler 
+
+namespace QtScriptPlugin
 {
 
-const char* QtScriptWrapper::LANG_NAME = "QtScript";
-
-QtScriptWrapper::QtScriptWrapper() : 
-    ScriptLangWrapper()
+QtScriptInterpreter::QtScriptInterpreter() : 
+    ScriptInterpreter()
 {
 }
 
 
-QtScriptWrapper::~QtScriptWrapper()
+QtScriptInterpreter::~QtScriptInterpreter()
 {   
 }
 
 
-int QtScriptWrapper::run(const QString& script, 
+int QtScriptInterpreter::run(const QString& script, 
                          const QStringList& args, 
-                         ScriptAPI* services)
+                         SignalHandler::ScriptAPI* services)
 {
     // Create script engine and set ScriptApi as its global property.
     QScriptEngine engine;
-    ScriptApiQObjectWrapper api(services, &engine);
+    ScriptApiAdapter api(services, &engine);
     QScriptValue script_api = engine.newQObject(&api);
     engine.globalObject().setProperty("Auxilo2", script_api);
     
@@ -46,7 +46,7 @@ int QtScriptWrapper::run(const QString& script,
     // Run script.
     engine.evaluate(script);
     if ( engine.hasUncaughtException() ){
-        throw BadScript();
+        throw SignalHandler::BadScript();
     }
     
     return 0;
@@ -55,9 +55,9 @@ int QtScriptWrapper::run(const QString& script,
 }
 
 
-QString QtScriptWrapper::getLangID() const
+QString QtScriptInterpreter::getLangID() const
 {
-    return QString(LANG_NAME);
+    return QString("qtscript");
 }
 
-} // Namespace SignalHandler
+} // Namespace QtScriptPlugin

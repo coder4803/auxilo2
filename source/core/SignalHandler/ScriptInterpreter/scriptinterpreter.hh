@@ -1,7 +1,7 @@
 
-/* scriptlangwrapper.hh
+/* scriptinterpreter.hh
  * 
- * This header defines the ScriptLangWrapper interface for script language 
+ * This header defines the ScriptInterpreter interface for script language 
  * interpreters.
  * 
  * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
@@ -9,12 +9,12 @@
  * Last modified: 01-April-2015
  */
 
-#ifndef SCRIPTLANGWRAPPER_HH
-#define SCRIPTLANGWRAPPER_HH
+#ifndef SCRIPTINTERPRETER_HH
+#define SCRIPTINTERPRETER_HH
 
 #include <QString>
 #include <QStringList>
-#include "../ScriptAPI/scriptapi.hh"
+#include "scriptapi.hh"
 
 
 namespace SignalHandler
@@ -24,18 +24,18 @@ namespace SignalHandler
  * \brief The ScriptLangWrapper class
  *  Abstract base for supported script language interpreters.
  */
-class ScriptLangWrapper
+class ScriptInterpreter
 {
 public:
     
     //! Constructor
-    ScriptLangWrapper() = default;
+    ScriptInterpreter() = default;
     //! Destructor
-    virtual ~ScriptLangWrapper() = default;
+    virtual ~ScriptInterpreter() = default;
     //! Copy-constructor is forbidden.
-    ScriptLangWrapper(const ScriptLangWrapper&) = delete;
+    ScriptInterpreter(const ScriptInterpreter&) = delete;
     //! Copy-assignment operator is forbidden.
-    ScriptLangWrapper& operator=(const ScriptLangWrapper&) = delete;
+    ScriptInterpreter& operator=(const ScriptInterpreter&) = delete;
     
     /*!
      * \brief run Run given script with given arguments.
@@ -59,4 +59,4 @@ public:
 
 } // Namespace SignalHandler
 
-#endif // SCRIPTLANGWRAPPER_HH
+#endif // SCRIPTINTERPRETER_HH

@@ -1,34 +1,34 @@
 
-/* scriptlangwrapperpool.cc
+/* scriptinterpreterpool.cc
  * 
- * This is the implementation file for the ScriptLangWrapperPool class that is 
- * defined in scriptlangwrapper.hh.
+ * This is the implementation file for the ScriptInterpreterPool class that is 
+ * defined in scriptinterpreterpool.hh.
  * 
  * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
  * Created: 01-Apri-2015
  * Last modified: 01-April-2015
  */
 
-#include "scriptlangwrapperpool.hh"
-#include "scriptlangwrapperfactory.hh"
+#include "scriptinterpreterpool.hh"
+#include "scriptinterpreterfactory.hh"
 
 
 namespace SignalHandler 
 {
 
 
-ScriptLangWrapperPool::ScriptLangWrapperPool(): data_(), mx_()
+ScriptInterpreterPool::ScriptInterpreterPool(): data_(), mx_()
 {
 }
 
 
-ScriptLangWrapperPool::~ScriptLangWrapperPool()
+ScriptInterpreterPool::~ScriptInterpreterPool()
 {
 }
 
 
-ScriptLangWrapperPool::ScriptLangWrapperPtr 
-ScriptLangWrapperPool::reserve(const QString& langName)
+ScriptInterpreterPool::InterpreterPtr 
+ScriptInterpreterPool::reserve(const QString& langName)
 {
     std::unique_lock<std::mutex> lock(mx_);
     
@@ -36,12 +36,12 @@ ScriptLangWrapperPool::reserve(const QString& langName)
     if (iter == data_.end()){
         // No available wrappers of requested type - create new instance.
         lock.unlock();
-        ScriptLangWrapperFactory f;
-        return ScriptLangWrapperPtr( f.getInstance(langName) );
+        ScriptInterpreterFactory f;
+        return InterpreterPtr( f.getInstance(langName) );
     }
     
     // Remove and return one wrapper
-    ScriptLangWrapperPtr rval(nullptr);
+    InterpreterPtr rval(nullptr);
     rval.swap(iter->second);
     data_.erase(iter);
     lock.unlock();
@@ -49,8 +49,8 @@ ScriptLangWrapperPool::reserve(const QString& langName)
 }
 
 
-void ScriptLangWrapperPool::
-release(ScriptLangWrapperPool::ScriptLangWrapperPtr&& wrapper)
+void ScriptInterpreterPool::
+release(ScriptInterpreterPool::InterpreterPtr&& wrapper)
 {
     // Move wrapper into the container.
     std::unique_lock<std::mutex> lock(mx_);

@@ -15,11 +15,10 @@ CONFIG   += c++11
 
 INCLUDEPATH     += ../../utils/messagegroup/ \
                    ../../utils/messages/ \
-                   /ScriptLangWrapper \
+                   /ScriptInterpreter \
                    /exceptions \
                    /interfaces \
                    /communication \
-                   /ScriptAPI
 
 
 
@@ -35,18 +34,18 @@ SOURCES += main.cc \
     exceptions/unknownscript.cc \
     signalqueue.cc \
     exceptions/badmessage.cc \
-    ScriptLangWrapper/scriptlangwrapperpool.cc \
     communication/signalreader.cc \
     scriptrunner.cc \
-    ScriptLangWrapper/scriptlangwrapperfactory.cc \
-    ScriptAPI/scriptapiimplementation.cc \
+    ScriptInterpreter/scriptapiimplementation.cc \
     signalhandlerbuilder.cc \
     communication/configurationreader.cc \
     businesslogic.cc \
     confxmlhandler.cc \
     scriptrunnerpool.cc \
     UserInterface/consoleui.cc \
-    UserInterface/userinterface.cc 
+    UserInterface/userinterface.cc \ 
+    ScriptInterpreter/scriptinterpreterfactory.cc \
+    ScriptInterpreter/scriptinterpreterpool.cc
 
 HEADERS += \
     signal.hh \
@@ -62,14 +61,11 @@ HEADERS += \
     interfaces/priorityupdateobserver.hh \
     interfaces/priorityupdatesubject.hh \
     signalqueue.hh \
-    ScriptLangWrapper/scriptlangwrapper.hh \
-    ScriptLangWrapper/scriptlangwrapperpool.hh \
-    ScriptLangWrapper/scriptlangwrapperfactory.hh \
     communication/signalreader.hh \
     scriptrunner.hh \
-    exceptions/scriptrunexceptions.hh \
-    ScriptAPI/scriptapi.hh \
-    ScriptAPI/scriptapiimplementation.hh \
+    ScriptInterpreter/scriptrunexceptions.hh \
+    ScriptInterpreter/scriptapi.hh \
+    ScriptInterpreter/scriptapiimplementation.hh \
     interfaces/modelinterface.hh \
     signalhandlerbuilder.hh \
     communication/configurationreader.hh \
@@ -81,7 +77,10 @@ HEADERS += \
     UserInterface/consoleui.hh \
     UserInterface/userinterface.hh \
     UserInterface/uiplugin.hh \
-    ScriptLangWrapper/interpreterplugin.hh
+    ScriptInterpreter/interpreterplugin.hh \
+    ScriptInterpreter/scriptinterpreter.hh \
+    ScriptInterpreter/scriptinterpreterfactory.hh \
+    ScriptInterpreter/scriptinterpreterpool.hh
 
 DESTDIR         = ../../../build/bin/
 

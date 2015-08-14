@@ -1,21 +1,21 @@
-/* scriptapiqobjectwrapper.hh
+/* scriptapiadapter.hh
  * 
- * This header defines the ScriptApiQObjectWrapper class that wraps ScriptAPI
+ * This header defines the ScriptApiAdapter class that wraps ScriptAPI
  * into a QObject so that it could be used in a QtScript program.
  * 
  * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
  */
 
-#ifndef SCRIPTAPIQOBJECTWRAPPER_HH
-#define SCRIPTAPIQOBJECTWRAPPER_HH
+#ifndef SCRIPTAPIADAPTER_HH
+#define SCRIPTAPIADAPTER_HH
 
 #include <QObject>
 #include <QScriptValue>
 #include <QScriptEngine>
-#include "../ScriptAPI/scriptapi.hh"
+#include "scriptapi.hh"
 
 
-namespace SignalHandler
+namespace QtScriptPlugin
 {
 
 /*!
@@ -23,7 +23,7 @@ namespace SignalHandler
  * This class wraps the ScriptAPI-object inside QObject making it available
  * for QtScript environment.
  */
-class ScriptApiQObjectWrapper : public QObject
+class ScriptApiAdapter : public QObject
 {
     Q_OBJECT
     
@@ -37,13 +37,14 @@ public:
      * \pre api != nullptr, engine != nullptr.
      * \post Invokes of this object's slots are redirected to api.
      */
-    ScriptApiQObjectWrapper(ScriptAPI* api, QScriptEngine* engine, 
+    ScriptApiAdapter(SignalHandler::ScriptAPI* api, 
+                            QScriptEngine* engine, 
                             QObject* parent = 0);
     
     /*!
      * \brief Destructor.
      */
-    virtual ~ScriptApiQObjectWrapper();
+    virtual ~ScriptApiAdapter();
     
 public slots:
     
@@ -56,11 +57,11 @@ public slots:
     
     
 private:
-    ScriptAPI* api_;
+    SignalHandler::ScriptAPI* api_;
     QScriptEngine* eng_;
 };
 
-} // Namespace SignalHandler
+} // Namespace QtScriptPlugin
 
 // Conversions from custom type to QScriptValue
 
@@ -85,4 +86,4 @@ void fromScriptValue(const QScriptValue& obj,
                      Utils::StateResponseMessage::State& state);
 
 
-#endif // SCRIPTAPIQOBJECTWRAPPER_HH
+#endif // SCRIPTAPIADAPTER_HH

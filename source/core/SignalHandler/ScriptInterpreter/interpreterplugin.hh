@@ -14,7 +14,7 @@
 #define SIGNALHANDLER_INTERPRETERPLUGIN_IID "auxilo2.signalhandler.InterpreterPlugin"
 
 #include <QtPlugin>
-#include "scriptlangwrapper.hh"
+#include "scriptinterpreter.hh"
 
 namespace SignalHandler
 {
@@ -35,7 +35,7 @@ public:
      * \return New instance of ScriptLangWrapper (interpreter). Caller takes
      *  the ownership.
      */
-    virtual ScriptLangWrapper* createInterpreter() = 0;
+    virtual ScriptInterpreter* createInterpreter() = 0;
     
     /*!
      * \brief Get language id (name).

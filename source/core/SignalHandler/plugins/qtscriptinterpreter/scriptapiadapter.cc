@@ -1,23 +1,23 @@
-/* scriptapiqobjectwrapper.cc
+/* scriptapiadapter.cc
  * 
- * This is the implementation file for the ScriptApiQObjectWrapper class defined
- * in scriptapiqobjectwrapper.hh.
+ * This is the implementation file for the ScriptApiAdapter class defined
+ * in scriptapiadapter.hh.
  * 
  * Author: Perttu Paarlahti:    perttu.paarlahti@gmail.com
  */
 
-#include "scriptapiqobjectwrapper.hh"
+#include "scriptapiadapter.hh"
 #include <QDebug>
 
 // Register custom types, so they can be converted into QScriptValue.
 Q_DECLARE_METATYPE(Utils::StateResponseMessage::State)
 
-namespace SignalHandler
+namespace QtScriptPlugin
 {
 
-ScriptApiQObjectWrapper::ScriptApiQObjectWrapper(ScriptAPI* api,
-                                                 QScriptEngine* engine,
-                                                 QObject* parent):
+ScriptApiAdapter::ScriptApiAdapter(SignalHandler::ScriptAPI* api,
+                                   QScriptEngine* engine,
+                                   QObject* parent):
     QObject(parent), api_(api), eng_(engine)
 {
     Q_ASSERT(api != nullptr);
@@ -27,27 +27,27 @@ ScriptApiQObjectWrapper::ScriptApiQObjectWrapper(ScriptAPI* api,
 }
 
 
-ScriptApiQObjectWrapper::~ScriptApiQObjectWrapper()
+ScriptApiAdapter::~ScriptApiAdapter()
 {    
 }
 
 
-QDateTime ScriptApiQObjectWrapper::dateTimeNow() const
+QDateTime ScriptApiAdapter::dateTimeNow() const
 {
     return api_->dateTimeNow();
 }
 
-QScriptValue ScriptApiQObjectWrapper::getStateOf(const QString& stateName)
+QScriptValue ScriptApiAdapter::getStateOf(const QString& stateName)
 {
     Utils::StateResponseMessage::State st = api_->getStateOf(stateName);
     return eng_->toScriptValue(st);
 }
 
 
-QScriptValue ScriptApiQObjectWrapper::getStates(const QStringList& states)
+QScriptValue ScriptApiAdapter::getStates(const QStringList& states)
 {   
     // Convert ScriptAPI::StateMap into QVariantMap
-    ScriptAPI::StateMap sts = api_->getStates(states);
+    SignalHandler::ScriptAPI::StateMap sts = api_->getStates(states);
     QVariantMap variants;
     for (auto it = sts.begin(); it != sts.end(); ++it){
         variants.insert(it.key(), QVariant::fromValue(it.value()) );
@@ -58,20 +58,20 @@ QScriptValue ScriptApiQObjectWrapper::getStates(const QStringList& states)
 }
 
 
-int ScriptApiQObjectWrapper::setState(const QString& stateName, 
+int ScriptApiAdapter::setState(const QString& stateName, 
                                       const QVariant& value)
 {
     return api_->setState(stateName, value);
 }
 
 
-int ScriptApiQObjectWrapper::sendSignal(const QString& signalName,
+int ScriptApiAdapter::sendSignal(const QString& signalName,
                                         const QStringList& args)
 {
     return api_->sendSignal(signalName, args);
 }
 
-} //Namespace SignalHandler
+} //Namespace QtScriptPlugin
 
 // Conversion functions
 // ---------------------------------------------------------------------------

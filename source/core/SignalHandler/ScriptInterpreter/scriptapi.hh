@@ -14,7 +14,7 @@
 #include <QMap>
 #include <QVariant>
 #include <QDateTime>
-#include "../../utils/messages/stateresponsemessage.h"
+#include "stateresponsemessage.h"
 
 
 namespace SignalHandler
