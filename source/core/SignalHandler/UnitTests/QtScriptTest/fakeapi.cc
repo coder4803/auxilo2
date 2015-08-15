@@ -42,11 +42,17 @@ int FakeAPI::setState(const QString& stateName, const QVariant& value)
     return 0;
 }
 
-int FakeAPI::sendSignal(const QString& signalName, const QStringList& args)
+int FakeAPI::sendSignal(const QString& signalName, const QStringList& args, 
+                        const QString& target)
 {
-    Q_UNUSED(signalName); Q_UNUSED(args);
+    Q_UNUSED(signalName); Q_UNUSED(args); Q_UNUSED(target);
     called_fns_.at(sendSignalCalled_) = true;
     return 0;
+}
+
+QString FakeAPI::getSender() const
+{
+    return QString();
 }
 
 bool FakeAPI::verifyCalledOnly(QList<int> indecies)

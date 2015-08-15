@@ -2,8 +2,8 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "../../exceptions/scriptrunexceptions.hh"
-#include "../../ScriptLangWrapper/qtscriptwrapper.hh"
+#include "scriptrunexceptions.hh"
+#include "qtscriptinterpreter.hh"
 #include "fakeapi.hh"
 #include <memory>
 #include <functional>
@@ -46,11 +46,11 @@ void QtScriptTest::invalidScriptTest()
     QFETCH(QString, script);
     QFETCH(QStringList, args);
     
-    SignalHandler::QtScriptWrapper wrapper;
+    QtScriptPlugin::QtScriptInterpreter interpreter;
     
     try
     {
-        wrapper.run(script, args, api_.get());
+        interpreter.run(script, args, api_.get());
         api_->clear();
         QFAIL("No exception from invalid script");
     }
@@ -80,9 +80,9 @@ void QtScriptTest::ApiCallTest()
     QFETCH(QStringList, args);
     QFETCH(QList<int>, verification_indecies);
     
-    SignalHandler::QtScriptWrapper wrapper;
+    QtScriptPlugin::QtScriptInterpreter interpreter;
     try {
-        wrapper.run(script, args, api_.get());
+        interpreter.run(script, args, api_.get());
         QVERIFY2(api_->verifyCalledOnly(verification_indecies),
                  "Incorrect functions called.");
         api_->clear();
@@ -140,9 +140,9 @@ void QtScriptTest::argumentUsageTest()
     QFETCH(QString, script);
     QFETCH(QStringList, args);
     
-    SignalHandler::QtScriptWrapper wrapper;
+    QtScriptPlugin::QtScriptInterpreter interpreter;
     try {
-        wrapper.run(script, args, api_.get());
+        interpreter.run(script, args, api_.get());
         for (int i=0; i<args.size(); ++i){
             QString key = QString("arg")+QString::number(i+1);
             QVERIFY2(api_->getStateOf(key).value.toString() == args.at(i),

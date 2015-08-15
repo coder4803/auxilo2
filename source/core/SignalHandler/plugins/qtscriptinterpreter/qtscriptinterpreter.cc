@@ -17,7 +17,7 @@ namespace QtScriptPlugin
 {
 
 QtScriptInterpreter::QtScriptInterpreter() : 
-    ScriptInterpreter()
+    SignalHandler::ScriptInterpreter()
 {
 }
 

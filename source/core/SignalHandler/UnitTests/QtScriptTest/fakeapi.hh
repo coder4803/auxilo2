@@ -1,7 +1,7 @@
 #ifndef FAKEAPI_HH
 #define FAKEAPI_HH
 
-#include "../../ScriptAPI/scriptapi.hh"
+#include "scriptapi.hh"
 #include <map>
 #include <QList>
 
@@ -23,7 +23,10 @@ public:
     
     virtual int setState(const QString& stateName, const QVariant& value);
     
-    virtual int sendSignal(const QString& signalName, const QStringList& args);
+    virtual int sendSignal(const QString& signalName, const QStringList& args,
+                           const QString& target = QString());
+    
+    virtual QString getSender() const;
     
     // Verification functions:
     bool verifyCalledOnly(QList<int> indecies);

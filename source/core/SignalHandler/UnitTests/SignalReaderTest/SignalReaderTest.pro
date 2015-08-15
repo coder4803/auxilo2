@@ -22,8 +22,7 @@ SOURCES += tst_signalreadertest.cc \
     ../../communication/signalreader.cc \
     ../../signal.cc \
     ../../signalqueue.cc \
-    ../../exceptions/unknownscript.cc \
-    testsender.cc
+    ../../exceptions/unknownscript.cc 
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -36,20 +35,19 @@ HEADERS += \
     ../../communication/signalreader.hh \
     ../../signal.hh \
     ../../signalqueue.hh \
-    ../../exceptions/unknownscript.hh \
-    testsender.hh
+    ../../exceptions/unknownscript.hh 
 
 INCLUDEPATH += ../../
 INCLUDEPATH += ../../interfaces
 INCLUDEPATH += ../../communication
 INCLUDEPATH += ../../exceptions
-INCLUDEPATH += ../../../utils/messagegroup/
-INCLUDEPATH += ../../../utils/messages/
+INCLUDEPATH += ../../../../utils/messagegroup/
+INCLUDEPATH += ../../../../utils/messages/
 
 DEPENDPATH += ../../
 DEPENDPATH += ../../interfaces
 DEPENDPATH += ../../communication
 DEPENDPATH += ../../exceptions
 
-LIBS += -L../../../../build/lib/ -lmessagegroup
-LIBS += -L../../../../build/lib/ -lmessages
+LIBS += -L../../../../../build/lib/ -lmessagegroup
+LIBS += -L../../../../../build/lib/ -lmessages

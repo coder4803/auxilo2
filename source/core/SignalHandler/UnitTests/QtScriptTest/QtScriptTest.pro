@@ -16,25 +16,24 @@ TEMPLATE = app
 
 
 SOURCES += tst_qtscripttest.cc \
-           ../../ScriptLangWrapper/qtscriptwrapper.cc \
-           ../../ScriptLangWrapper/scriptapiqobjectwrapper.cc \
+           ../../plugins/qtscriptinterpreter/qtscriptinterpreter.cc \
+           ../../plugins/qtscriptinterpreter/scriptapiadapter.cc \
     fakeapi.cc
 
-HEADERS += ../../ScriptLangWrapper/qtscriptwrapper.hh \
-           ../../ScriptLangWrapper/scriptapiqobjectwrapper.hh \
-           ../../exceptions/scriptrunexceptions.hh \
-           ../../ScriptAPI/scriptapi.hh \
+HEADERS += ../../plugins/qtscriptinterpreter/qtscriptinterpreter.hh \
+           ../../plugins/qtscriptinterpreter/scriptapiadapter.hh \
+           ../../ScriptInterpreter/scriptrunexceptions.hh \
+           ../../ScriptInterpreter/scriptapi.hh \
     fakeapi.hh
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-INCLUDEPATH += ../exceptions \
-               ../ScriptLangWrapper \
-               ../ScriptAPI
+INCLUDEPATH += ../../exceptions \
+               ../../ScriptInterpreter\
+               ../../plugins/qtscriptinterpreter
 
-DEPENDPATH += ../../exceptions \
-              ../../ScriptLangWrapper \
-              ../../ScriptAPI
+DEPENDPATH += ../../ScriptInterpreter
 
-INCLUDEPATH     += ../utils/messagegroup/
-INCLUDEPATH     += ../utils/messages/
+INCLUDEPATH     += ../../../../utils/messages/
+
+LIBS += -L../../../../../build/lib/ -lmessages

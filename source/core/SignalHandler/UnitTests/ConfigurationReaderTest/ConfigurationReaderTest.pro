@@ -27,13 +27,13 @@ INCLUDEPATH += ../../
 INCLUDEPATH += ../../interfaces
 INCLUDEPATH += ../../communication
 INCLUDEPATH += ../../exceptions
-INCLUDEPATH += ../../../utils/messagegroup/
-INCLUDEPATH += ../../../utils/messages/
+INCLUDEPATH += ../../../../utils/messagegroup/
+INCLUDEPATH += ../../../../utils/messages/
 
 DEPENDPATH += ../../
 DEPENDPATH += ../../interfaces
 DEPENDPATH += ../../communication
 DEPENDPATH += ../../exceptions
 
-LIBS += -L../../../../build/lib/ -lmessagegroup
-LIBS += -L../../../../build/lib/ -lmessages
+LIBS += -L../../../../../build/lib/ -lmessagegroup
+LIBS += -L../../../../../build/lib/ -lmessages

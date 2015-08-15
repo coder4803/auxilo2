@@ -83,8 +83,10 @@ private:
     
     
     // Send given messages using the actual message client (in its own thread).
+    /*
     void sendMessages(std::mutex* mx, std::condition_variable* cv, bool* ready,
                       const std::vector<Utils::SignalMessage> msgs);
+    */
 };
 
 
@@ -362,7 +364,7 @@ void SignalReaderTest::emitSignals(std::mutex* mx,
     }
 }
 
-
+/*
 void SignalReaderTest::sendMessages(std::mutex* mx, 
                                     std::condition_variable* cv, 
                                     bool* ready, 
@@ -384,7 +386,7 @@ void SignalReaderTest::sendMessages(std::mutex* mx,
     
     sender.startSending();
 }
-
+*/
 
 QTEST_APPLESS_MAIN(SignalReaderTest)
 
