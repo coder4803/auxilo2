@@ -128,7 +128,7 @@ UserInterface::UserInterface(std::unique_ptr<ViewInterface>&& view) :
 QCoreApplication* UserInterface::loadPlugin(int& argc, char* argv[], 
                                             const QString& name, bool verbose)
 {
-    QPluginLoader loader( Conf::PLUGIN_PATH + "ui" + name );
+    QPluginLoader loader( Conf::UI_PLUGIN_PATH + "ui" + name );
     if (!loader.load()){
         QString msg = QString("Failed to load ui-plugin: ") + name;
         qFatal(msg.toLatin1().data());

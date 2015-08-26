@@ -47,7 +47,7 @@ ScriptInterpreterFactory::getInstance(const QString& langName) const
     }
     
     // Proper plugin has not been loaded, try to load it.
-    QString fileName = Conf::PLUGIN_PATH + langName + "interpreter";
+    QString fileName = Conf::INTERPRETER_PLUGIN_PATH + langName + "interpreter";
     QPluginLoader loader(fileName);
     if (!loader.load()){
         qWarning() << "Failed to load interpreter plugin: " << langName;

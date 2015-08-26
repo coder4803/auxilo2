@@ -53,7 +53,9 @@ namespace Conf
     const unsigned DEFAULT_PRIORITY (2);
     
     //! Signalhandler plugin library path.
-    const QString PLUGIN_PATH ("../lib/signalhandler/");
+    const QString INTERPRETER_PLUGIN_PATH ("../plugins/scriptinterpreters/");
+
+    const QString UI_PLUGIN_PATH ("../plugins/userinterfaces/signalhandler/");
 
     
 } // Namespace SignalHandler::Conf

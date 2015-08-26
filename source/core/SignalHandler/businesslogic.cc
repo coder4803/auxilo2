@@ -29,6 +29,8 @@ BusinessLogic::BusinessLogic(std::unique_ptr<SignalReader>&& signal_reader,
     sig_reader_->setPrioritySubject(this);
     connect(conf_reader_.get(), SIGNAL(configurationUpdated()),
             this, SLOT(onConfigurationReceived()), Qt::DirectConnection);
+
+    qCritical() << "Waiting for initial configuration...";
     conf_reader_->start();
 }
 
@@ -154,6 +156,7 @@ void BusinessLogic::onConfigurationReceived()
     qDebug() << "New configuration has been set.";
     if (!sig_reader_->isStarted()){
         sig_reader_->start();
+        qCritical() << "Signal Handler is running!";
     }
     
 }

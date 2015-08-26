@@ -17,4 +17,4 @@ SOURCES += graphicalui.cc \
 
 FORMS += graphicalui.ui
 
-DESTDIR = ../../../../../build/lib/signalhandler
+DESTDIR = ../../../../../build/plugins/userinterfaces/signalhandler

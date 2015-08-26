@@ -20,4 +20,4 @@ SOURCES += qtscriptinterpreter.cc \
 INCLUDEPATH += ../../ScriptInterpreter \
                ../../../../utils/messages/
 
-DESTDIR = ../../../../../build/lib/signalhandler
+DESTDIR = ../../../../../build/plugins/scriptinterpreters

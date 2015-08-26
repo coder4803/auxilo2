@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QtGlobal>
 #include <QException>
+#include <signal.h>
 
 #include "interface.h"
 
