@@ -29,7 +29,9 @@ private slots:
 
     void onMessageAccepted();
 
-    void onMsgTypeSelected(const QString &type);
+    void onMsgTypeSelected(int type);
+
+    void onGroupSelected();
 
 private:
    bool initWidgets();
@@ -39,13 +41,17 @@ private:
 
     MessageWidgetPool m_msgWidgetPool;
     std::unique_ptr<MessageWidget> m_activeMsgWidget;
+
     // Child widgets:
     QLabel* m_targetGroupLabel;
-    QLineEdit* m_targetGroupEdit;
+    QLabel* m_targetGroupDisplay;
     QLabel* m_messageTypeLabel;
     QComboBox* m_messageTypeBox;
+    QLabel* m_warningLabel;
 
     QGridLayout* m_mainLayout;
+
+    static const QHash<QString, int> TYPE_INDEXES;
 };
 
 } // MessageTool
