@@ -1,8 +1,8 @@
 /* scriptrunner.cc
- * 
+ *
  * This is the implementation file for the ScriptRunner class defined in
  * scriptrunner.hh.
- * 
+ *
  * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
  */
 
@@ -20,8 +20,8 @@ namespace SignalHandler
 int ScriptRunner::runner_counter_ = 0;
 
 ScriptRunner::ScriptRunner(std::shared_ptr<SignalQueue> queue, 
-                           const ScriptLibrary* lib, 
-                           std::shared_ptr<ScriptInterpreterPool> pool, 
+                           const ScriptLibrary* lib,
+                           std::shared_ptr<ScriptInterpreterPool> pool,
                            ScriptUpdateSubject* subject) :
     
     queue_(queue), lib_(lib), pool_(pool), subject_(subject),
@@ -34,8 +34,8 @@ ScriptRunner::ScriptRunner(std::shared_ptr<SignalQueue> queue,
     
     if (subject_ != nullptr){
         subject_->registerObserver(this);
-    
-        services_ = new ScriptApiImplementation(lib_, subject_, 
+
+        services_ = new ScriptApiImplementation(lib_, subject_,
                                                 QString::number(runner_id_));
     }
 }
@@ -60,7 +60,7 @@ void ScriptRunner::setScriptUpdateSubject(ScriptUpdateSubject* sub)
     }
     subject_ = sub;
     subject_->registerObserver(this);
-    services_ = new ScriptApiImplementation(lib_, subject_, 
+    services_ = new ScriptApiImplementation(lib_, subject_,
                                             QString::number(runner_id_));
 }
 
@@ -80,14 +80,22 @@ void ScriptRunner::start()
             continue;
         }
         
-        std::unique_lock<std::mutex> lock(update_mx_);
-        QString lang = lib_->getLanguage( s.getScriptID() );
-        QString script = lib_->getScript( s.getScriptID() );
-        lock.unlock();
-        
+        QString lang, script;
+        try{
+            std::unique_lock<std::mutex> lock(update_mx_);
+            lang = lib_->getLanguage( s.getScriptID() );
+            script = lib_->getScript( s.getScriptID() );
+            lock.unlock();
+        }
+        catch(UnknownScript&){
+            qDebug() << "Unknown script: " << s.getScriptID();
+            continue;
+        }
+
         ScriptLangWrapperPtr interpreter = pool_->reserve(lang);
         if (interpreter == nullptr){
             // Error: Language not supported.
+            qDebug() << "Unknown lang: " << lang;
             Utils::SignalAckMessage ack_msg(s.getAckInfo().ackID,
                                             Utils::SignalAckMessage::FAILED);
             Utils::MessageGroup::publish(ack_msg, s.getAckInfo().ackGroup);

@@ -21,7 +21,8 @@ SOURCES             += main.cpp \
                        detailmodel.cpp \
                        messagefilterproxymodel.cpp \
     messagewidgets/signalmessagewidget.cpp \
-    messagewidgets/messagewidgetpool.cpp
+    messagewidgets/messagewidgetpool.cpp \
+    messagewidgets/confresponsemessagewidget.cpp
 
 HEADERS             += mainwindow.h \
                        messageviewer.h \
@@ -34,7 +35,8 @@ HEADERS             += mainwindow.h \
                        messagefilterproxymodel.h \
     messagewidgets/messagewidget.h \
     messagewidgets/signalmessagewidget.h \
-    messagewidgets/messagewidgetpool.h
+    messagewidgets/messagewidgetpool.h \
+    messagewidgets/confresponsemessagewidget.h
 
 LIBS                += -L../../../build/lib/ -lmessages \
                        -L../../../build/lib/ -lmessagegroup

@@ -98,6 +98,7 @@ void SignalReader::notifyOnPriorityUpdate(const ScriptPriorityLibrary* new_lib)
 
 void SignalReader::onMessageReceived(QByteArray data)
 {
+    qDebug() << "Signal received";
     Utils::SignalMessage msg(data);
     unsigned priority;
     

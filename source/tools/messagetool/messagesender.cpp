@@ -1,4 +1,5 @@
 #include "messagesender.h"
+#include "messagegroup.h"
 #include <QMessageBox>
 #include <QDebug>
 
@@ -27,7 +28,7 @@ MessageSender::MessageSender(QStandardItemModel& groupModel,
    m_targetGroupDisplay( new QLabel(tr("Select group from left."), this) ),
    m_messageTypeLabel( new QLabel(tr("Message type:"), this) ),
    m_messageTypeBox( new QComboBox(this) ),
-   m_warningLabel( new QLabel(tr("Warnig: unexpected message type"), this) ),
+   m_warningLabel( new QLabel(tr("Warning: unexpected message type"), this) ),
    m_mainLayout( new QGridLayout(this) )
 {
     this->initWidgets();
@@ -45,6 +46,7 @@ void MessageSender::onMessageAccepted()
     }
 
     // Send message (make sure to avoid the memory leak).
+    Utils::MessageGroup::publish(msg->data(), m_targetGroupDisplay->text() );
     delete msg;
 }
 
@@ -133,7 +135,7 @@ bool MessageSender::initWidgets()
     m_mainLayout->addWidget(m_groupView, 1,1,8,1, Qt::AlignLeft);
     m_groupView->setModel(&m_groupModel);
     m_groupView->setHeaderHidden(true);
-    m_groupView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_groupView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_groupView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_groupView->setMinimumWidth(200);
 
