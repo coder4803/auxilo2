@@ -44,7 +44,7 @@ private:
 
     // Child widgets:
     QLabel* m_targetGroupLabel;
-    QLabel* m_targetGroupDisplay;
+    QLineEdit* m_targetGroupDisplay;
     QLabel* m_messageTypeLabel;
     QComboBox* m_messageTypeBox;
     QLabel* m_warningLabel;
