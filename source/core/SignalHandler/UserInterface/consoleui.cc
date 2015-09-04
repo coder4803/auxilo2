@@ -10,14 +10,28 @@
  */
 
 #include "consoleui.hh"
-#include <QDebug>
-#include <functional>
+#include <QCoreApplication>
 #include <cstdio>
+#include <csignal>
+
+
+namespace
+{
+
+void systemSignalHandler(int signum)
+{
+    printf("Quited! (signal %i raised)\n", signum);
+    QCoreApplication::quit();
+}
+
+}
 
 
 ConsoleUI::ConsoleUI(bool verbose) : 
     SignalHandler::ViewInterface(), verbose_(verbose), mx_()
 {
+    signal(SIGINT, systemSignalHandler);
+    signal(SIGTERM, systemSignalHandler);
 }
 
 
