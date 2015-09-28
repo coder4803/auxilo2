@@ -1,0 +1,3 @@
+<signalGenerator>
+<event signal="s1" timestamp="01-01-2000 00:00:00" interval="invalid"/>
+</signalGenerator>

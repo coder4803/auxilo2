@@ -1,0 +1,6 @@
+<signalGenerator>
+  <event signal="s1" timestamp="01-01-2000 00:00:00"/>
+  <event signal="s2" timestamp="02-02-2001 12:00:00" interval="1 seconds" repeat="5"/>
+  <event signal="s2" timestamp="03-03-2002 14:00:00" interval="6 hour"/>
+  <event signal="s3" timestamp="04-04-2003 16:30:00" repeat="10"/>
+</signalGenerator>
