@@ -1,3 +1,11 @@
+/* confreader.cpp
+ * This is the implementation file for the SignalGenerator::ConfReader class
+ * defined in confreader.h.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 28-Sep-2015
+ */
+
 #include "confreader.h"
 #include "confrequestmessage.h"
 #include "confresponsemessage.h"

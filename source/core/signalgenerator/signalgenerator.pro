@@ -25,10 +25,12 @@ INCLUDEPATH     += ../../utils/messagegroup/ \
 
 SOURCES += main.cpp \
     confreader.cpp \
-    confxmlhandler.cpp
+    confxmlhandler.cpp \
+    evententity.cpp
 
 HEADERS += \
     confreader.h \
-    confxmlhandler.h
+    confxmlhandler.h \
+    evententity.h
 
 DESTDIR         = ../../../build/bin/

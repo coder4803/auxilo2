@@ -1,3 +1,11 @@
+/* confxmlhandler.cpp
+ * This is the implementation file for the SignalGenerator::ConfXmlHandler
+ * class defined in confxmlhandler.h.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 28-Sep-2015
+ */
+
 #include "confxmlhandler.h"
 #include <QDebug>
 
@@ -33,7 +41,7 @@ bool ConfXmlHandler::startElement(const QString &namespaceURI,
     // Event
     else if (qName == "event"){
         if (!parsingStarted_){
-            errorString_ = "All 'event'-elements must be defined inside 'signalGenerator.";
+            errorString_ = "All 'event'-elements must be defined inside 'signalGenerator'.";
             return false;
         }
         else if (readingEntity_){
@@ -72,9 +80,11 @@ bool ConfXmlHandler::endElement(const QString &namespaceURI,
 
     if (qName == "event"){
         readingEntity_ = false;
+        return true;
     }
     else if (qName == "signalGenerator"){
         endFlag_ = true;
+        return true;
     }
     return false;
 }
@@ -82,7 +92,7 @@ bool ConfXmlHandler::endElement(const QString &namespaceURI,
 
 bool ConfXmlHandler::fatalError(const QXmlParseException &exception)
 {
-    errorString_ = QString("Error at: line %1, column%2. (%3)")
+    errorString_ = QString("Error at line %1, column%2. (%3)")
             .arg(exception.lineNumber())
             .arg(exception.columnNumber())
             .arg(exception.message());
@@ -113,8 +123,7 @@ bool ConfXmlHandler::parseEvent(const QXmlAttributes &atts)
 
         // Timestamp
         else if (qName == "timestamp"){
-            e.timestamp = QDateTime::fromString(atts.value(i),
-                                                "dd-MM-yyyy hh:mm:ss");
+            e.timestamp = EventEntity::parseDateTime( atts.value(i) );
             if ( !e.timestamp.isValid() ){
                 errorString_ = QString("Invalid timestamp: ") + atts.value(i);
                 return false;
@@ -125,7 +134,7 @@ bool ConfXmlHandler::parseEvent(const QXmlAttributes &atts)
         // Interval
         else if (qName == "interval"){
             e.interval = atts.value(i);
-            if ( !isValidInterval(e.interval) ){
+            if ( !EventEntity::isValidInterval(e.interval) ){
                 errorString_ = QString("Invalid interval: ") + e.interval;
                 return false;
             }
@@ -157,36 +166,12 @@ bool ConfXmlHandler::parseEvent(const QXmlAttributes &atts)
         errorString_ = "Event missing mandatory attributes (timestamp).";
         return false;
     }
+    if (result_.contains(e)){
+        errorString_ = "All events must be unique.";
+        return false;
+    }
     result_.append(e);
     return true;
-}
-
-
-bool ConfXmlHandler::isValidInterval(const QString &interval)
-{
-    static const QStringList ALLOWED_UNITS =
-    {
-        "second", "minute", "hour", "day", "week", "month", "year"
-    };
-
-    QStringList fields = interval.split(" ");
-    if (fields.size() != 2) return false;
-
-    // Check factor
-    bool ok(false);
-    fields.at(0).toUInt(&ok);
-    if (!ok) return false;
-
-    // Check unit.
-    if (ALLOWED_UNITS.contains( fields.at(1) ) ){
-        return true;
-    }
-    else if (fields.at(1).endsWith("s") ){
-        QString tmp = fields.at(1);
-        tmp = tmp.remove( tmp.length()-1, 1);
-        return ALLOWED_UNITS.contains(tmp);
-    }
-    return false;
 }
 
 } // Namespace SignalGenerator
