@@ -66,7 +66,7 @@ QDateTime EventEntity::parseDateTime(const QString &str)
 }
 
 
-bool EventEntity::operator==(const EventEntity &other)
+bool EventEntity::operator==(const EventEntity &other) const
 {
     return this->signal == other.signal &&
             this->timestamp == other.timestamp &&

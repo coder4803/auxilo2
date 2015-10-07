@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core xml network
+QT       += core xml network sql
 
 QT       -= gui
 
@@ -26,11 +26,19 @@ INCLUDEPATH     += ../../utils/messagegroup/ \
 SOURCES += main.cpp \
     confreader.cpp \
     confxmlhandler.cpp \
-    evententity.cpp
+    evententity.cpp \
+    eventmanager.cpp \
+    userinterface.cpp \
+    consoleui.cpp
 
 HEADERS += \
     confreader.h \
     confxmlhandler.h \
-    evententity.h
+    evententity.h \
+    eventmanager.h \
+    viewinterface.h \
+    uiplugininterface.h \
+    userinterface.h \
+    consoleui.h
 
 DESTDIR         = ../../../build/bin/

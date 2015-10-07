@@ -70,7 +70,7 @@ struct EventEntity
      *  match each other.
      * \pre None.
      */
-    bool operator==(const EventEntity& other);
+    bool operator==(const EventEntity& other) const;
 };
 
 
