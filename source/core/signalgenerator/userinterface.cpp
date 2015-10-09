@@ -1,11 +1,21 @@
+/* userinterface.cpp
+ * This is the implementation file for the UserInterface singleton class
+ * defined in userinterface.h.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 09-Oct-2015
+ */
+
 #include "userinterface.h"
 #include "consoleui.h"
+#include "uiplugininterface.h"
+#include <QPluginLoader>
 #include <QDebug>
 
 namespace
 {
 
-// Message handler redirects Qt's print functions to the ViewInterface.
+// Message handler redirects Qt's printing functions to the used ViewInterface.
 void messageHandler(QtMsgType type,
                     const QMessageLogContext& context,
                     const QString& msg)
@@ -27,6 +37,7 @@ void messageHandler(QtMsgType type,
 
     case QtFatalMsg:
         SignalGenerator::UserInterface::getInstance()->critical(msg);
+        break;
 
     default:
         break;
@@ -120,9 +131,50 @@ UserInterface::UserInterface(ViewInterface* view):
 
 QCoreApplication *UserInterface::loadUiPlugin(int &argc, char *argv[])
 {
-    Q_UNUSED(argc); Q_UNUSED(argv);
-    qDebug() << "Ui-plugin loader not implemented.";
-    return nullptr;
+    // Get ui-plugin name
+    auto it = std::find_if(argv+1, argv+argc,
+                           [](char* str){return QString(str)=="--ui";} );
+    ++it;
+    if (it == argv+argc){
+        qCritical() << "--ui parameter given, but no ui name given. Quiting.";
+        return nullptr;
+    }
+    QString uiName(*it);
+
+    // Load plugin
+    QString fileName = "../plugins/userinterfaces/signalgenerator/ui" + uiName;
+    QPluginLoader loader(fileName);
+    if ( !loader.load() ){
+        qCritical() << "Failed to load plugin file" << fileName
+                    << "(" << loader.errorString() << ")";
+        return nullptr;
+    }
+
+    // Cast to UiPlugin
+    UiPluginInterface* plugin(nullptr);
+    plugin = qobject_cast<UiPluginInterface*>(loader.instance());
+    if (plugin == nullptr){
+        qCritical() << "Failed to instantiate UiPlugin from" << fileName;
+        return nullptr;
+    }
+
+    // Create App and view.
+    QCoreApplication* app = plugin->createApp(argc, argv);
+    if (app == nullptr){
+        qCritical() << "UiPlugin" << uiName
+                    << "did not produce proper instance of QCoreApplication.";
+        return nullptr;
+    }
+
+    UserInterface::instance_.reset( new UserInterface(plugin->createView()) );
+    if (UserInterface::instance_->view_ == nullptr){
+        qCritical() << "UiPlugin" << uiName
+                    << "did not produce a proper instance of ViewInterface";
+        delete app;
+        return nullptr;
+    }
+
+    return app;
 }
 
 } // Namespace SignalGenerator

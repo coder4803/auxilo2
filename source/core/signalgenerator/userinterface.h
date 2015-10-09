@@ -1,3 +1,10 @@
+/* userinterface.h
+ * This header defines the UserInterface singleton class.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 9-Oct-2015
+ */
+
 #ifndef USERINTERFACE_H
 #define USERINTERFACE_H
 
