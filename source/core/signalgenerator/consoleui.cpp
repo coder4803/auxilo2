@@ -28,7 +28,7 @@ namespace SignalGenerator
 {
 
 ConsoleUI::ConsoleUI() :
-    ViewInterface(), verbose_(false), dbModel_(nullptr)
+    ViewInterface(), verbose_(false), model_(nullptr)
 {
     signal(SIGINT, handleSignals);
     signal(SIGABRT, handleSignals);
@@ -38,7 +38,6 @@ ConsoleUI::ConsoleUI() :
 
 ConsoleUI::~ConsoleUI()
 {
-    delete dbModel_;
 }
 
 
@@ -77,11 +76,10 @@ void ConsoleUI::setVerbose(bool value)
 }
 
 
-void ConsoleUI::setTableModel(QSqlTableModel *model)
+void ConsoleUI::setModel(ModelInterface *model)
 {
-    Q_ASSERT(model != nullptr);
-    dbModel_ = model;
-    this->warning("UI does not support showing database contents");
+    model_ = model;
 }
+
 
 } // namespace SignalGenerator

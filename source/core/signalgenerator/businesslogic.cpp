@@ -5,17 +5,18 @@
 namespace SignalGenerator
 {
 
-BusinessLogic::BusinessLogic():
-    confReader_(), eventManager_(nullptr)
+BusinessLogic::BusinessLogic(bool clearEvents, QObject *parent):
+    QObject(parent), ModelInterface(),
+    confReader_(), eventManager_()
 {
-    try{
-        eventManager_ = new EventManager;
-        UserInterface::getInstance()->setTableModel( eventManager_->getTableModel() );
-    }
-    catch (std::exception&){
+    if (!eventManager_.isValid()){
         qFatal("Could not open database.");
         return;
     }
+    if (clearEvents){
+        eventManager_.clearAll();
+    }
+    UserInterface::getInstance()->setModel(this);
 
     connect(&confReader_, SIGNAL(configurationReady()),
             this, SLOT(onConfigurationReceived()) );
@@ -26,13 +27,24 @@ BusinessLogic::BusinessLogic():
 
 BusinessLogic::~BusinessLogic()
 {
-    delete eventManager_;
+}
+
+
+QSqlTableModel *BusinessLogic::getEventTable()
+{
+    return eventManager_.getTableModel();
+}
+
+
+QSqlQueryModel *BusinessLogic::getTaskList()
+{
+    return eventManager_.getTaskList();
 }
 
 
 void BusinessLogic::onConfigurationReceived()
 {
-    bool ok = eventManager_->setStaticEvents( confReader_.getConfiguration() );
+    bool ok = eventManager_.setStaticEvents( confReader_.getConfiguration() );
     if (!ok){
         qCritical() << "Setting new configuration failed.";
         confReader_.restart();

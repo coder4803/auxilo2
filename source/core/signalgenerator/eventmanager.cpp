@@ -13,7 +13,8 @@ const QString EventManager::DB_NAME_ ("signalGenerator.db");
 const QString EventManager::TABLE_ ("events");
 
 
-EventManager::EventManager()
+EventManager::EventManager() :
+    model_(nullptr), taskList_(nullptr)
 {
     if (!this->openDatabase(DB_NAME_) ){
         return;
@@ -58,11 +59,25 @@ bool EventManager::setStaticEvents(const QList<EventEntity> &events)
 
 bool EventManager::clearStaticEvents()
 {
-    QSqlDatabase db = QSqlDatabase::database();
-    QSqlQuery q("DELETE FROM " + TABLE_ + " WHERE (static == 1);", db);
+    QSqlQuery q("DELETE FROM " + TABLE_ + " WHERE (static == 1);");
 
-    if (!q.exec()){
+    if (q.lastError().type() != QSqlError::NoError){
         qCritical() << "Failed to clear static events:"
+                    << q.lastError().text().toLatin1().data();
+        return false;
+    }
+
+    model_->select();
+    return true;
+}
+
+
+bool EventManager::clearAll()
+{
+    QSqlQuery q("DELETE FROM " + TABLE_ + ";");
+
+    if (q.lastError().type() != QSqlError::NoError){
+        qCritical() << "Failed to clear events:"
                     << q.lastError().text().toLatin1().data();
         return false;
     }
@@ -96,6 +111,26 @@ bool EventManager::addDynamicEvent(const EventEntity &event)
 QSqlTableModel *EventManager::getTableModel() const
 {
     return model_.get();
+}
+
+
+QSqlQueryModel *EventManager::getTaskList()
+{
+    taskList_.reset(new QSqlQueryModel);
+    taskList_->setQuery("SELECT * FROM " + TABLE_ +
+                        " ORDER BY timestamp ASC;");
+
+    if (taskList_->lastError().type() != QSqlError::NoError){
+        qCritical() << "Failed to create task list.";
+        return nullptr;
+    }
+    return taskList_.get();
+}
+
+
+bool EventManager::isValid() const
+{
+    return QSqlDatabase::database().isValid();
 }
 
 
@@ -136,6 +171,7 @@ bool EventManager::openDatabase(const QString &db_name)
     model_.reset( new QSqlTableModel );
     model_->setTable(TABLE_);
     model_->select();
+
     qCritical() << "Done!";
     return true;
 }

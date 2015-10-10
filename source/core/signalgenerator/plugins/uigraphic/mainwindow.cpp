@@ -7,7 +7,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), SignalGenerator::ViewInterface(),
     ui(new Ui::MainWindow),
-    verbose_(false), dbModel_(nullptr)
+    verbose_(false), model_(nullptr)
 {
     ui->setupUi(this);
     ui->debugLabel->hide();
@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->dbView->setEditTriggers(QTableView::NoEditTriggers);
 
     connect(ui->exitBtn, SIGNAL(clicked(bool)), this, SLOT(onExitBtnClicked()) );
+
+    connect(ui->showTaskListBtn, SIGNAL(clicked(bool)),
+            this, SLOT(onShowTaskListBtnClicked()) );
+
     this->show();
 }
 
@@ -74,12 +78,11 @@ void MainWindow::setVerbose(bool value)
     }
 }
 
-
-void MainWindow::setTableModel(QSqlTableModel *model)
+void MainWindow::setModel(SignalGenerator::ModelInterface *model)
 {
     Q_ASSERT(model != nullptr);
-    dbModel_ = model;
-    ui->dbView->setModel(dbModel_);
+    model_ = model;
+    ui->dbView->setModel(model_->getEventTable());
     ui->dbView->show();
 }
 
@@ -87,5 +90,15 @@ void MainWindow::setTableModel(QSqlTableModel *model)
 void MainWindow::onExitBtnClicked()
 {
     this->close();
+}
+
+
+void MainWindow::onShowTaskListBtnClicked()
+{
+    QMessageBox box(QMessageBox::Information,
+                    "Task List",
+                    "Task List not implemented yet.",
+                    QMessageBox::Ok, this);
+    box.exec();
 }
 

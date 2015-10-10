@@ -25,9 +25,15 @@ public:
 
     bool clearStaticEvents();
 
+    bool clearAll();
+
     bool addDynamicEvent(const EventEntity& event);
 
     QSqlTableModel* getTableModel() const;
+
+    QSqlQueryModel* getTaskList();
+
+    bool isValid() const;
 
 
 private:
@@ -36,6 +42,7 @@ private:
     static const QString TABLE_;
 
     std::unique_ptr<QSqlTableModel> model_;
+    std::unique_ptr<QSqlQueryModel> taskList_;
 
     bool openDatabase(const QString& db_name);
 };

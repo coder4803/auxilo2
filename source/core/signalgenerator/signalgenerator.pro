@@ -41,6 +41,7 @@ HEADERS += \
     uiplugininterface.h \
     userinterface.h \
     consoleui.h \
-    businesslogic.h
+    businesslogic.h \
+    modelinterface.h
 
 DESTDIR         = ../../../build/bin/

@@ -10,7 +10,7 @@
 #define VIEWINTERFACE_H
 
 #include <QString>
-#include <QSqlTableModel>
+#include "modelinterface.h"
 
 namespace SignalGenerator
 {
@@ -70,12 +70,13 @@ public:
     virtual void setVerbose(bool value = true) = 0;
 
     /*!
-     * \brief Give access to the events-database.
-     * \param model Model of the events-table.
+     * \brief Provide the UI with access to the business logic.
+     * \param model Pointer to the model part of program.
+     *  Ownership is not passed to the UI.
      * \pre model != nullptr.
-     * \post The view takes ownership over the model.
+     * \post Ui has access to the model.
      */
-    virtual void setTableModel(QSqlTableModel* model) = 0;
+    virtual void setModel(ModelInterface* model) = 0;
 };
 
 } // Namespace SignalGenerator

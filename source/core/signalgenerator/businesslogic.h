@@ -2,6 +2,7 @@
 #define BUSINESSLOGIC_H
 
 #include <QObject>
+#include "modelinterface.h"
 #include "confreader.h"
 #include "eventmanager.h"
 
@@ -14,17 +15,19 @@ namespace SignalGenerator
  * The central logic coomponent, that encapsulates all other
  * components into one.
  */
-class BusinessLogic : public QObject
+class BusinessLogic : public QObject, public ModelInterface
 {
     Q_OBJECT
 
 public:
 
-    BusinessLogic();
+    BusinessLogic(bool clearEvents = false, QObject* parent = 0);
 
-    ~BusinessLogic();
-    BusinessLogic(const BusinessLogic&) = delete;
-    BusinessLogic& operator=(const BusinessLogic&) = delete;
+    virtual ~BusinessLogic();
+
+    // Implements the ModelInterface
+    virtual QSqlTableModel* getEventTable();
+    virtual QSqlQueryModel* getTaskList();
 
 
 private slots:
@@ -34,7 +37,7 @@ private slots:
 private:
 
     ConfReader confReader_;
-    EventManager* eventManager_;
+    EventManager eventManager_;
 };
 
 }

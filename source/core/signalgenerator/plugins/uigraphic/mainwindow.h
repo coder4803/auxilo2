@@ -25,19 +25,20 @@ public:
     virtual void critical(const QString &msg);
     virtual void fatal(const QString &msg);
     virtual void setVerbose(bool value);
-    virtual void setTableModel(QSqlTableModel *model);
+    virtual void setModel(SignalGenerator::ModelInterface *model);
 
 
 private slots:
 
     void onExitBtnClicked();
 
+    void onShowTaskListBtnClicked();
 
 private:
 
     Ui::MainWindow *ui;
     bool verbose_;
-    QSqlTableModel* dbModel_;
+    SignalGenerator::ModelInterface* model_;
 };
 
 #endif // MAINWINDOW_H

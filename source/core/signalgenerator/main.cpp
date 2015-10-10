@@ -11,7 +11,9 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    bool clear = QCoreApplication::arguments().contains("--cleardb");
+
     qCritical() << "Starting signalgenerator...";
-    SignalGenerator::BusinessLogic logic;
+    SignalGenerator::BusinessLogic logic(clear);
     return a->exec();
 }

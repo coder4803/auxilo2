@@ -116,9 +116,9 @@ void UserInterface::setVerbose(bool value)
     view_->setVerbose(value);
 }
 
-void UserInterface::setTableModel(QSqlTableModel *model)
+void UserInterface::setModel(ModelInterface *model)
 {
-    view_->setTableModel(model);
+    view_->setModel(model);
 }
 
 

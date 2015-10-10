@@ -54,7 +54,7 @@ public:
     virtual void critical(const QString &msg);
     virtual void fatal(const QString &msg);
     virtual void setVerbose(bool value);
-    virtual void setTableModel(QSqlTableModel *model);
+    virtual void setModel(ModelInterface *model);
 
 
 private:
