@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QtSql/QSqlTableModel>
+#include <memory>
 #include "evententity.h"
 
 namespace SignalGenerator
@@ -33,6 +34,8 @@ private:
 
     static const QString DB_NAME_;
     static const QString TABLE_;
+
+    std::unique_ptr<QSqlTableModel> model_;
 
     bool openDatabase(const QString& db_name);
 };

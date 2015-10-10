@@ -50,6 +50,8 @@ bool EventManager::setStaticEvents(const QList<EventEntity> &events)
             return false;
         }
     }
+
+    model_->select();
     return true;
 }
 
@@ -64,6 +66,8 @@ bool EventManager::clearStaticEvents()
                     << q.lastError().text().toLatin1().data();
         return false;
     }
+
+    model_->select();
     return true;
 }
 
@@ -83,23 +87,15 @@ bool EventManager::addDynamicEvent(const EventEntity &event)
                     << q.lastError().text().toLatin1().data();
         return false;
     }
+
+    model_->select();
     return true;
 }
 
 
 QSqlTableModel *EventManager::getTableModel() const
 {
-    QSqlDatabase db = QSqlDatabase::database();
-    QSqlTableModel* model = new QSqlTableModel(nullptr, db);
-    model->setTable(TABLE_);
-
-    if (model->lastError().type() != QSqlError::NoError){
-        qDebug() << model->lastError().text().toLatin1().data();
-        delete model;
-        return nullptr;
-    }
-
-    return model;
+    return model_.get();
 }
 
 
@@ -137,6 +133,9 @@ bool EventManager::openDatabase(const QString &db_name)
        return false;
     }
 
+    model_.reset( new QSqlTableModel );
+    model_->setTable(TABLE_);
+    model_->select();
     qCritical() << "Done!";
     return true;
 }

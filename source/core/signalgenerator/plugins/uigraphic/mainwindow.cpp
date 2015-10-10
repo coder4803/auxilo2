@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->debugList->hide();
     ui->dbView->hide();
 
+    ui->dbView->setEditTriggers(QTableView::NoEditTriggers);
+
     connect(ui->exitBtn, SIGNAL(clicked(bool)), this, SLOT(onExitBtnClicked()) );
     this->show();
 }
@@ -22,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete dbModel_;
 }
 
 
@@ -76,9 +77,7 @@ void MainWindow::setVerbose(bool value)
 
 void MainWindow::setTableModel(QSqlTableModel *model)
 {
-    if (model == nullptr) return;
-
-    delete dbModel_;
+    Q_ASSERT(model != nullptr);
     dbModel_ = model;
     ui->dbView->setModel(dbModel_);
     ui->dbView->show();
@@ -89,3 +88,4 @@ void MainWindow::onExitBtnClicked()
 {
     this->close();
 }
+
