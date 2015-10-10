@@ -1,3 +1,11 @@
+/*
+ * userinterface.h
+ * This header defines the ConsoleUI class, the default user interface.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 10-Oct-2015
+ */
+
 #ifndef CONSOLEUI_H
 #define CONSOLEUI_H
 
@@ -6,12 +14,22 @@
 namespace SignalGenerator
 {
 
+/*!
+ * \brief The ConsoleUI class
+ *  The console user interface. This is the default user interfece.
+ */
 class ConsoleUI : public ViewInterface
 {
 public:
 
+    /*!
+     * \brief Constructor.
+     */
     ConsoleUI();
 
+    /*!
+     * \brief Destructor.
+     */
     virtual ~ConsoleUI();
 
     // Implements the ViewInterface.
@@ -26,6 +44,7 @@ public:
 private:
 
     bool verbose_;
+    QSqlTableModel* dbModel_;
 };
 
 } // Namespace SignalGenerator

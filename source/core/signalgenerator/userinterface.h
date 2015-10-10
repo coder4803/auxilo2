@@ -15,6 +15,10 @@
 namespace SignalGenerator
 {
 
+/*!
+ * \brief The UserInterface class
+ * A Signleton class to create and access the user interface.
+ */
 class UserInterface : public ViewInterface
 {
 public:

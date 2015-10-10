@@ -130,9 +130,11 @@ void ConfReader::onConfResponseReceived(QByteArray data)
 
 void ConfReader::onTimeout()
 {
-    std::lock_guard<std::mutex> lock(mx_);
     if ( this->isStarted() ){
-        // Re-send request
+        Utils::ConfRequestMessage msg(RESPONSE_GROUP_NAME_, FEATURE_, true);
+        Utils::MessageGroup::publish(msg, Utils::CONF_REQUEST_GROUP);
+        qDebug() << "ConfRequest sent.";
+        std::lock_guard<std::mutex> lock(mx_);
         timer_.start();
     }
 }
@@ -142,6 +144,7 @@ void ConfReader::onResponseGroupReady()
 {
     Utils::ConfRequestMessage msg(RESPONSE_GROUP_NAME_, FEATURE_, true);
     Utils::MessageGroup::publish(msg, Utils::CONF_REQUEST_GROUP);
+    qDebug() << "ConfRequest sent.";
     timer_.setInterval(RETRY_INTERVAL_);
     connect(&timer_, SIGNAL(timeout()), this, SLOT(onTimeout()) );
     timer_.start();

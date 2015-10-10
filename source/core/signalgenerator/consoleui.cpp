@@ -1,3 +1,12 @@
+/*
+ * userinterface.cpp
+ * This is the implementation file for the ConsoleUI class defined in
+ * consoleui.h.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 10-Oct-2015
+ */
+
 #include "consoleui.h"
 #include <cstdio>
 #include <csignal>
@@ -6,6 +15,7 @@
 
 namespace
 {
+    // Handle environment signals.
     void handleSignals(int signum)
     {
         printf("Quited! (signal %i was risen)\n", signum);
@@ -18,7 +28,7 @@ namespace SignalGenerator
 {
 
 ConsoleUI::ConsoleUI() :
-    ViewInterface(), verbose_(false)
+    ViewInterface(), verbose_(false), dbModel_(nullptr)
 {
     signal(SIGINT, handleSignals);
     signal(SIGABRT, handleSignals);
@@ -28,6 +38,7 @@ ConsoleUI::ConsoleUI() :
 
 ConsoleUI::~ConsoleUI()
 {
+    delete dbModel_;
 }
 
 
@@ -68,7 +79,8 @@ void ConsoleUI::setVerbose(bool value)
 
 void ConsoleUI::setTableModel(QSqlTableModel *model)
 {
-    Q_UNUSED(model);
+    Q_ASSERT(model != nullptr);
+    dbModel_ = model;
     this->warning("UI does not support showing database contents");
 }
 

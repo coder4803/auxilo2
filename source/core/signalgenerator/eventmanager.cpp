@@ -16,11 +16,11 @@ const QString EventManager::TABLE_ ("events");
 EventManager::EventManager()
 {
     if (!this->openDatabase(DB_NAME_) ){
-        throw QException();
+        return;
     }
-    else if (!this->clearStaticEvents() ){
+    if (!this->clearStaticEvents() ){
         QSqlDatabase::database(DB_NAME_).close();
-        throw QException();
+        return;
     }
 }
 
@@ -34,17 +34,18 @@ EventManager::~EventManager()
 bool EventManager::setStaticEvents(const QList<EventEntity> &events)
 {
     this->clearStaticEvents();
+
     foreach (EventEntity e, events) {
-        QString interval = e.interval.isEmpty() ? "NULL" : e.interval;
+        QString interval = e.interval.isEmpty() ? "NULL" : "\"" + e.interval + "\"";
         QString repeat = e.repeat==0 ? "NULL" : QString::number(e.repeat);
 
         QSqlQuery q("INSERT INTO " + TABLE_ + " VALUES(" +
-                    e.signal + ", " +
-                    e.timestamp.toString("dd-MM-yyyy hh:mm:ss") + ", " +
+                    "\"" + e.signal + "\", " +
+                    "\"" + e.timestamp.toString("dd-MM-yyyy hh:mm:ss") + "\", " +
                     interval + ", " + repeat + ", " + "1);");
 
-        if (!q.exec()){
-            qCritical() << "Failed to clear static events:"
+        if (q.lastError().type() != QSqlError::NoError){
+            qCritical() << "Failed to set static events:"
                         << q.lastError().text().toLatin1().data();
             return false;
         }
@@ -55,7 +56,8 @@ bool EventManager::setStaticEvents(const QList<EventEntity> &events)
 
 bool EventManager::clearStaticEvents()
 {
-    QSqlQuery q("DELETE FROM " + TABLE_ + " WHERE static=1;");
+    QSqlDatabase db = QSqlDatabase::database();
+    QSqlQuery q("DELETE FROM " + TABLE_ + " WHERE (static == 1);", db);
 
     if (!q.exec()){
         qCritical() << "Failed to clear static events:"
@@ -68,12 +70,12 @@ bool EventManager::clearStaticEvents()
 
 bool EventManager::addDynamicEvent(const EventEntity &event)
 {
-    QString interval = event.interval.isEmpty() ? "NULL" : event.interval;
+    QString interval = event.interval.isEmpty() ? "NULL" : "\"" + event.interval + "\"";
     QString repeat = event.repeat==0 ? "NULL" : QString::number(event.repeat);
 
     QSqlQuery q("INSERT INTO " + TABLE_ + " VALUES(" +
-                event.signal + ", " +
-                event.timestamp.toString("dd-MM-yyyy hh:mm:ss") + ", " +
+                "\"" + event.signal + "\", " +
+                "\"" + event.timestamp.toString("dd-MM-yyyy hh:mm:ss") + "\", " +
                 interval + ", " + repeat + ", " + "0);");
 
     if (!q.exec()){
@@ -87,12 +89,14 @@ bool EventManager::addDynamicEvent(const EventEntity &event)
 
 QSqlTableModel *EventManager::getTableModel() const
 {
-    QSqlDatabase db = QSqlDatabase::database(DB_NAME_);
+    QSqlDatabase db = QSqlDatabase::database();
     QSqlTableModel* model = new QSqlTableModel(nullptr, db);
     model->setTable(TABLE_);
 
-    if (db.lastError().type() != QSqlError::NoError){
-        qDebug() << db.lastError().text().toLatin1().data();
+    if (model->lastError().type() != QSqlError::NoError){
+        qDebug() << model->lastError().text().toLatin1().data();
+        delete model;
+        return nullptr;
     }
 
     return model;
@@ -104,7 +108,11 @@ bool EventManager::openDatabase(const QString &db_name)
     Q_ASSERT( !db_name.isEmpty() );
     qCritical() << "Opening database:" << db_name;
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLite");
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    if (!db.isValid()){
+        qCritical() << "Failed to load database driver 'SQLITE'.";
+        return false;
+    }
     db.setDatabaseName(db_name);
 
     if (!db.open()){
@@ -113,17 +121,18 @@ bool EventManager::openDatabase(const QString &db_name)
         return false;
     }
 
-    QSqlQuery q ("CREATE TABLE IF NOT EXIST " + TABLE_ + " ("
-                 "signal    TEXT    NOT NULL,"
-                 "timestamp TEXT    NOT NULL,"
-                 "interval  TEXT,"
-                 "repeat    INTEGER,"
-                 "static    INTEGER NOT NULL,"
-                 "PRIMARY_KEY(signal, timestamp, interval, repeat) );");
+    QSqlQuery q ("CREATE TABLE IF NOT EXISTS " + TABLE_ + "("
+                 "signal    TEXT    NOT NULL, "
+                 "timestamp TEXT    NOT NULL, "
+                 "interval  TEXT, "
+                 "repeat    INTEGER, "
+                 "static    INTEGER NOT NULL, "
+                 "PRIMARY KEY(signal, timestamp, interval, repeat)"
+                 ");", db);
 
     if (!q.exec()) {
        qCritical("Failed to create event table: %s.",
-                 db.lastError().text().toLatin1().data());
+                 q.lastError().text().toLatin1().data());
        db.close();
        return false;
     }

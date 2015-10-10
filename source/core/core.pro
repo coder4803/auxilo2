@@ -10,4 +10,7 @@ SUBDIRS         = stateholder \
                   plugininterfaces \
                   interface \
                   messagebroker \
-                  SignalHandler
+                  SignalHandler \
+                  SignalHandler/plugins/signalhandler_plugins.pro \
+                  signalgenerator \
+                  signalgenerator/plugins/signalgenerator_plugins.pro

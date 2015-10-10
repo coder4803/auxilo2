@@ -29,7 +29,8 @@ SOURCES += main.cpp \
     evententity.cpp \
     eventmanager.cpp \
     userinterface.cpp \
-    consoleui.cpp
+    consoleui.cpp \
+    businesslogic.cpp
 
 HEADERS += \
     confreader.h \
@@ -39,6 +40,7 @@ HEADERS += \
     viewinterface.h \
     uiplugininterface.h \
     userinterface.h \
-    consoleui.h
+    consoleui.h \
+    businesslogic.h
 
 DESTDIR         = ../../../build/bin/

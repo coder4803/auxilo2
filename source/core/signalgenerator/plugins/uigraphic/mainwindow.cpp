@@ -50,7 +50,7 @@ void MainWindow::critical(const QString &msg)
 {
     QString timestamp = QDateTime::currentDateTime().toString("dd-MM-yyyy hh:mm:ss");
     QString output = timestamp + " : " + msg;
-    ui->debugList->insertItem(0, output);
+    ui->outputList->insertItem(0, output);
 }
 
 
@@ -76,7 +76,9 @@ void MainWindow::setVerbose(bool value)
 
 void MainWindow::setTableModel(QSqlTableModel *model)
 {
-    Q_ASSERT(model != nullptr);
+    if (model == nullptr) return;
+
+    delete dbModel_;
     dbModel_ = model;
     ui->dbView->setModel(dbModel_);
     ui->dbView->show();

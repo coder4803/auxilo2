@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include "userinterface.h"
+#include "businesslogic.h"
 #include <memory>
 
 int main(int argc, char *argv[])
@@ -10,5 +11,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    qCritical() << "Starting signalgenerator...";
+    SignalGenerator::BusinessLogic logic;
     return a->exec();
 }
