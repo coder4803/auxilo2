@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "tasklistdialog.h"
 #include <QDateTime>
 #include <QMessageBox>
 
@@ -95,10 +96,7 @@ void MainWindow::onExitBtnClicked()
 
 void MainWindow::onShowTaskListBtnClicked()
 {
-    QMessageBox box(QMessageBox::Information,
-                    "Task List",
-                    "Task List not implemented yet.",
-                    QMessageBox::Ok, this);
-    box.exec();
+    TaskListDialog taskDialog(model_, this);
+    taskDialog.exec();
 }
 

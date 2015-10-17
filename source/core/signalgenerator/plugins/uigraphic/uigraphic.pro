@@ -11,14 +11,17 @@ TEMPLATE = lib
 DESTDIR = ../../../../../build/plugins/userinterfaces/signalgenerator
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    tasklistdialog.ui
 
 HEADERS += \
     mainwindow.h \
-    signalgeneratorgraphicuiplugin.h
+    signalgeneratorgraphicuiplugin.h \
+    tasklistdialog.h
 
 INCLUDEPATH += ../../
 
 SOURCES += \
     mainwindow.cpp \
-    signalgeneratorgraphicuiplugin.cpp
+    signalgeneratorgraphicuiplugin.cpp \
+    tasklistdialog.cpp

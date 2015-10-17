@@ -45,6 +45,14 @@ private:
     std::unique_ptr<QSqlQueryModel> taskList_;
 
     bool openDatabase(const QString& db_name);
+
+    bool clearExpiredEvents();
+
+    QDateTime findNextTimestamp(QDateTime dt,
+                                int& repeat, const QString& interval) const;
+
+    bool updateExpired(const QList<int>& toBeRemoved,
+                  const QMap<int, QPair<QString,int>>& toBeUpdated);
 };
 
 

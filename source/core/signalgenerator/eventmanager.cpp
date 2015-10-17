@@ -2,6 +2,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
+#include <QSqlResult>
 #include <QException>
 #include <QDebug>
 
@@ -19,10 +20,8 @@ EventManager::EventManager() :
     if (!this->openDatabase(DB_NAME_) ){
         return;
     }
-    if (!this->clearStaticEvents() ){
-        QSqlDatabase::database(DB_NAME_).close();
-        return;
-    }
+    this->clearStaticEvents();
+    this->clearExpiredEvents();
 }
 
 
@@ -42,7 +41,7 @@ bool EventManager::setStaticEvents(const QList<EventEntity> &events)
 
         QSqlQuery q("INSERT INTO " + TABLE_ + " VALUES(" +
                     "\"" + e.signal + "\", " +
-                    "\"" + e.timestamp.toString("dd-MM-yyyy hh:mm:ss") + "\", " +
+                    "\"" + e.timestamp.toString("yyyy-MM-dd hh:mm:ss") + "\", " +
                     interval + ", " + repeat + ", " + "1);");
 
         if (q.lastError().type() != QSqlError::NoError){
@@ -52,7 +51,7 @@ bool EventManager::setStaticEvents(const QList<EventEntity> &events)
         }
     }
 
-    model_->select();
+    this->clearExpiredEvents();
     return true;
 }
 
@@ -94,7 +93,7 @@ bool EventManager::addDynamicEvent(const EventEntity &event)
 
     QSqlQuery q("INSERT INTO " + TABLE_ + " VALUES(" +
                 "\"" + event.signal + "\", " +
-                "\"" + event.timestamp.toString("dd-MM-yyyy hh:mm:ss") + "\", " +
+                "\"" + event.timestamp.toString("yyyy-MM-dd hh:mm:ss") + "\", " +
                 interval + ", " + repeat + ", " + "0);");
 
     if (!q.exec()){
@@ -103,7 +102,7 @@ bool EventManager::addDynamicEvent(const EventEntity &event)
         return false;
     }
 
-    model_->select();
+    clearExpiredEvents();
     return true;
 }
 
@@ -117,7 +116,8 @@ QSqlTableModel *EventManager::getTableModel() const
 QSqlQueryModel *EventManager::getTaskList()
 {
     taskList_.reset(new QSqlQueryModel);
-    taskList_->setQuery("SELECT * FROM " + TABLE_ +
+    taskList_->setQuery("SELECT timestamp, signal, interval, repeat "
+                        "FROM " + TABLE_ +
                         " ORDER BY timestamp ASC;");
 
     if (taskList_->lastError().type() != QSqlError::NoError){
@@ -153,12 +153,13 @@ bool EventManager::openDatabase(const QString &db_name)
     }
 
     QSqlQuery q ("CREATE TABLE IF NOT EXISTS " + TABLE_ + "("
+                 "id        INTEGER PRIMARY KEY, "
                  "signal    TEXT    NOT NULL, "
                  "timestamp TEXT    NOT NULL, "
                  "interval  TEXT, "
                  "repeat    INTEGER, "
                  "static    INTEGER NOT NULL, "
-                 "PRIMARY KEY(signal, timestamp, interval, repeat)"
+                 "UNIQUE(signal, timestamp, interval, repeat)"
                  ");", db);
 
     if (!q.exec()) {
@@ -173,6 +174,124 @@ bool EventManager::openDatabase(const QString &db_name)
     model_->select();
 
     qCritical() << "Done!";
+    return true;
+}
+
+
+bool EventManager::clearExpiredEvents()
+{
+    // Get events with timestamp earlier than current time.
+    QDateTime current = QDateTime::currentDateTime();
+    QSqlQuery q("SELECT * FROM " + TABLE_ +
+                " WHERE timestamp < \"" +
+                current.toString("yyyy-MM-dd hh:mm:ss")
+                + "\";");
+    if (q.lastError().type() != QSqlError::NoError){
+        qCritical() << "Failed to fetch expired events:"
+                    << q.lastError().text().toLatin1().data();
+        return false;
+    }
+
+    // Deside to eather delete or update events.
+    QList<int> toBeRemoved;
+    QMap<int, QPair<QString, int>> toBeUpdated;
+    while (q.next()){
+        QString tmp = q.value("timestamp").toString();
+        QDateTime dt = QDateTime::fromString(tmp, "yyyy-MM-dd hh:mm:ss");
+
+        bool ok(false);
+        int repeat = q.value("repeat").toInt(&ok);
+        if (ok && repeat==0){
+            // No more repeats left.
+            toBeRemoved.append( q.value("id").toInt() );
+            continue;
+        }
+
+        dt = this->findNextTimestamp(dt, repeat, q.value("interval").toString());
+        if (dt < current){
+            toBeRemoved.append( q.value("id").toInt() );
+        }
+        else {
+            toBeUpdated.insert(q.value("id").toInt(),
+                               qMakePair(dt.toString("yyyy-MM-dd hh:mm:ss"), repeat));
+        }
+    }
+
+    return this->updateExpired(toBeRemoved, toBeUpdated);
+}
+
+
+QDateTime EventManager::findNextTimestamp(QDateTime dt,
+                                          int &repeat,
+                                          const QString &interval) const
+{
+    static const QHash<QString, int> SEC_FACTOR =
+    {
+        {"second", 1},
+        {"minute", 60},
+        {"hour", 3600},
+        {"day", 3600*24},
+        {"week", 3600*24*7},
+        {"month", 3600*24*30},
+        {"year", 3600*24*365}
+    };
+
+    if (interval.isEmpty()){
+        // Not repeatable
+        return dt;
+    }
+
+    QStringList parts = interval.split(" ");
+    int interval_sec = parts.at(0).toInt() * SEC_FACTOR[parts.at(1)];
+    QDateTime current = QDateTime::currentDateTime();
+
+    // Infinite repeat
+    if (repeat == 0){
+        while (dt < current){
+            dt = dt.addSecs(interval_sec);
+        }
+        return dt;
+    }
+
+    // Finite repeat
+    while (repeat > 0 && dt < current){
+        dt = dt.addSecs(interval_sec);
+        --repeat;
+    }
+    return dt;
+}
+
+
+bool EventManager::updateExpired(const QList<int> &toBeRemoved,
+                            const QMap<int, QPair<QString,int>> &toBeUpdated)
+{
+    // Delete events
+    foreach (int id, toBeRemoved) {
+        QSqlQuery query("DELETE FROM " + TABLE_ +
+                        " WHERE id = " + QString::number(id) + ";");
+
+        if (query.lastError().type() != QSqlError::NoError){
+            qCritical() << "Failed to remove expired event: "
+                        << query.lastError().text().toLatin1().data();
+            return false;
+        }
+    }
+
+    // Update events
+    for (auto it = toBeUpdated.begin(); it != toBeUpdated.end(); ++it) {
+        QSqlQuery query("UPDATE "+ TABLE_ + " SET " +
+                        "timestamp = " + "\"" + it.value().first + "\", " +
+                        "repeat = " + QString::number(it.value().second) +
+                        " WHERE id = " + QString::number(it.key()) + ";");
+
+        if (query.lastError().type() != QSqlError::NoError){
+            qCritical() << "Failed to update expired event: "
+                        << query.lastError().text().toLatin1().data();
+        }
+        return false;
+    }
+
+    model_->select();
     return true;
 }
 
