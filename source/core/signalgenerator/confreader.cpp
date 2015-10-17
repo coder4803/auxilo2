@@ -17,7 +17,7 @@ namespace SignalGenerator
 
 const int ConfReader::RETRY_INTERVAL_(2000);
 const QString ConfReader::RESPONSE_GROUP_NAME_("signalgeneratorConf");
-const QString ConfReader::FEATURE_("signalgenerator");
+const QString ConfReader::FEATURE_("signalGenerator");
 
 
 ConfReader::ConfReader(QObject *parent) :
@@ -93,10 +93,11 @@ void ConfReader::onConfResponseReceived(QByteArray data)
     QString conf_path;
 
     try{
-        conf_path = msg.parameterSet().parameter<QString>("configurationFile");
+        conf_path = msg.parameterSet().parameter<QString>(
+                    QString("configurationFile").toLower());
     }
     catch (QException&){
-        qDebug() << "Invalid configuration received";
+        qCritical() << "Invalid configuration received";
         this->restart();
         return;
     }

@@ -39,7 +39,9 @@ bool EventManager::setStaticEvents(const QList<EventEntity> &events)
         QString interval = e.interval.isEmpty() ? "NULL" : "\"" + e.interval + "\"";
         QString repeat = e.repeat==0 ? "NULL" : QString::number(e.repeat);
 
-        QSqlQuery q("INSERT INTO " + TABLE_ + " VALUES(" +
+        QSqlQuery q("INSERT INTO " + TABLE_ +
+                    " (signal, timestamp, interval, repeat, static) " +
+                    "VALUES(" +
                     "\"" + e.signal + "\", " +
                     "\"" + e.timestamp.toString("yyyy-MM-dd hh:mm:ss") + "\", " +
                     interval + ", " + repeat + ", " + "1);");
@@ -91,9 +93,11 @@ bool EventManager::addDynamicEvent(const EventEntity &event)
     QString interval = event.interval.isEmpty() ? "NULL" : "\"" + event.interval + "\"";
     QString repeat = event.repeat==0 ? "NULL" : QString::number(event.repeat);
 
-    QSqlQuery q("INSERT INTO " + TABLE_ + " VALUES(" +
+    QSqlQuery q("INSERT INTO " + TABLE_ +
+                " (signal, timestamp, interval, repeat, static) " +
+                "VALUES(" +
                 "\"" + event.signal + "\", " +
-                "\"" + event.timestamp.toString("yyyy-MM-dd hh:mm:ss") + "\", " +
+                "\"" + event.timestamp.toString("yyyy-MM-dd hh:mm:ss") +"\", "+
                 interval + ", " + repeat + ", " + "0);");
 
     if (!q.exec()){
@@ -206,12 +210,16 @@ bool EventManager::clearExpiredEvents()
             toBeRemoved.append( q.value("id").toInt() );
             continue;
         }
+        bool inf_repeat = !ok;
 
         dt = this->findNextTimestamp(dt, repeat, q.value("interval").toString());
         if (dt < current){
             toBeRemoved.append( q.value("id").toInt() );
         }
         else {
+            if (inf_repeat){
+                repeat = -1;
+            }
             toBeUpdated.insert(q.value("id").toInt(),
                                qMakePair(dt.toString("yyyy-MM-dd hh:mm:ss"), repeat));
         }
@@ -279,16 +287,19 @@ bool EventManager::updateExpired(const QList<int> &toBeRemoved,
 
     // Update events
     for (auto it = toBeUpdated.begin(); it != toBeUpdated.end(); ++it) {
+        QString repeat_str =
+                it.value().second==-1 ? "NULL" : QString::number(it.value().second);
+
         QSqlQuery query("UPDATE "+ TABLE_ + " SET " +
                         "timestamp = " + "\"" + it.value().first + "\", " +
-                        "repeat = " + QString::number(it.value().second) +
+                        "repeat = " + repeat_str +
                         " WHERE id = " + QString::number(it.key()) + ";");
 
         if (query.lastError().type() != QSqlError::NoError){
             qCritical() << "Failed to update expired event: "
                         << query.lastError().text().toLatin1().data();
+            return false;
         }
-        return false;
     }
 
     model_->select();
