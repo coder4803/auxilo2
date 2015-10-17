@@ -153,7 +153,7 @@ void ConfReaderTest::invalidConfigurationTest_data()
                         "no_signal.xml", "no_timestamp.xml",
                         "negative_repeat.xml", "invalid_timestamp.xml",
                         "invalid_interval.xml", "unknown_attribute.xml",
-                        "dublicates.xml"};
+                        "dublicates.xml", "repeat_no_interval.xml"};
 
     for (QString f_name : files){
         Utils::ParameterSet tmp;
@@ -226,7 +226,7 @@ void ConfReaderTest::validConfigurationTest_data()
             SignalGenerator::EventEntity("s1", QDateTime(QDate(2000,1,1), QTime(0,0,0)) ),
             SignalGenerator::EventEntity("s2", QDateTime(QDate(2001,2,2), QTime(12,0,0)), "1 second", 5),
             SignalGenerator::EventEntity("s2", QDateTime(QDate(2002,3,3), QTime(14,0,0)), "6 hour"),
-            SignalGenerator::EventEntity("s3", QDateTime(QDate(2003,4,4), QTime(16,30,0)), "", 10)
+            SignalGenerator::EventEntity("s3", QDateTime(QDate(2003,4,4), QTime(16,30,0)), "", 0)
         };
         QTest::newRow("many events") << params << data;
     }

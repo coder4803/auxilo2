@@ -1,0 +1,3 @@
+<signalGenerator>
+   <event signal="s1" timestamp="17-10-2015 00:00:00" repeat="10"/>
+</signalGenerator>

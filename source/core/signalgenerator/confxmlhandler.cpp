@@ -166,6 +166,10 @@ bool ConfXmlHandler::parseEvent(const QXmlAttributes &atts)
         errorString_ = "Event missing mandatory attributes (timestamp).";
         return false;
     }
+    else if (e.interval.isEmpty() && e.repeat != 0){
+        errorString_ = "No timeinterval defined for repeatable event.";
+        return false;
+    }
     if (result_.contains(e)){
         errorString_ = "All events must be unique.";
         return false;
