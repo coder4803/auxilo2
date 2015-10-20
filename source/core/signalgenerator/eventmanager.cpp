@@ -5,6 +5,8 @@
 #include <QSqlResult>
 #include <QException>
 #include <QDebug>
+#include "signalmessage.h"
+#include "messagegroup.h"
 
 
 namespace SignalGenerator
@@ -15,13 +17,18 @@ const QString EventManager::TABLE_ ("events");
 
 
 EventManager::EventManager() :
-    model_(nullptr), taskList_(nullptr)
+    model_(nullptr), taskList_(nullptr), nextEvents_(), nextTimestamp_(),
+    timer_(this)
 {
     if (!this->openDatabase(DB_NAME_) ){
         return;
     }
     this->clearStaticEvents();
     this->clearExpiredEvents();
+
+    connect(&timer_, SIGNAL(timeout()), this, SLOT(onTimeout()) );
+    timer_.setInterval(1000);
+    timer_.start();
 }
 
 
@@ -136,6 +143,22 @@ bool EventManager::isValid() const
 {
     return QSqlDatabase::database().isValid();
 }
+
+
+void EventManager::onTimeout()
+{
+    if (!nextTimestamp_.isValid() ||
+            nextTimestamp_ > QDateTime::currentDateTime() )
+    {
+        return;
+    }
+
+    foreach (int id, nextEvents_) {
+        this->generate(id);
+    }
+    this->findNextEvents();
+}
+
 
 
 bool EventManager::openDatabase(const QString &db_name)
@@ -304,6 +327,77 @@ bool EventManager::updateExpired(const QList<int> &toBeRemoved,
 
     model_->select();
     return true;
+}
+
+
+void EventManager::findNextEvents()
+{
+    QSqlQuery q("SELECT id, timestamp FROM " + TABLE_ + " ORDER BY timestamp ASC;");
+    if (q.lastError().type() != QSqlError::NoError){
+        qCritical() << "Failed to fetch next events:"
+                    << q.lastError().text().toLatin1().data();
+        return;
+    }
+
+    if (!q.next()){
+        // No events.
+        return;
+    }
+
+    nextTimestamp_ = QDateTime::fromString(q.value("timestamp").toString(),
+                                           "yyyy-MM-dd hh:mm:ss");
+    nextEvents_.clear();
+    nextEvents_.append( q.value("id").toInt() );
+
+    while (q.next()){
+        QDateTime dt = QDateTime::fromString(q.value("timestamp").toString(),
+                                             "yyyy-MM-dd hh:mm:ss");
+        if (dt > nextTimestamp_){
+            break;
+        }
+        nextEvents_.append( q.value("id").toInt() );
+    }
+}
+
+
+void EventManager::generate(int id) const
+{
+    QSqlQuery q("SELECT signal, timestamp, interval, repeat FROM "+ TABLE_ +
+                " WHERE id==" + QString::number(id) + ";");
+
+    if (!q.next()){
+        qCritical() << "Event not found!";
+        return;
+    }
+
+    QString signalName = q.value("signal").toString();
+    Utils::SignalMessage msg(signalName, "signalGenerator");
+    Utils::MessageGroup::publish(msg, Utils::SIGNAL_HANDLER_GROUP);
+
+    qDebug() << "Generated:" << id << signalName;
+
+    // Update/remove generated event.
+    QDateTime timestamp = QDateTime::fromString(q.value("timestamp").toString(),
+                                                "yyyy-MM-dd hh:mm:ss");
+    bool ok(false);
+    int repeat = q.value("repeat").toInt(&ok);
+    QString interval = q.value("interval").toString();
+
+    if (!interval.isEmpty() && (repeat!=0 || !ok) ){
+        // Calculate next timestamp and update.
+        timestamp = findNextTimestamp(timestamp, repeat, interval);
+        if (timestamp > QDateTime::currentDateTime()){
+            QSqlQuery query("UPDATE " + TABLE_ + " SET " +
+                            "timestamp=" + timestamp.toString("yyyy-MM-dd hh:mm:ss") +
+                            ", repeat=" + QString::number(repeat) +
+                            " WHERE id==" + QString::number(id) + ";");
+            return;
+        }
+    }
+
+    QSqlQuery query("DELETE FROM " + TABLE_ +
+                " WHERE id==" + QString::number(id) + ";");
+
 }
 
 }

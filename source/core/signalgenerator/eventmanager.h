@@ -1,8 +1,10 @@
 #ifndef EVENTMANAGER_H
 #define EVENTMANAGER_H
 
+#include <QObject>
 #include <QList>
-#include <QtSql/QSqlTableModel>
+#include <QSqlTableModel>
+#include <QTimer>
 #include <memory>
 #include "evententity.h"
 
@@ -10,8 +12,10 @@ namespace SignalGenerator
 {
 
 
-class EventManager
+class EventManager : public QObject
 {
+    Q_OBJECT
+
 public:
 
     EventManager();
@@ -36,6 +40,11 @@ public:
     bool isValid() const;
 
 
+private slots:
+
+    void onTimeout();
+
+
 private:
 
     static const QString DB_NAME_;
@@ -43,6 +52,9 @@ private:
 
     std::unique_ptr<QSqlTableModel> model_;
     std::unique_ptr<QSqlQueryModel> taskList_;
+    QList<int> nextEvents_;
+    QDateTime nextTimestamp_;
+    QTimer timer_;
 
     bool openDatabase(const QString& db_name);
 
@@ -53,6 +65,10 @@ private:
 
     bool updateExpired(const QList<int>& toBeRemoved,
                   const QMap<int, QPair<QString,int>>& toBeUpdated);
+
+    void findNextEvents();
+
+    void generate(int id) const;
 };
 
 
