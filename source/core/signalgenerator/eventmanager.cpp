@@ -1,3 +1,12 @@
+/* eventmanager.cpp
+ *
+ * This is the implementation file for the EventManager class defined in
+ * eventmanager.h.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 25-Oct-2015
+ */
+
 #include "eventmanager.h"
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
@@ -347,7 +356,6 @@ void EventManager::findNextEvents()
                     << q.lastError().text().toLatin1().data();
         return;
     }
-
     if (!q.next()){
         // No events.
         return;
@@ -355,9 +363,6 @@ void EventManager::findNextEvents()
 
     nextTimestamp_ = QDateTime::fromString(q.value("timestamp").toString(),
                                            "yyyy-MM-dd hh:mm:ss");
-
-    qDebug() << "Next time:" << nextTimestamp_.toString("dd-MM-yyyy hh:mm:ss");
-
     nextEvents_.append( q.value("id").toInt() );
 
     while (q.next()){
@@ -375,11 +380,7 @@ void EventManager::generate(int id) const
 {
     QSqlQuery q("SELECT signal, timestamp, interval, repeat FROM "+ TABLE_ +
                 " WHERE id==" + QString::number(id) + ";");
-
-    if (!q.next()){
-        qCritical() << "Event not found!";
-        return;
-    }
+    Q_ASSERT(q.next());
 
     QString signalName = q.value("signal").toString();
     Utils::SignalMessage msg(signalName, "signalGenerator");
@@ -388,4 +389,4 @@ void EventManager::generate(int id) const
     qDebug() << "Generated:" << id << signalName;
 }
 
-}
+} // Namespace SignalGenerator
