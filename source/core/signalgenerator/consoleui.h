@@ -10,6 +10,8 @@
 #define CONSOLEUI_H
 
 #include "viewinterface.h"
+#include <mutex>
+#include <thread>
 
 namespace SignalGenerator
 {
@@ -45,6 +47,13 @@ private:
 
     bool verbose_;
     ModelInterface* model_;
+    std::mutex output_mx_;
+    std::thread input_thread_;
+
+    void readInput();
+    void printTaskList();
+    void printEventsTable();
+    void printHelp();
 };
 
 } // Namespace SignalGenerator
