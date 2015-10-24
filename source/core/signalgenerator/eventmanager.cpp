@@ -61,6 +61,7 @@ bool EventManager::setStaticEvents(const QList<EventEntity> &events)
     }
 
     this->clearExpiredEvents();
+    this->findNextEvents();
     return true;
 }
 
@@ -152,10 +153,14 @@ void EventManager::onTimeout()
     {
         return;
     }
+    if (nextEvents_.isEmpty()){
+        return;
+    }
 
     foreach (int id, nextEvents_) {
         this->generate(id);
     }
+    this->clearExpiredEvents();
     this->findNextEvents();
 }
 
@@ -210,7 +215,7 @@ bool EventManager::clearExpiredEvents()
     // Get events with timestamp earlier than current time.
     QDateTime current = QDateTime::currentDateTime();
     QSqlQuery q("SELECT * FROM " + TABLE_ +
-                " WHERE timestamp < \"" +
+                " WHERE timestamp <= \"" +
                 current.toString("yyyy-MM-dd hh:mm:ss")
                 + "\";");
     if (q.lastError().type() != QSqlError::NoError){
@@ -323,6 +328,7 @@ bool EventManager::updateExpired(const QList<int> &toBeRemoved,
                         << query.lastError().text().toLatin1().data();
             return false;
         }
+
     }
 
     model_->select();
@@ -332,6 +338,9 @@ bool EventManager::updateExpired(const QList<int> &toBeRemoved,
 
 void EventManager::findNextEvents()
 {
+    nextEvents_.clear();
+    nextTimestamp_ = QDateTime();
+
     QSqlQuery q("SELECT id, timestamp FROM " + TABLE_ + " ORDER BY timestamp ASC;");
     if (q.lastError().type() != QSqlError::NoError){
         qCritical() << "Failed to fetch next events:"
@@ -346,7 +355,9 @@ void EventManager::findNextEvents()
 
     nextTimestamp_ = QDateTime::fromString(q.value("timestamp").toString(),
                                            "yyyy-MM-dd hh:mm:ss");
-    nextEvents_.clear();
+
+    qDebug() << "Next time:" << nextTimestamp_.toString("dd-MM-yyyy hh:mm:ss");
+
     nextEvents_.append( q.value("id").toInt() );
 
     while (q.next()){
@@ -375,29 +386,6 @@ void EventManager::generate(int id) const
     Utils::MessageGroup::publish(msg, Utils::SIGNAL_HANDLER_GROUP);
 
     qDebug() << "Generated:" << id << signalName;
-
-    // Update/remove generated event.
-    QDateTime timestamp = QDateTime::fromString(q.value("timestamp").toString(),
-                                                "yyyy-MM-dd hh:mm:ss");
-    bool ok(false);
-    int repeat = q.value("repeat").toInt(&ok);
-    QString interval = q.value("interval").toString();
-
-    if (!interval.isEmpty() && (repeat!=0 || !ok) ){
-        // Calculate next timestamp and update.
-        timestamp = findNextTimestamp(timestamp, repeat, interval);
-        if (timestamp > QDateTime::currentDateTime()){
-            QSqlQuery query("UPDATE " + TABLE_ + " SET " +
-                            "timestamp=" + timestamp.toString("yyyy-MM-dd hh:mm:ss") +
-                            ", repeat=" + QString::number(repeat) +
-                            " WHERE id==" + QString::number(id) + ";");
-            return;
-        }
-    }
-
-    QSqlQuery query("DELETE FROM " + TABLE_ +
-                " WHERE id==" + QString::number(id) + ";");
-
 }
 
 }
