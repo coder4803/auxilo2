@@ -1,10 +1,12 @@
 #include <QException>
 #include <QXmlSimpleReader>
 #include <QSet>
+#include <QMetaEnum>
 
 #include "groupmodel.h"
 #include "devicenameloader.h"
 #include "messagegroup.h"
+#include "globals.h"
 
 namespace MessageTool {
 
@@ -19,6 +21,23 @@ GroupModel::GroupModel(const QString& deviceFileName,
    }
 
    generateGroupTree(interfaceNames, deviceNames);
+}
+
+QStringList GroupModel::getGroups() const
+{
+   return m_messageTypeTable.keys();
+}
+
+Globals::MessageType GroupModel::getMessageTypeByGroup(const QString& group) const
+{
+   return m_messageTypeTable.value(group);
+}
+
+QString GroupModel::getMessageTypeNameByGroup(const QString& group) const
+{
+   return Globals::staticMetaObject.
+         enumerator(Globals::ENUMINDEX_MESSAGE_TYPE).
+         valueToKey(getMessageTypeByGroup(group));
 }
 
 void GroupModel::handleMessage(QByteArray payload, QString group)

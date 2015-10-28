@@ -14,6 +14,12 @@ public:
    explicit GroupModel(const QString& deviceFileName,
                        QObject* parent = NULL);
 
+   QStringList getGroups() const;
+
+   Globals::MessageType getMessageTypeByGroup(const QString& group) const;
+
+   QString getMessageTypeNameByGroup(const QString& group) const;
+
 signals:
    void messageReceived(Globals::MessageType messageType,
                         QByteArray payload,

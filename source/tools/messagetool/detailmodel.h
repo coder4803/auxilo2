@@ -3,6 +3,7 @@
 
 #include <QAbstractTableModel>
 
+#include "message.h"
 #include "messagemodel.h"
 #include "globals.h"
 
@@ -10,16 +11,35 @@ namespace MessageTool {
 
 class DetailModel : public QStandardItemModel
 {
+   Q_OBJECT
 public:
    explicit DetailModel(QObject* parent = NULL);
+   ~DetailModel();
 
    void setDetailData(Globals::MessageType messageType,
                       const QByteArray& data);
 
    void clearContent();
 
+   void enableEditing(bool editable);
+
+   QStringList getOptions(int row);
+
+   QString getAddButtonText();
+
+   QByteArray getMessageData();
+
+public slots:
+   void addEmptyRow();
+
 private:
-   void newRow(QString name, QVariant value);
+   Globals::MessageType m_messageType;
+   bool m_ductile;
+
+   void newRow(QString name,
+               QVariant value,
+               QStringList options = QStringList(),
+               bool editable = false);
 
    void parseConfRequestMessage(const QByteArray& data);
    void parseConfResponseMessage(const QByteArray& data);
@@ -32,6 +52,18 @@ private:
    void parseSetStateAckMessage(const QByteArray& data);
    void parseStateChangedMessage(const QByteArray& data);
    void parseStateChangedAckMessage(const QByteArray& data);
+
+   QByteArray createConfRequestMessage();
+   QByteArray createConfResponseMessage();
+   QByteArray createSignalMessage();
+   QByteArray createSignalAckMessage();
+   QByteArray createLogMessage();
+   QByteArray createRequestStateMessage();
+   QByteArray createStateResponseMessage();
+   QByteArray createSetStateMessage();
+   QByteArray createSetStateAckMessage();
+   QByteArray createStateChangedMessage();
+   QByteArray createStateChangedAckMessage();
 };
 
 } // MessageTool

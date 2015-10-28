@@ -17,7 +17,10 @@ SOURCES             += main.cpp \
                        devicenameloader.cpp \
                        messagemodel.cpp \
                        detailmodel.cpp \
-                       messagefilterproxymodel.cpp
+                       messagefilterproxymodel.cpp \
+                       sendmessagemodel.cpp \
+                       detaildelegate.cpp \
+    detailfilter.cpp
 
 HEADERS             += mainwindow.h \
                        messageviewer.h \
@@ -27,7 +30,10 @@ HEADERS             += mainwindow.h \
                        messagemodel.h \
                        detailmodel.h \
                        globals.h \
-                       messagefilterproxymodel.h
+                       messagefilterproxymodel.h \
+                       sendmessagemodel.h \
+                       detaildelegate.h \
+    detailfilter.h
 
 LIBS                += -L../../../build/lib/ -lmessages \
                        -L../../../build/lib/ -lmessagegroup
