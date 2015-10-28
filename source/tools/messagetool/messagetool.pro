@@ -4,12 +4,10 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET              = messagetool
 TEMPLATE            = app
-CONFIG              += c++11
 
 INCLUDEPATH         += ../../../externals/include/ \
                        ../../utils/messagegroup/ \
-                       ../../utils/messages/ \
-                       ./messagewidgets
+                       ../../utils/messages/
 
 SOURCES             += main.cpp \
                        mainwindow.cpp \
@@ -19,10 +17,7 @@ SOURCES             += main.cpp \
                        devicenameloader.cpp \
                        messagemodel.cpp \
                        detailmodel.cpp \
-                       messagefilterproxymodel.cpp \
-    messagewidgets/signalmessagewidget.cpp \
-    messagewidgets/messagewidgetpool.cpp \
-    messagewidgets/confresponsemessagewidget.cpp
+                       messagefilterproxymodel.cpp
 
 HEADERS             += mainwindow.h \
                        messageviewer.h \
@@ -32,11 +27,7 @@ HEADERS             += mainwindow.h \
                        messagemodel.h \
                        detailmodel.h \
                        globals.h \
-                       messagefilterproxymodel.h \
-    messagewidgets/messagewidget.h \
-    messagewidgets/signalmessagewidget.h \
-    messagewidgets/messagewidgetpool.h \
-    messagewidgets/confresponsemessagewidget.h
+                       messagefilterproxymodel.h
 
 LIBS                += -L../../../build/lib/ -lmessages \
                        -L../../../build/lib/ -lmessagegroup
