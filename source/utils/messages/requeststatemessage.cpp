@@ -4,6 +4,7 @@ namespace Utils {
 
 RequestStateMessage::RequestStateMessage(QString responseGroup,
                                          QString state) :
+   Message(),
    m_responseGroup(responseGroup)
 {
    m_states.append(state);
@@ -11,12 +12,14 @@ RequestStateMessage::RequestStateMessage(QString responseGroup,
 
 RequestStateMessage::RequestStateMessage(QString responseGroup,
                                          QStringList states) :
+   Message(),
    m_responseGroup(responseGroup),
    m_states(states)
 {
 }
 
-RequestStateMessage::RequestStateMessage(QByteArray data)
+RequestStateMessage::RequestStateMessage(QByteArray data) :
+   Message()
 {
    QDataStream stream(data);
    stream >> m_responseGroup;

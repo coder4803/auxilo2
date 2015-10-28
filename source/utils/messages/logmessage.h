@@ -11,6 +11,8 @@ namespace Utils {
  */
 class LogMessage : public Message
 {
+   Q_GADGET
+   Q_ENUMS(LogType)
 public:
    /*!
     * \brief Describes log type.

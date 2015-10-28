@@ -5,6 +5,7 @@ namespace Utils {
 StateChangedMessage::StateChangedMessage(QString label,
                                          QVariant value,
                                          QString ackGroup) :
+   Message(),
    m_label(label),
    m_value(value),
    m_ackGroup(ackGroup),
@@ -15,7 +16,18 @@ StateChangedMessage::StateChangedMessage(QString label,
    }
 }
 
-StateChangedMessage::StateChangedMessage(QByteArray data)
+StateChangedMessage::StateChangedMessage(const StateChangedMessage& other) :
+   Message(),
+   m_label(other.label()),
+   m_value(other.value()),
+   m_ackGroup(other.ackGroup()),
+   m_ackId(other.ackId())
+{
+}
+
+StateChangedMessage::StateChangedMessage(QByteArray data) :
+   Message(),
+   m_ackId(0)
 {
    QDataStream stream(data);
    stream >> m_label;
@@ -25,14 +37,6 @@ StateChangedMessage::StateChangedMessage(QByteArray data)
    if (!m_ackGroup.isEmpty()) {
       stream >> m_ackId;
    }
-}
-
-StateChangedMessage::StateChangedMessage(const StateChangedMessage& other) :
-   m_label(other.label()),
-   m_value(other.value()),
-   m_ackGroup(other.ackGroup()),
-   m_ackId(other.ackId())
-{
 }
 
 StateChangedMessage

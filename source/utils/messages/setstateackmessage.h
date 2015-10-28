@@ -11,6 +11,8 @@ namespace Utils {
  */
 class SetStateAckMessage : public Message
 {
+   Q_GADGET
+   Q_ENUMS(Result)
 public:
    /*!
     * \brief Result of setting state.

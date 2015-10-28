@@ -13,7 +13,9 @@ SetStateAckMessage::SetStateAckMessage(quint32 ackId,
 }
 
 SetStateAckMessage::SetStateAckMessage(QByteArray data) :
-   Message()
+   Message(),
+   m_ackId(0),
+   m_result(SUCCEEDED)
 {
    QDataStream stream(data);
    stream >> m_ackId;

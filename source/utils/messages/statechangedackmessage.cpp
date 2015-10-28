@@ -12,7 +12,10 @@ StateChangedAckMessage::StateChangedAckMessage(quint32 ackId,
 {
 }
 
-StateChangedAckMessage::StateChangedAckMessage(QByteArray data)
+StateChangedAckMessage::StateChangedAckMessage(QByteArray data) :
+   Message(),
+   m_ackId(0),
+   m_result(SUCCEEDED)
 {
    QDataStream stream(data);
    stream >> m_ackId;

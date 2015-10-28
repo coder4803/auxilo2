@@ -11,6 +11,8 @@ namespace Utils {
  */
 class SignalAckMessage : public Message
 {
+   Q_GADGET
+   Q_ENUMS(Result)
 public:
    /*!
     * \brief Result of executing signal.

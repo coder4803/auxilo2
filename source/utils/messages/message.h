@@ -118,6 +118,7 @@ const QString SET_STATE_ACK_POST_FIX("_setStateAck");
  */
 class Message
 {
+   Q_GADGET
 public:
    //! Destructor.
    virtual ~Message() {}

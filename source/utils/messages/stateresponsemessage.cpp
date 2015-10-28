@@ -30,11 +30,13 @@ StateResponseMessage::State::operator=(const StateResponseMessage::State& other)
    return *this;
 }
 
-StateResponseMessage::StateResponseMessage()
+StateResponseMessage::StateResponseMessage() :
+   Message()
 {
 }
 
-StateResponseMessage::StateResponseMessage(const QByteArray& payload)
+StateResponseMessage::StateResponseMessage(const QByteArray& payload) :
+   Message()
 {
    QDataStream stream(payload);
 

@@ -5,13 +5,16 @@ namespace Utils {
 ConfRequestMessage::ConfRequestMessage(QString responseGroup,
                                        QString featureName,
                                        bool coreFeature) :
+   Message(),
    m_responseGroup(responseGroup),
    m_featureName(featureName),
    m_coreFeature(coreFeature)
 {
 }
 
-ConfRequestMessage::ConfRequestMessage(QByteArray data)
+ConfRequestMessage::ConfRequestMessage(QByteArray data) :
+   Message(),
+   m_coreFeature(false)
 {
    QDataStream stream(data);
    stream >> m_responseGroup;

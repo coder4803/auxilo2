@@ -127,6 +127,8 @@ private:
  */
 class ConfResponseMessage : public Message
 {
+   Q_GADGET
+   Q_ENUMS(Result)
 public:
    enum Result {
       NO_ERROR,          //!< No errors.

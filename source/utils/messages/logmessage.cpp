@@ -7,13 +7,16 @@ namespace Utils {
 LogMessage::LogMessage(QString message,
                        LogType type = INFO,
                        QString sender) :
+   Message(),
    m_message(message),
    m_type(type),
    m_sender(sender)
 {
 }
 
-LogMessage::LogMessage(QByteArray data)
+LogMessage::LogMessage(QByteArray data) :
+   Message(),
+   m_type(INFO)
 {
    QDataStream stream(data);
 

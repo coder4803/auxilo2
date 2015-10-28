@@ -13,7 +13,9 @@ SignalAckMessage::SignalAckMessage(quint32 ackId,
 }
 
 SignalAckMessage::SignalAckMessage(QByteArray data) :
-   Message()
+   Message(),
+   m_ackId(0),
+   m_result(SUCCEEDED)
 {
    QDataStream stream(data);
    stream >> m_ackId;

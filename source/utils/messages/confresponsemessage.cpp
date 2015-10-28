@@ -96,13 +96,16 @@ QStringList ParameterSet::parameterList(QString startsWith,
 }
 
 ConfResponseMessage::ConfResponseMessage(const ParameterSet& parameterSet) :
+   Message(),
    m_parameterSet(parameterSet),
    m_result(NO_ERROR)
 {
 }
 
 ConfResponseMessage::ConfResponseMessage(const QByteArray& payload) :
-   m_parameterSet("")
+   Message(),
+   m_parameterSet(""),
+   m_result(NO_ERROR)
 {
    QDataStream stream(payload);
 

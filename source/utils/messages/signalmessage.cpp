@@ -22,7 +22,8 @@ SignalMessage::SignalMessage(QString signalName,
 }
 
 SignalMessage::SignalMessage(QByteArray data) :
-   Message()
+   Message(),
+   m_ackId(0)
 {
    QDataStream stream(data);
    stream >> m_signalName;
