@@ -3,12 +3,17 @@
 
 #include <QObject>
 
-class Globals : QObject {
-   Q_OBJECT
+namespace MessageTool {
+
+/*!
+ * \brief The Globals class
+ * This class holds global staff that is inserted into Qt's meta-object system.
+ */
+class Globals {
+   Q_GADGET
    Q_ENUMS(MessageType)
 public:
-   static const int ENUMINDEX_MESSAGE_TYPE = 0;
-
+   //! Enum for message types
    enum MessageType
    {
       SignalMessage,
@@ -24,5 +29,7 @@ public:
       LogMessage
    };
 };
+
+} // MessageTool
 
 #endif

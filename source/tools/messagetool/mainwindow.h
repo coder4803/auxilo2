@@ -11,25 +11,45 @@
 
 namespace MessageTool {
 
+/*!
+ * \brief The MainWindow class
+ */
 class MainWindow : public QMainWindow
 {
    Q_OBJECT
-
 public:
+   //! Constructor.
    explicit MainWindow(QWidget *parent = 0);
+
+   //! Destructor.
    ~MainWindow();
 
 private slots:
+   /*!
+    * \brief Handles connect button click.
+    */
    void connectClicked();
 
 private:
+   //! Edit field for server address.
    QLineEdit* m_serverAddress;
+
+   //! Edit field for server port.
    QLineEdit* m_serverPort;
+
+   //! Connect button.
    QPushButton* m_connect;
+
+   //! Tab widget for different views.
    QTabWidget* m_tabWidget;
 
+   //! Bool indicator for connection state.
    bool m_connected;
+
+   //! Model for group list.
    GroupModel* m_groupModel;
+
+   //! Model for messages.
    MessageModel* m_messageModel;
 };
 

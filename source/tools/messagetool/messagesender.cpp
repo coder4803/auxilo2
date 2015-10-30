@@ -104,7 +104,7 @@ void MessageSender::initWidgets()
    m_sendMessageModel = new SendMessageModel(this);
    m_sendMessageView = new QTableView(this);
    m_sendMessageView->setModel(m_sendMessageModel);
-   m_sendMessageView->hideColumn(2);
+   m_sendMessageView->hideColumn(SendMessageModel::INDEX_PAYLOAD);
    m_sendMessageView->setEditTriggers(QAbstractItemView::NoEditTriggers);
    m_sendMessageView->setSelectionBehavior(QAbstractItemView::SelectRows);
    m_sendMessageView->setSelectionMode(QAbstractItemView::SingleSelection);

@@ -30,8 +30,9 @@ void MessageModel::onNewMessage(Globals::MessageType type,
    groupItem->setData(group, Qt::DisplayRole);
 
    QStandardItem* typeItem = new QStandardItem();
-   QString typeString = Globals::staticMetaObject.
-         enumerator(Globals::ENUMINDEX_MESSAGE_TYPE).valueToKey(type);
+   int index = Globals::staticMetaObject.indexOfEnumerator("MessageType");
+   QString typeString = Globals::staticMetaObject.enumerator(index).
+         valueToKey(type);
    typeItem->setData(typeString, Qt::DisplayRole);
 
    QStandardItem* payloadItem = new QStandardItem();

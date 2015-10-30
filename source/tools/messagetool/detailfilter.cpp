@@ -1,4 +1,7 @@
 #include "detailfilter.h"
+#include "detailmodel.h"
+
+namespace MessageTool {
 
 DetailFilter::DetailFilter(QObject *parent) :
    QSortFilterProxyModel(parent)
@@ -9,11 +12,15 @@ Qt::ItemFlags DetailFilter::flags(const QModelIndex &index) const
 {
    Qt::ItemFlags indexFlags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
-   if (index.column() == 0 && index.data(Qt::UserRole).toBool()) {
+   // Name column is ductile only if manually set.
+   if (index.column() == DetailModel::COLUMN_NAME && index.data(Qt::UserRole).toBool()) {
       indexFlags |= Qt::ItemIsEditable;
-   } else if (index.column() == 1) {
+   // Value column is always ductile
+   } else if (index.column() == DetailModel::COLUMN_VALUE) {
       indexFlags |= Qt::ItemIsEditable;
    }
 
    return indexFlags;
 }
+
+} // MessageTool

@@ -2,6 +2,8 @@
 
 #include "messagefilterproxymodel.h"
 
+namespace MessageTool {
+
 MessageFilterProxyModel::MessageFilterProxyModel(QObject* parent) :
    QSortFilterProxyModel(parent)
 {
@@ -41,3 +43,5 @@ bool MessageFilterProxyModel::filterAcceptsRow(int sourceRow,
 
    return false;
 }
+
+} // MessageTool

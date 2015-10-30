@@ -22,9 +22,9 @@ DetailModel::DetailModel(QObject* parent) :
    m_messageType(Globals::SignalMessage),
    m_ductile(false)
 {
-   setColumnCount(2);
-   setHorizontalHeaderItem(0, new QStandardItem("Name"));
-   setHorizontalHeaderItem(1, new QStandardItem("Value"));
+   setColumnCount(NUMBER_OF_COLUMNS);
+   setHorizontalHeaderItem(COLUMN_NAME, new QStandardItem("Name"));
+   setHorizontalHeaderItem(COLUMN_VALUE, new QStandardItem("Value"));
 }
 
 DetailModel::~DetailModel()
@@ -90,7 +90,7 @@ void DetailModel::enableEditing(bool ductile)
 
 QStringList DetailModel::getOptions(int row)
 {
-   return index(row, 1).data(Qt::UserRole).toString().split(",");
+   return index(row, COLUMN_VALUE).data(Qt::UserRole).toString().split(",");
 }
 
 QString DetailModel::getAddButtonText()
@@ -143,10 +143,10 @@ void DetailModel::addEmptyRow()
 void DetailModel::newRow(QString name,
                          QVariant value,
                          QStringList options,
-                         bool editable)
+                         bool ductile)
 {
    QStandardItem* nameItem = new QStandardItem(name);
-   nameItem->setData(editable, Qt::UserRole);
+   nameItem->setData(ductile, Qt::UserRole);
 
    QStandardItem* valueItem = new QStandardItem(value.toString());
    valueItem->setData(options.join(","), Qt::UserRole);
@@ -337,9 +337,9 @@ void DetailModel::parseStateChangedAckMessage(const QByteArray& data)
 
 QByteArray DetailModel::createConfRequestMessage()
 {
-   QString featureName = item(0, 1)->data(Qt::DisplayRole).toString();
-   bool coreFeature = item(1, 1)->data(Qt::DisplayRole).toBool();
-   QString responseGroup = item(2, 1)->data(Qt::DisplayRole).toString();
+   QString featureName = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
+   bool coreFeature = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toBool();
+   QString responseGroup = item(2, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    Utils::ConfRequestMessage message(responseGroup, featureName, coreFeature);
    return message.data();
@@ -347,7 +347,7 @@ QByteArray DetailModel::createConfRequestMessage()
 
 QByteArray DetailModel::createConfResponseMessage()
 {
-   QString resultAsString = item(0, 1)->data(Qt::DisplayRole).toString();
+   QString resultAsString = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    int indexOfResult = Utils::ConfResponseMessage::staticMetaObject.
          indexOfEnumerator("Result");
@@ -358,12 +358,12 @@ QByteArray DetailModel::createConfResponseMessage()
    result = static_cast<Utils::ConfResponseMessage::Result>(
             resultEnumData.keyToValue(resultAsString.toLatin1().data()));
 
-   QString featureName = item(1, 1)->data(Qt::DisplayRole).toString();
+   QString featureName = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
    Utils::ParameterSet parameterSet(featureName);
 
    for (int i = 2; i < rowCount(); ++i) {
-      QString parameter = item(i, 0)->data(Qt::DisplayRole).toString();
-      QString value = item(i, 1)->data(Qt::DisplayRole).toString();
+      QString parameter = item(i, COLUMN_NAME)->data(Qt::DisplayRole).toString();
+      QString value = item(i, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
       if (!parameter.isEmpty() && !parameter.isEmpty()) {
          parameterSet.appendParameter(parameter, value);
@@ -377,11 +377,11 @@ QByteArray DetailModel::createConfResponseMessage()
 
 QByteArray DetailModel::createSignalMessage()
 {
-   QString signalName = item(0, 1)->data(Qt::DisplayRole).toString();
-   QString senderName = item(1, 1)->data(Qt::DisplayRole).toString();
-   QString ackGroup = item(2, 1)->data(Qt::DisplayRole).toString();
+   QString signalName = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
+   QString senderName = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
+   QString ackGroup = item(2, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
-   QString parameters = item(3, 1)->data(Qt::DisplayRole).toString();
+   QString parameters = item(3, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
    QStringList listOfParameters = parameters.split(",");
 
    Utils::SignalMessage message(signalName, senderName, listOfParameters,
@@ -391,7 +391,7 @@ QByteArray DetailModel::createSignalMessage()
 
 QByteArray DetailModel::createSignalAckMessage()
 {
-   QString resultAsString = item(0, 1)->data(Qt::DisplayRole).toString();
+   QString resultAsString = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    int indexOfResult = Utils::SignalAckMessage::staticMetaObject.
          indexOfEnumerator("Result");
@@ -403,9 +403,9 @@ QByteArray DetailModel::createSignalAckMessage()
             resultEnumData.keyToValue(resultAsString.toLatin1().data()));
 
    bool ok = false;
-   int ackId = item(1, 1)->data(Qt::DisplayRole).toInt(&ok);
+   int ackId = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toInt(&ok);
    if (!ok) {
-      qCritical("Invalid ackId: %s", item(1, 1)->
+      qCritical("Invalid ackId: %s", item(1, COLUMN_VALUE)->
                 data(Qt::DisplayRole).toString().toLatin1().data());
       return QByteArray();
    }
@@ -416,9 +416,9 @@ QByteArray DetailModel::createSignalAckMessage()
 
 QByteArray DetailModel::createLogMessage()
 {
-   QString messageText = item(0, 1)->data(Qt::DisplayRole).toString();
+   QString messageText = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
-   QString logTypeAsString = item(1, 1)->data(Qt::DisplayRole).toString();
+   QString logTypeAsString = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    int indexOfLogType = Utils::LogMessage::staticMetaObject.
          indexOfEnumerator("LogType");
@@ -429,7 +429,7 @@ QByteArray DetailModel::createLogMessage()
    logType = static_cast<Utils::LogMessage::LogType>(
             typeEnumData.keyToValue(logTypeAsString.toLatin1().data()));
 
-   QString sender = item(2, 1)->data(Qt::DisplayRole).toString();
+   QString sender = item(2, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    Utils::LogMessage message(messageText, logType, sender);
    return message.data();
@@ -437,8 +437,8 @@ QByteArray DetailModel::createLogMessage()
 
 QByteArray DetailModel::createRequestStateMessage()
 {
-   QStringList states = item(0, 1)->data(Qt::DisplayRole).toString().split(",");
-   QString responseGroup = item(1, 1)->data(Qt::DisplayRole).toString();
+   QStringList states = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString().split(",");
+   QString responseGroup = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    Utils::RequestStateMessage message(responseGroup, states);
    return message.data();
@@ -449,8 +449,8 @@ QByteArray DetailModel::createStateResponseMessage()
    Utils::StateResponseMessage message;
 
    for (int i = 0; i < rowCount(); ++i) {
-      QString parameterName = item(i, 0)->data(Qt::DisplayRole).toString();
-      QString parameterValue = item(i, 1)->data(Qt::DisplayRole).toString();
+      QString parameterName = item(i, COLUMN_NAME)->data(Qt::DisplayRole).toString();
+      QString parameterValue = item(i, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
       Utils::StateResponseMessage::State state;
 
@@ -476,10 +476,10 @@ QByteArray DetailModel::createStateResponseMessage()
 
 QByteArray DetailModel::createSetStateMessage()
 {
-   QString name = item(0, 1)->data(Qt::DisplayRole).toString();
-   QString value = item(1, 1)->data(Qt::DisplayRole).toString();
+   QString name = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
+   QString value = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
-   QString ackGroup = item(2, 1)->data(Qt::DisplayRole).toString();
+   QString ackGroup = item(2, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    Utils::SetStateMessage message(name, value, ackGroup);
    return message.data();
@@ -487,7 +487,7 @@ QByteArray DetailModel::createSetStateMessage()
 
 QByteArray DetailModel::createSetStateAckMessage()
 {
-   QString resultAsString = item(0, 1)->data(Qt::DisplayRole).toString();
+   QString resultAsString = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    int indexOfResult = Utils::SetStateAckMessage::staticMetaObject.
          indexOfEnumerator("Result");
@@ -499,9 +499,9 @@ QByteArray DetailModel::createSetStateAckMessage()
             resultEnumData.keyToValue(resultAsString.toLatin1().data()));
 
    bool ok = false;
-   int ackId = item(1, 1)->data(Qt::DisplayRole).toInt(&ok);
+   int ackId = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toInt(&ok);
    if (!ok) {
-      qCritical("Invalid ackId: %s", item(1, 1)->
+      qCritical("Invalid ackId: %s", item(1, COLUMN_VALUE)->
                 data(Qt::DisplayRole).toString().toLatin1().data());
       return QByteArray();
    }
@@ -512,9 +512,9 @@ QByteArray DetailModel::createSetStateAckMessage()
 
 QByteArray DetailModel::createStateChangedMessage()
 {
-   QString label = item(0, 1)->data(Qt::DisplayRole).toString();
-   QString value = item(1, 1)->data(Qt::DisplayRole).toString();
-   QString ackGroup = item(2, 1)->data(Qt::DisplayRole).toString();
+   QString label = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
+   QString value = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
+   QString ackGroup = item(2, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    Utils::StateChangedMessage message(label, value, ackGroup);
    return message.data();
@@ -522,7 +522,7 @@ QByteArray DetailModel::createStateChangedMessage()
 
 QByteArray DetailModel::createStateChangedAckMessage()
 {
-   QString resultAsString = item(0, 1)->data(Qt::DisplayRole).toString();
+   QString resultAsString = item(0, COLUMN_VALUE)->data(Qt::DisplayRole).toString();
 
    int indexOfResult = Utils::StateChangedAckMessage::staticMetaObject.
          indexOfEnumerator("Result");
@@ -534,9 +534,9 @@ QByteArray DetailModel::createStateChangedAckMessage()
             resultEnumData.keyToValue(resultAsString.toLatin1().data()));
 
    bool ok = false;
-   int ackId = item(1, 1)->data(Qt::DisplayRole).toInt(&ok);
+   int ackId = item(1, COLUMN_VALUE)->data(Qt::DisplayRole).toInt(&ok);
    if (!ok) {
-      qCritical("Invalid ackId: %s", item(1, 1)->
+      qCritical("Invalid ackId: %s", item(1, COLUMN_VALUE)->
                 data(Qt::DisplayRole).toString().toLatin1().data());
       return QByteArray();
    }

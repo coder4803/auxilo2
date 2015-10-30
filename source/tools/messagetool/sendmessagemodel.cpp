@@ -5,7 +5,7 @@ namespace MessageTool {
 SendMessageModel::SendMessageModel(QObject *parent) :
    QStandardItemModel(parent)
 {
-   setColumnCount(3);
+   setColumnCount(NUMBER_OF_COLUMNS);
 
    QStringList headerList;
    headerList << "Target group";
@@ -45,32 +45,32 @@ bool SendMessageModel::removeMessage(int row)
 
 bool SendMessageModel::setTargetGroup(int row, QString targetGroup)
 {
-   return setData(index(row, 0), targetGroup);
+   return setData(index(row, INDEX_TARGET_GROUP), targetGroup);
 }
 
 bool SendMessageModel::setDescription(int row, QString description)
 {
-   return setData(index(row, 1), description);
+   return setData(index(row, INDEX_DESCRIPTION), description);
 }
 
 bool SendMessageModel::setPayload(int row, QByteArray payload)
 {
-   return setData(index(row, 2), payload);
+   return setData(index(row, INDEX_PAYLOAD), payload);
 }
 
 QString SendMessageModel::getGroup(int row)
 {
-   return index(row, 0).data().toString();
+   return index(row, INDEX_TARGET_GROUP).data().toString();
 }
 
 QString SendMessageModel::getDescription(int row)
 {
-   return index(row, 1).data().toString();
+   return index(row, INDEX_DESCRIPTION).data().toString();
 }
 
 QByteArray SendMessageModel::getPayload(int row)
 {
-   return index(row, 2).data().toByteArray();
+   return index(row, INDEX_PAYLOAD).data().toByteArray();
 }
 
 } // MessageTool

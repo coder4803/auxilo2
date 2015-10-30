@@ -28,15 +28,16 @@ QStringList GroupModel::getGroups() const
    return m_messageTypeTable.keys();
 }
 
-Globals::MessageType GroupModel::getMessageTypeByGroup(const QString& group) const
+Globals::MessageType
+GroupModel::getMessageTypeByGroup(const QString& group) const
 {
    return m_messageTypeTable.value(group);
 }
 
 QString GroupModel::getMessageTypeNameByGroup(const QString& group) const
 {
-   return Globals::staticMetaObject.
-         enumerator(Globals::ENUMINDEX_MESSAGE_TYPE).
+   int index = Globals::staticMetaObject.indexOfEnumerator("MessageType");
+   return Globals::staticMetaObject.enumerator(index).
          valueToKey(getMessageTypeByGroup(group));
 }
 
