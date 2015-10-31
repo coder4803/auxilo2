@@ -121,6 +121,18 @@ bool State::isWaitingForAck(quint32 ackId)
    return false;
 }
 
+bool State::containsDeviceWithLabel(QString device,
+                                    QString label)
+{
+   if (m_devices.contains(device)) {
+      if (m_devices.value(device)->label == label) {
+         return true;
+      }
+   }
+
+   return false;
+}
+
 void State::setDefaultValue(QVariant value)
 {
    // Default value is set only if state is not persisted

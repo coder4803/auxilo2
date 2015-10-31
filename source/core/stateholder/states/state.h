@@ -113,6 +113,15 @@ public:
     */
    QString name() const { return m_name; }
 
+   /*!
+    * \brief Checks if state is linked to certain device with certain label.
+    * \param device Name of device.
+    * \param label Name of lable.
+    * \return True if state is linked, otherwise false.
+    */
+   bool containsDeviceWithLabel(QString device,
+                                QString label);
+
 protected:
    /*!
     * \brief Sets state's default value.

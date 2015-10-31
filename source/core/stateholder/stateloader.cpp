@@ -88,6 +88,18 @@ bool StateLoader::startElement(const QString& namespaceURI,
             quint32 updateInterval = readOptionalAttribute<quint32>(attributes,
                                      "updateInterval", DEFAULT_UPDATE_INTERVAL);
 
+            // Check that device is not already linked to another state.
+            foreach (State* state, m_states) {
+               if (state->containsDeviceWithLabel(name, label)) {
+                  qCritical("Device (%s) is already linked to another "
+                            "state (%s) with same label (%s).",
+                            name.toLatin1().data(),
+                            state->name().toLatin1().data(),
+                            label.toLatin1().data());
+                  return false;
+               }
+            }
+
             m_state->addDevice(name, label, updateInterval);
          } catch (QException& e) {
             return false;
