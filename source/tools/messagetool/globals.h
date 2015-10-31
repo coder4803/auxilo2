@@ -26,7 +26,8 @@ public:
       ConfResponseMessage,
       StateChangedMessage,
       StateChangedAckMessage,
-      LogMessage
+      LogMessage,
+      EventMessage
    };
 };
 

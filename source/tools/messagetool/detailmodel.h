@@ -105,6 +105,7 @@ private:
    void parseSetStateAckMessage(const QByteArray& data);
    void parseStateChangedMessage(const QByteArray& data);
    void parseStateChangedAckMessage(const QByteArray& data);
+   void parseEventMessage(const QByteArray& data);
 
    // Methods for creating different messages.
    QByteArray createConfRequestMessage();
@@ -118,6 +119,7 @@ private:
    QByteArray createSetStateAckMessage();
    QByteArray createStateChangedMessage();
    QByteArray createStateChangedAckMessage();
+   QByteArray createEventMessage();
 };
 
 } // MessageTool

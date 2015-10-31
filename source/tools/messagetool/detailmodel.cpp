@@ -14,6 +14,7 @@
 #include "setstateackmessage.h"
 #include "statechangedmessage.h"
 #include "statechangedackmessage.h"
+#include "eventmessage.h"
 
 namespace MessageTool {
 
@@ -73,6 +74,9 @@ void DetailModel::setDetailData(Globals::MessageType messageType,
    case Globals::StateChangedAckMessage:
       parseStateChangedAckMessage(data);
       break;
+   case Globals::EventMessage:
+      parseEventMessage(data);
+      break;
    default:
       break;
    }
@@ -130,6 +134,8 @@ QByteArray DetailModel::getMessageData()
       return createStateChangedMessage();
    case Globals::StateChangedAckMessage:
       return createStateChangedAckMessage();
+   case Globals::EventMessage:
+      return createEventMessage();
    default:
       return QByteArray();
    }
@@ -333,6 +339,21 @@ void DetailModel::parseStateChangedAckMessage(const QByteArray& data)
 
    newRow("Result", resultEnumData.valueToKey(message.result()), resultOptions);
    newRow("AckId", message.ackId());
+}
+
+void DetailModel::parseEventMessage(const QByteArray& data)
+{
+   Utils::EventMessage message(data);
+
+   QString signalName = message.signalName();
+   QDateTime timestamp = message.timestamp();
+   quint32 interval = message.interval();
+   quint32 repeat = message.repeat();
+
+   newRow("Signal name", signalName);
+   newRow("Timestamp", timestamp.toString("dd:MM:yyyy hh:mm:ss"));
+   newRow("Interval", interval);
+   newRow("Repeat", repeat);
 }
 
 QByteArray DetailModel::createConfRequestMessage()
@@ -542,6 +563,35 @@ QByteArray DetailModel::createStateChangedAckMessage()
    }
 
    Utils::StateChangedAckMessage message(ackId, result);
+   return message.data();
+}
+
+QByteArray DetailModel::createEventMessage()
+{
+   bool ok = false;
+
+   QString signalName = item(0, COLUMN_VALUE)->
+         data(Qt::DisplayRole).toString();
+
+   QDateTime timestamp = QDateTime::fromString(item(1, COLUMN_VALUE)->
+                                               data(Qt::DisplayRole).toString(),
+                                               "dd:MM:yyyy hh:mm:ss");
+
+   quint32 interval = item(2, COLUMN_VALUE)->data(Qt::DisplayRole).toInt(&ok);
+   if (!ok) {
+      qCritical("Invalid interval: %s", item(2, COLUMN_VALUE)->
+                data(Qt::DisplayRole).toString().toLatin1().data());
+      return QByteArray();
+   }
+
+   quint32 repeat = item(3, COLUMN_VALUE)->data(Qt::DisplayRole).toInt(&ok);
+   if (!ok) {
+      qCritical("Invalid repeat: %s", item(3, COLUMN_VALUE)->
+                data(Qt::DisplayRole).toString().toLatin1().data());
+      return QByteArray();
+   }
+
+   Utils::EventMessage message(signalName, timestamp, interval, repeat);
    return message.data();
 }
 
