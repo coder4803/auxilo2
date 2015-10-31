@@ -185,6 +185,8 @@ Connection::Connection() :
    qRegisterMetaType<QByteArray>("QByteArray");
 
    connectToHost();
+
+   m_connectionTimer.start(DEFAULT_RETRY_INTERVAL);
    connect(&m_connectionTimer, SIGNAL(timeout()),
            this, SLOT(connectToHost()));
 }
