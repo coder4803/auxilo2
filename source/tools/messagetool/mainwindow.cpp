@@ -22,32 +22,40 @@ MainWindow::MainWindow(QWidget *parent)
 {
    qRegisterMetaType<Globals::MessageType>("Globals::MessageType");
 
-   // Load groups from configuration file.
-   try {
-      m_groupModel = new GroupModel("../parameters/coreconfig.xml", this);
-   } catch (QException& e) {
-      qCritical("Failed to load group names.");
+   initBasicWidgets();
+}
+
+MainWindow::~MainWindow()
+{
+}
+
+void MainWindow::connectClicked()
+{
+   bool ok = false;
+   qint16 port = m_serverPort->text().toUInt(&ok);
+   if (!ok) {
+      qCritical("Invalid port %s", m_serverPort->text().toLatin1().data());
+      return;
    }
 
-   m_messageModel = new MessageModel(this);
+   Utils::Connection::setHost(m_serverAddress->text(), port);
 
-   connect(m_groupModel,
-           SIGNAL(messageReceived(Globals::MessageType,QByteArray,QString)),
-           m_messageModel,
-           SLOT(onNewMessage(Globals::MessageType,QByteArray,QString)));
+   if (!initViews()) {
+      return;
+   }
 
-   // Views for monitoring and sending messages.
-   QWidget* messageViewer = new MessageViewer(*m_groupModel,
-                                              *m_messageModel,
-                                              this);
+   m_connected = true;
 
-   QWidget* messageSender = new MessageSender(*m_groupModel,
-                                              this);
+   m_serverAddress->setEnabled(false);
+   m_serverPort->setEnabled(false);
+   m_connect->setEnabled(false);
+   m_tabWidget->setEnabled(true);
+}
 
+void MainWindow::initBasicWidgets()
+{
    // Tab widget for views
    m_tabWidget = new QTabWidget(this);
-   m_tabWidget->addTab(messageViewer, "View");
-   m_tabWidget->addTab(messageSender, "Send");
    m_tabWidget->setEnabled(false);
 
    // Server address.
@@ -88,26 +96,35 @@ MainWindow::MainWindow(QWidget *parent)
    this->resize(width, height);
 }
 
-MainWindow::~MainWindow()
+bool MainWindow::initViews()
 {
-}
-
-void MainWindow::connectClicked()
-{
-   bool ok = false;
-   qint16 port = m_serverPort->text().toUInt(&ok);
-   if (!ok) {
-      qCritical("Invalid port %s", m_serverPort->text().toLatin1().data());
-      return;
+   // Load groups from configuration file.
+   try {
+      m_groupModel = new GroupModel("../parameters/coreconfig.xml", this);
+   } catch (QException& e) {
+      qCritical("Failed to load group names.");
+      return false;
    }
 
-   Utils::Connection::setHost(m_serverAddress->text(), port);
-   m_connected = true;
+   m_messageModel = new MessageModel(this);
 
-   m_serverAddress->setEnabled(false);
-   m_serverPort->setEnabled(false);
-   m_connect->setEnabled(false);
-   m_tabWidget->setEnabled(true);
+   connect(m_groupModel,
+           SIGNAL(messageReceived(Globals::MessageType,QByteArray,QString)),
+           m_messageModel,
+           SLOT(onNewMessage(Globals::MessageType,QByteArray,QString)));
+
+   // Views for monitoring and sending messages.
+   QWidget* messageViewer = new MessageViewer(*m_groupModel,
+                                              *m_messageModel,
+                                              this);
+
+   QWidget* messageSender = new MessageSender(*m_groupModel,
+                                              this);
+
+   m_tabWidget->addTab(messageViewer, "View");
+   m_tabWidget->addTab(messageSender, "Send");
+
+   return true;
 }
 
 } // MessageTool

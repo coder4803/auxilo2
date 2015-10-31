@@ -6,6 +6,7 @@
 #include <QTableView>
 #include <QAbstractTableModel>
 #include <QStandardItemModel>
+#include <QPushButton>
 
 #include "messagefilterproxymodel.h"
 #include "detailmodel.h"
@@ -42,6 +43,11 @@ private slots:
     */
    void onGroupSelectionChanged();
 
+   /*!
+    * \brief Clears received messages
+    */
+   void onClearButtonClicked();
+
 private:
    /*!
     * \brief Initializes view's widgets.
@@ -68,6 +74,9 @@ private:
 
    //! View for detail model.
    QTableView* m_detailView;
+
+   //! Clear messages button
+   QPushButton* m_clearMessagesPushButton;
 };
 
 } // MessageTool

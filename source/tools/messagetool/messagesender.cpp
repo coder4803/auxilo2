@@ -231,8 +231,7 @@ void MessageSender::initWidgets()
    this->setLayout(mainLayout);
 
    // One message for starters
-   m_sendMessageModel->newMessage();
-   onMessageSelected(m_sendMessageView->indexAt(QPoint(0, 0)));
+   onNewMessage();
 }
 
 } // MessageTool

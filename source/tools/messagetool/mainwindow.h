@@ -31,6 +31,17 @@ private slots:
    void connectClicked();
 
 private:
+   /*!
+    * \brief Initializes connect related widgets.
+    */
+   void initBasicWidgets();
+
+   /*!
+    * \brief Initializes view widgets.
+    * \return True on success, false on failure.
+    */
+   bool initViews();
+
    //! Edit field for server address.
    QLineEdit* m_serverAddress;
 

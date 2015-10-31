@@ -1,6 +1,7 @@
 #include <QLayout>
 #include <QHeaderView>
 #include <QSplitter>
+#include <QLayout>
 #include <QSet>
 
 #include "messageviewer.h"
@@ -63,6 +64,11 @@ void MessageViewer::onGroupSelectionChanged()
    m_detailModel->clearContent();
 }
 
+void MessageViewer::onClearButtonClicked()
+{
+   m_messageModel.removeRows(0, m_messageModel.rowCount());
+}
+
 void MessageViewer::initWidgets()
 {
    // Group list
@@ -106,6 +112,17 @@ void MessageViewer::initWidgets()
    m_detailView->resizeColumnsToContents();
    m_detailView->horizontalHeader()->setStretchLastSection(true);
 
+   // Clear messages button
+   m_clearMessagesPushButton = new QPushButton("Clear messages");
+   connect(m_clearMessagesPushButton, SIGNAL(clicked()),
+           this, SLOT(onClearButtonClicked()));
+
+   // Bottom layout
+   QHBoxLayout* bottomLayout = new QHBoxLayout();
+   bottomLayout->addStretch();
+   bottomLayout->addWidget(m_clearMessagesPushButton);
+
+   // Splitter for views
    QSplitter* splitter = new QSplitter(this);
    splitter->addWidget(m_groupView);
    splitter->addWidget(m_messageView);
@@ -113,8 +130,9 @@ void MessageViewer::initWidgets()
    splitter->setSizes(QList<int>() << 1 << 1000 << 1000);
 
    // Create layout
-   QHBoxLayout* mainLayout = new QHBoxLayout();
+   QVBoxLayout* mainLayout = new QVBoxLayout();
    mainLayout->addWidget(splitter);
+   mainLayout->addLayout(bottomLayout);
 
    this->setLayout(mainLayout);
 }
