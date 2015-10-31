@@ -17,13 +17,17 @@ SOURCES         += main.cpp \
                    stateloader.cpp \
                    states/state.cpp \
                    states/booleanstate.cpp \
-                   states/integerstate.cpp
+                   states/integerstate.cpp \
+                   states/doublestate.cpp \
+                   states/stringstate.cpp
 
 HEADERS         += stateholder.h \
                    stateloader.h \
                    states/state.h \
                    states/booleanstate.h \
-                   states/integerstate.h
+                   states/integerstate.h \
+                   states/doublestate.h \
+                   states/stringstate.h
 
 LIBS            += -L../../../build/lib/ -lmessages \
                    -L../../../build/lib/ -lmessagegroup

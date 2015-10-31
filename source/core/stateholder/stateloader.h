@@ -81,6 +81,12 @@ private:
    //! Constant for state element name.
    static const QString ELEMENT_STATEHOLDER;
 
+   //! Constant for signal element name.
+   static const QString ELEMENT_SIGNAL;
+
+   //! Constant for device element name.
+   static const QString ELEMENT_DEVICE;
+
    //! Boolean indicator if we are reading configurations.
    bool m_readingConfiguration;
 

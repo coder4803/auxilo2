@@ -3,6 +3,8 @@
 #include "stateloader.h"
 #include "states/booleanstate.h"
 #include "states/integerstate.h"
+#include "states/doublestate.h"
+#include "states/stringstate.h"
 
 namespace Core {
 
@@ -10,6 +12,9 @@ const quint32 StateLoader::DEFAULT_UPDATE_INTERVAL = 5;
 
 const QString StateLoader::ELEMENT_STATE("state");
 const QString StateLoader::ELEMENT_STATEHOLDER("stateholder");
+
+const QString StateLoader::ELEMENT_SIGNAL("signal");
+const QString StateLoader::ELEMENT_DEVICE("device");
 
 StateLoader::StateLoader(QHash<QString, State*>& states) :
    m_readingConfiguration(false),
@@ -75,7 +80,7 @@ bool StateLoader::startElement(const QString& namespaceURI,
       }
    } else if (m_state) {
       // Here we parse elements between state start and end tags.
-      if (qName.toLower() == "device") {
+      if (qName.toLower() == ELEMENT_DEVICE) {
          try {
             QString name = readMandatoryAttribute<QString>(attributes, "name");
             QString label = readOptionalAttribute<QString>(attributes, "label",
@@ -87,7 +92,7 @@ bool StateLoader::startElement(const QString& namespaceURI,
          } catch (QException& e) {
             return false;
          }
-      } else if (qName.toLower() == "signal") {
+      } else if (qName.toLower() == ELEMENT_SIGNAL) {
          try {
             QString name = readMandatoryAttribute<QString>(attributes, "name");
             m_state->addSignal(name);
@@ -137,8 +142,8 @@ bool StateLoader::endElement(const QString& namespaceURI,
       }
 
       // Handle device end element
-      if (qName.toLower() != "device" &&
-          qName.toLower() != "signal")
+      if (qName.toLower() != ELEMENT_DEVICE &&
+          qName.toLower() != ELEMENT_SIGNAL)
       {
          if (!m_state->setOption(qName, m_data)) {
             m_errorStr = QString("invalid option: %1 (value: %2)")
@@ -230,6 +235,10 @@ State* StateLoader::createState(QString type,
          state = new BooleanState(name, persisted);
       } else if (type.toLower() == "integer") {
          state = new IntegerState(name, persisted);
+      } else if (type.toLower() == "double") {
+         state = new DoubleState(name, persisted);
+      } else if (type.toLower() == "string") {
+         state = new StringState(name, persisted);
       }
    } catch (QException& e) {
       return NULL;
