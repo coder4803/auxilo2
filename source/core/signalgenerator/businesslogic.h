@@ -5,6 +5,7 @@
 #include "modelinterface.h"
 #include "confreader.h"
 #include "eventmanager.h"
+#include "eventreceiver.h"
 
 
 namespace SignalGenerator
@@ -38,6 +39,7 @@ private:
 
     ConfReader confReader_;
     EventManager eventManager_;
+    EventReceiver receiver_;
 };
 
 }

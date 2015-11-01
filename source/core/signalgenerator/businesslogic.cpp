@@ -7,7 +7,7 @@ namespace SignalGenerator
 
 BusinessLogic::BusinessLogic(bool clearEvents, QObject *parent):
     QObject(parent), ModelInterface(),
-    confReader_(), eventManager_()
+    confReader_(), eventManager_(), receiver_(&eventManager_)
 {
     if (!eventManager_.isValid()){
         qFatal("Could not open database.");

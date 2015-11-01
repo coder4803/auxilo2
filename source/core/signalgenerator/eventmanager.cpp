@@ -117,13 +117,14 @@ bool EventManager::addDynamicEvent(const EventEntity &event)
                 "\"" + event.timestamp.toString("yyyy-MM-dd hh:mm:ss") +"\", "+
                 interval + ", " + repeat + ", " + "0);");
 
-    if (!q.exec()){
+    if (q.lastError().type() != QSqlError::NoError){
         qCritical() << "Failed to insert dynamic event:"
                     << q.lastError().text().toLatin1().data();
         return false;
     }
 
     clearExpiredEvents();
+    this->findNextEvents();
     return true;
 }
 

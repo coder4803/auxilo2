@@ -53,6 +53,13 @@ const QString SH_STATE_CHANGED_ACK_GROUP("stateChangedAck");
 const QString SIGNAL_HANDLER_GROUP("signalHandler");
 
 /*!
+ * \brief Name of group for sending dynamic events.
+ *  This group is listened by Signal Generator. Only EventMessages are allowed
+ *  in this group.
+ */
+const QString SIGNAL_GENERATOR_GROUP("signalGenerator");
+
+/*!
  * \brief Name of group for sending log messages.
  * This group is listened by message logger. Logger will handle message
  * according to its configurations.
