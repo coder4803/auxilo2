@@ -1,3 +1,12 @@
+/* eventreceiver.cpp
+ *
+ * This is the implementation file for the EventReceiver class defined in
+ * eventreceiver.h.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 14-Nov-2015
+ */
+
 #include "eventreceiver.h"
 #include <QDebug>
 

@@ -1,3 +1,12 @@
+/* eventreceiver.h
+ *
+ * This header defines the EventReceiver class that is responsible for
+ * receiving event messages.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 14-Nov-2015
+ */
+
 #ifndef EVENTRECEIVER_H
 #define EVENTRECEIVER_H
 

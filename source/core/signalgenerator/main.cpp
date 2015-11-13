@@ -1,3 +1,17 @@
+
+/* main.cpp
+ *
+ * Signal generator's main program.
+ *
+ * Signal generator is part of Auxilo2 core. Its purpose is to send
+ * Signal handler signals at determined times. These so called events
+ * can be set in configuration (static events) or at runtime (dynamic events)
+ * sending signal generator event messages (Utils::EventMessage).
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 28-Sep-2015
+ */
+
 #include <QCoreApplication>
 #include "userinterface.h"
 #include "businesslogic.h"

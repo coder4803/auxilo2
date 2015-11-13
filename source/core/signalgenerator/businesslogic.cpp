@@ -1,3 +1,12 @@
+/* businesslogic.cpp
+ *
+ * This is the implementation file for the BusinessLogic class that is defined
+ * in businesslogic.h.
+ *
+ * Author: Perttu Paarlahti     perttu.paarlahti@gmail.com
+ * Date: 13-Nov-2015
+ */
+
 #include "businesslogic.h"
 #include "userinterface.h"
 #include <QException>

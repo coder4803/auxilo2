@@ -16,7 +16,7 @@ namespace SignalGenerator
 {
 
 const int ConfReader::RETRY_INTERVAL_(2000);
-const QString ConfReader::RESPONSE_GROUP_NAME_("signalgeneratorConf");
+const QString ConfReader::RESPONSE_GROUP_NAME_("signalGeneratorConf");
 const QString ConfReader::FEATURE_("signalGenerator");
 
 
