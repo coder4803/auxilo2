@@ -104,7 +104,6 @@ private:
     mutable std::mutex mx_;
     QTimer retry_timer_;
     
-    static const QString RESPONSE_GROUP_NAME_;
     static const QString FEATURE_NAME_;
     static const unsigned RETRY_INTERVAL_;
 };

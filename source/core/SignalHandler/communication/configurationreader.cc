@@ -16,7 +16,6 @@
 namespace SignalHandler
 {
 
-const QString ConfigurationReader::RESPONSE_GROUP_NAME_ ("signalHandlerConf");
 const QString ConfigurationReader::FEATURE_NAME_ (Conf::SIGNALHANDLER_FEATURE_NAME);
 const unsigned ConfigurationReader::RETRY_INTERVAL_ (2000);
 
@@ -40,7 +39,7 @@ void ConfigurationReader::start(const QString& group_name)
 {
     Q_ASSERT(!group_name.isEmpty());
     
-    responseGroup_ = new Utils::MessageGroup(RESPONSE_GROUP_NAME_,
+    responseGroup_ = new Utils::MessageGroup(Utils::SIGNAL_HANDLER_CONF,
                                              Utils::MessageGroup::Subscriber,
                                              this);
     
@@ -91,7 +90,7 @@ void ConfigurationReader::onConfMessageReceived(QByteArray data)
 
 void ConfigurationReader::onResponseGroupReady()
 {
-    Utils::ConfRequestMessage req_msg(RESPONSE_GROUP_NAME_,FEATURE_NAME_,true);
+    Utils::ConfRequestMessage req_msg(Utils::SIGNAL_HANDLER_CONF, FEATURE_NAME_, true);
     Utils::MessageGroup::publish(req_msg, Utils::CONF_REQUEST_GROUP);
     qDebug() << "ConfRequest sent.";
     if (!retry_timer_.isActive()){

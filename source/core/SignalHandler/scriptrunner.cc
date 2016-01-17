@@ -47,6 +47,7 @@ ScriptRunner::~ScriptRunner()
         subject_->unregisterObserver(this);
     }
     delete services_;
+    --runner_id_;
 }
 
 

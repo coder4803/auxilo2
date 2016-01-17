@@ -35,9 +35,9 @@ public:
     /*!
      * \brief Constructor.
      * \param clearEvents if true, then database is cleared from all events.
-     * \param parent QObject's parent.
+     * \param address Server address.
      */
-    BusinessLogic(bool clearEvents = false, QObject* parent = 0);
+    BusinessLogic(bool clearEvents, QObject* parent = 0);
 
     //! Destructor.s
     virtual ~BusinessLogic();

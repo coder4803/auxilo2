@@ -39,9 +39,21 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    // Find meaningful commandline parameters.
     bool clear = QCoreApplication::arguments().contains("--cleardb");
+    QString addr = "127.0.0.1";
+    quint16 port = 13803;
+    int addr_index = QCoreApplication::arguments().indexOf("--address");
+    int port_index = QCoreApplication::arguments().indexOf("--port");
+    if (addr_index != -1){
+        addr = QCoreApplication::arguments().at(addr_index+1);
+    }
+    if (port_index != -1){
+        port = QCoreApplication::arguments().at(port_index+1).toInt();
+    }
 
     qCritical() << "Starting signalgenerator...";
+    Utils::Connection::setHost(addr, port);
     SignalGenerator::BusinessLogic logic(clear);
     return a->exec();
 }
