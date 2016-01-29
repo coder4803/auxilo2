@@ -71,6 +71,7 @@ bool EventManager::setStaticEvents(const QList<EventEntity> &events)
 
     this->clearExpiredEvents();
     this->findNextEvents();
+    qDebug() << "Static events set!";
     return true;
 }
 

@@ -53,10 +53,15 @@ QSqlQueryModel *BusinessLogic::getTaskList()
 
 void BusinessLogic::onConfigurationReceived()
 {
+    qDebug() << "Setting new conf...";
     bool ok = eventManager_.setStaticEvents( confReader_.getConfiguration() );
     if (!ok){
         qCritical() << "Setting new configuration failed.";
         confReader_.restart();
+    }
+    else if (!receiver_.isStarted()){
+        qDebug() << "New conf set!";
+        receiver_.start();
     }
 }
 

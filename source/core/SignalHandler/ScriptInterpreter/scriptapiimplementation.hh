@@ -81,6 +81,11 @@ public:
                            const QString& target = QString() );
     
     virtual QString getSender() const;
+
+    virtual void sendEvent(const QString &signal,
+                           const QDateTime &timestamp,
+                           quint32 interval_sec,
+                           quint32 repeat);
     
     // Implements the ScriptUpdateObserver interface.
     virtual void notifyOnScriptUpdate(const ScriptLibrary* new_lib);

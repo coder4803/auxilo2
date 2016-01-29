@@ -87,6 +87,20 @@ public:
      * \pre None.
      */
     virtual QString getSender() const = 0;
+
+    /*!
+     * \brief Send an event to the signal generator.
+     * \param signal Signal associated with the event.
+     * \param timestamp First occurence of the event.
+     * \param interval_sec Event repetition interval.
+     * \param repeat Event repetition times.
+     * \pre interval_sec >= 0, repeat >= 0.
+     *  If interval_sec = 0, then repeat must be 0 too.
+     */
+    virtual void sendEvent(const QString& signal,
+                          const QDateTime& timestamp,
+                          quint32 interval_sec,
+                          quint32 repeat) = 0;
 };
 
 }

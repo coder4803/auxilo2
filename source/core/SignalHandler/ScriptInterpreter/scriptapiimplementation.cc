@@ -10,6 +10,7 @@
 #include "requeststatemessage.h"
 #include "setstatemessage.h"
 #include "signalmessage.h"
+#include "eventmessage.h"
 #include "scriptinterpreterfactory.hh"
 #include "scriptrunexceptions.hh"
 #include <ctime>
@@ -213,6 +214,16 @@ int ScriptApiImplementation::sendSignal(const QString& signalName,
 QString ScriptApiImplementation::getSender() const
 {
     return senderName_;
+}
+
+
+void ScriptApiImplementation::sendEvent(const QString &signal,
+                                        const QDateTime &timestamp,
+                                        quint32 interval_sec,
+                                        quint32 repeat)
+{
+    Utils::EventMessage msg(signal, timestamp, interval_sec, repeat);
+    Utils::MessageGroup::publish(msg, Utils::SIGNAL_GENERATOR_GROUP);
 }
 
 

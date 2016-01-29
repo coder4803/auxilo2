@@ -54,6 +54,8 @@ public slots:
     QScriptValue getStates(const QStringList& states);
     int setState(const QString& stateName, const QVariant& value);    
     int sendSignal(const QString& signalName, const QStringList& args);
+    QString getSender() const;
+    void sendEvent(const QString& signal, const QDateTime& timestamp, quint32 interval_sec, quint32 repeat);
     
     
 private:
@@ -84,6 +86,8 @@ QScriptValue toScriptValue(QScriptEngine* engine,
  */
 void fromScriptValue(const QScriptValue& obj,
                      Utils::StateResponseMessage::State& state);
+
+
 
 
 #endif // SCRIPTAPIADAPTER_HH

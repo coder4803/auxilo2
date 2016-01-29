@@ -71,6 +71,21 @@ int ScriptApiAdapter::sendSignal(const QString& signalName,
     return api_->sendSignal(signalName, args);
 }
 
+
+QString ScriptApiAdapter::getSender() const
+{
+    return api_->getSender();
+}
+
+
+void ScriptApiAdapter::sendEvent(const QString &signal,
+                                 const QDateTime &timestamp,
+                                 quint32 interval_sec,
+                                 quint32 repeat)
+{
+    api_->sendEvent(signal, timestamp, interval_sec, repeat);
+}
+
 } //Namespace QtScriptPlugin
 
 // Conversion functions
