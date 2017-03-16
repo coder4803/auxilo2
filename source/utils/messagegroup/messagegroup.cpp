@@ -1,3 +1,4 @@
+#include <QDataStream>
 #include <QMutexLocker>
 
 #include "messagegroup.h"

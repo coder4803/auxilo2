@@ -1,3 +1,5 @@
+#include <QDataStream>
+
 #include "requeststatemessage.h"
 
 namespace Utils {

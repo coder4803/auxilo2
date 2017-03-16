@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <QDataStream>
 
 #include <QCoreApplication>
 #include <QElapsedTimer>

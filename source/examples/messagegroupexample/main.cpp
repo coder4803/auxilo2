@@ -17,6 +17,7 @@ void messageHandler(QtMsgType type,
    switch (type) {
    case QtDebugMsg:
    case QtWarningMsg:
+   case QtInfoMsg:
       if (MessageGroupExample::verbose) {
          printf("%s\n", msg.toLatin1().data());
       }

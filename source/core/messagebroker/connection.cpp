@@ -1,3 +1,5 @@
+#include <QDataStream>
+
 #include "connection.h"
 #include "globals.h"
 

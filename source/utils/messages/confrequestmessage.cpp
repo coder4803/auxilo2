@@ -1,3 +1,5 @@
+#include <QDataStream>
+
 #include "confrequestmessage.h"
 
 namespace Utils {

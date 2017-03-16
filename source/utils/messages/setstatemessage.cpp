@@ -1,3 +1,5 @@
+#include <QDataStream>
+
 #include "setstatemessage.h"
 #include "setstateackmessage.h"
 

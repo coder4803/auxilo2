@@ -1,3 +1,5 @@
+#include <QDataStream>
+
 #include "messagebroker.h"
 #include "connection.h"
 

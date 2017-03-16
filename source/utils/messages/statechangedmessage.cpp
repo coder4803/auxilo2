@@ -1,3 +1,5 @@
+#include <QDataStream>
+
 #include "statechangedmessage.h"
 
 namespace Utils {
