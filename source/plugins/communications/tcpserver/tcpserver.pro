@@ -5,16 +5,15 @@ TARGET          = tcpserver
 TEMPLATE        = lib
 CONFIG          += plugin
 
-INCLUDEPATH     += ../../../core/interface \
+INCLUDEPATH     += ../ \
+                   ../../../core/interface \
                    ../../../utils/messages \
                    ../../../core/plugininterfaces \
                    ../../../core/plugininterfaces/communication
 
-SOURCES         += tcpserverplugin.cpp \
-                   tcpserver.cpp
+SOURCES         += tcpserver.cpp
 
-HEADERS         += tcpserverplugin.h \
-                   tcpserver.h
+HEADERS         += tcpserver.h
 
 LIBS            += -L../../../../build/lib/ -lcommunication
 

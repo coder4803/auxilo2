@@ -2,7 +2,7 @@
 #include <QList>
 #include <QTcpServer>
 
-#include "communication.h"
+#include "communications.h"
 
 #ifndef TCPSERVER_H
 #define TCPSERVER_H
@@ -88,5 +88,7 @@ private:
 };
 
 } // Plugins
+
+DEFINE_COMMUNICATION_PLUGIN(TCPServer)
 
 #endif

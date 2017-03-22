@@ -3,7 +3,7 @@
 #include <QTimer>
 #include <QTcpSocket>
 
-#include "communication.h"
+#include "communications.h"
 
 #ifndef TCPSERVER_H
 #define TCPSERVER_H
@@ -85,5 +85,7 @@ private:
 };
 
 } // Plugins
+
+DEFINE_COMMUNICATION_PLUGIN(TCPClient)
 
 #endif

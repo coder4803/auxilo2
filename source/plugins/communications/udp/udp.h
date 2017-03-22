@@ -2,7 +2,7 @@
 #include <QList>
 #include <QUdpSocket>
 
-#include "communication.h"
+#include "communications.h"
 
 #ifndef UDP_H
 #define UDP_H
@@ -89,5 +89,7 @@ private:
 };
 
 } // Plugins
+
+DEFINE_COMMUNICATION_PLUGIN(UDP)
 
 #endif

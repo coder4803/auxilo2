@@ -5,16 +5,15 @@ TARGET          = tcpclient
 TEMPLATE        = lib
 CONFIG          += plugin
 
-INCLUDEPATH     += ../../../core/interface \
+INCLUDEPATH     += ../ \
+                   ../../../core/interface \
                    ../../../utils/messages \
                    ../../../core/plugininterfaces \
                    ../../../core/plugininterfaces/communication
 
-SOURCES         += tcpclientplugin.cpp \
-                   tcpclient.cpp
+SOURCES         += tcpclient.cpp
 
-HEADERS         += tcpclientplugin.h \
-                   tcpclient.h
+HEADERS         += tcpclient.h
 
 LIBS            += -L../../../../build/lib/ -lcommunication \
                    -L../../../../build/lib/ -lmessages
