@@ -5,16 +5,15 @@ TARGET          = webui
 TEMPLATE        = lib
 CONFIG          += plugin
 
-INCLUDEPATH     += ../../../core/interface \
+INCLUDEPATH     += ../ \
+                   ../../../core/interface \
                    ../../../utils/messages \
                    ../../../core/plugininterfaces \
                    ../../../core/plugininterfaces/protocol
 
-SOURCES         += webuiplugin.cpp \
-                   webui.cpp
+SOURCES         += webui.cpp
 
-HEADERS         += webuiplugin.h \
-                   webui.h
+HEADERS         += webui.h
 
 LIBS            += -L../../../../build/lib/ -lprotocol \
                    -L../../../build/lib/ -lmessages

@@ -1,6 +1,6 @@
 #include <QTimer>
 
-#include "protocol.h"
+#include "protocols.h"
 
 #ifndef LESENSOR_H
 #define LESENSOR_H
@@ -131,5 +131,7 @@ private:
 };
 
 } // Plugins
+
+DEFINE_PROTOCOL_PLUGIN(LESensor)
 
 #endif

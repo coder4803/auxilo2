@@ -1,7 +1,7 @@
 #include <QTimer>
 #include <QSet>
 
-#include "protocol.h"
+#include "protocols.h"
 
 #ifndef WEBUI_H
 #define WEBUI_H
@@ -140,5 +140,7 @@ private:
 };
 
 } // Plugins
+
+DEFINE_PROTOCOL_PLUGIN(WebUI)
 
 #endif

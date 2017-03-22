@@ -4,7 +4,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 
-#include "protocol.h"
+#include "protocols.h"
 
 #ifndef ORVIBOSOCKETS20_H
 #define ORVIBOSOCKETS20_H
@@ -12,8 +12,8 @@
 namespace Plugins {
 
 /*!
- * \brief The WebUI class.
- * This class describes WebUI protocol.
+ * \brief The OrviboSocketS20 class.
+ * This class describes Orvibo Socket S20 switch protocol.
  */
 class OrviboSocketS20 : public Protocol
 {
@@ -214,5 +214,7 @@ private:
 };
 
 } // Plugins
+
+DEFINE_PROTOCOL_PLUGIN(OrviboSocketS20)
 
 #endif

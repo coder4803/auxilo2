@@ -5,16 +5,15 @@ TARGET          = lesensor
 TEMPLATE        = lib
 CONFIG          += plugin
 
-INCLUDEPATH     += ../../../core/interface \
+INCLUDEPATH     += ../ \
+                   ../../../core/interface \
                    ../../../utils/messages \
                    ../../../core/plugininterfaces \
                    ../../../core/plugininterfaces/protocol
 
-SOURCES         += lesensorplugin.cpp \
-                   lesensor.cpp
+SOURCES         += lesensor.cpp
 
-HEADERS         += lesensorplugin.h \
-                   lesensor.h
+HEADERS         += lesensor.h
 
 LIBS            += -L../../../../build/lib/ -lprotocol \
                    -L../../../build/lib/ -lmessages
