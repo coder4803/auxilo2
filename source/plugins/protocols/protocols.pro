@@ -1,6 +1,5 @@
 TEMPLATE            = subdirs
 CONFIG              += ordered
 
-SUBDIRS             += lesensor \
-                       webui \
+SUBDIRS             += webui \
                        orvibosockets20
