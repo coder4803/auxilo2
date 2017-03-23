@@ -28,40 +28,40 @@ public:
    ~WebUI();
 
    /*!
-    * \brief Empty implementation.
-    * \param stateName Unused.
-    * \param stateValue Unused.
-    * \param available Unused.
+    * \brief Handles state responses.
+    * \param stateName State name.
+    * \param stateValue State value.
+    * \param available Is state available.
     */
    void handleStateResponse(const QString& stateName,
                             const QVariant& stateValue,
                             bool available);
 
    /*!
-    * \brief Empty implementation.
-    * \param label Unused.
-    * \param value Unused.
+    * \brief Handles state change notifications.
+    * \param label State label name.
+    * \param value State value.
     */
    void handleStateChange(const QString& label,
                           const QVariant& value);
 
 protected slots:
    /*!
-    * \brief Empty implementation.
-    * \param connectionId Unused.
+    * \brief Handles connected signal from communication plugin.
+    * \param connectionId Connection id.
     */
    void connected(qint32 connectionId);
 
    /*!
-    * \brief Empty implementation.
-    * \param connectionId Unused.
+    * \brief Handles disconnected signal from communication plugin.
+    * \param connectionId Connection id.
     */
    void disconnected(qint32 connectionId);
 
    /*!
     * \brief Handles data received from device.
     * \param data Received data.
-    * \param connectionId Unused.
+    * \param connectionId Connection id.
     */
    void dataReceived(QByteArray data,
                      qint32 connectionId);
@@ -100,12 +100,21 @@ private:
     */
    void parseErr(QString message);
 
+   /*!
+    * \brief Requests values for given states.
+    * \param states List of state names.
+    */
    void requestStates(QSet<QString> states);
 
+   /*!
+    * \brief Sends error message to User interface (WebUI).
+    * \param message Error message.
+    * \param connectionId Connection id.
+    */
    void sendErrorMessage(QString message,
                          int connectionId);
 
-   //! List of users
+   //! List of users.
    QHash<qint32, User*> m_users;
 };
 
