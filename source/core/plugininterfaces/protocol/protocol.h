@@ -43,7 +43,7 @@ public:
     * \brief Sets last acknowledge id.
     * \param ackId Acknowledge id.
     */
-   void setLastAckId(quint32 ackId) { m_lastAckId = ackId; }
+   void setLastAckId(quint32 ackId);
 
    /*!
     * \brief Returns last acknowledge id.
@@ -52,7 +52,7 @@ public:
     * the signal to get right acknowledge id.
     * \return Last acknowledge id.
     */
-   quint32 getLastAckId() const { return m_lastAckId; }
+   quint32 getLastAckId() const ;
 
    /*!
     * \brief This method should handle device parameters.
@@ -60,7 +60,7 @@ public:
     * signal.
     * \param parameters Device parameters.
     */
-   virtual void handleParameters(const Utils::ParameterSet& parameters) = 0;
+   virtual void handleParameters(const Utils::ParameterSet& parameters);
 
    /*!
     * \brief This method should handle state response message.
@@ -72,7 +72,7 @@ public:
     */
    virtual void handleStateResponse(const QString& stateName,
                                     const QVariant& stateValue,
-                                    bool available) = 0;
+                                    bool available);
 
    /*!
     * \brief This method should handle signal message and return result of
@@ -83,7 +83,7 @@ public:
     */
    virtual Utils::SignalAckMessage::Result
    handleSignal(const QString& name,
-                const QStringList& parameters) = 0;
+                const QStringList& parameters);
 
    /*!
     * \brief This method should handle state changed message and return result
@@ -92,7 +92,7 @@ public:
     * \param value State value.
     */
    virtual void handleStateChange(const QString& label,
-                                  const QVariant& value) = 0;
+                                  const QVariant& value);
 
    /*!
     * \brief This method should handle signal acknowledge message.
@@ -102,7 +102,7 @@ public:
     * \param ackId Acknowledge id.
     */
    virtual void handleSignalAck(Utils::SignalAckMessage::Result result,
-                                quint32 ackId) = 0;
+                                quint32 ackId);
 
    /*!
     * \brief This method should handle set state acknowledge message.
@@ -112,7 +112,7 @@ public:
     * \param ackId Acknowledge id.
     */
    virtual void handleSetStateAck(Utils::SetStateAckMessage::Result result,
-                                  quint32 ackId) = 0;
+                                  quint32 ackId);
 
 protected:
    /*!
@@ -150,7 +150,7 @@ protected slots:
     * that can have multiple connections. This is common with server
     * connections. Use >= 0. -1 means undefined (or only one connection).
     */
-   virtual void connected(qint32 connectionId) = 0;
+   virtual void connected(qint32 connectionId);
 
    /*!
     * \brief This slot should handle disconnected-signal from communication.
@@ -158,7 +158,7 @@ protected slots:
     * that can have multiple connections. This is common with server
     * connections. Use >= 0. -1 means undefined (or only one connection).
     */
-   virtual void disconnected(qint32 connectionId) = 0;
+   virtual void disconnected(qint32 connectionId);
 
    /*!
     * \brief This slot should handle data received from communication.
@@ -168,7 +168,7 @@ protected slots:
     * connections. Use >= 0. -1 means undefined (or only one connection).
     */
    virtual void dataReceived(QByteArray data,
-                             qint32 connectionId) = 0;
+                             qint32 connectionId);
 
 signals:
    /*!

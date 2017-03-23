@@ -23,6 +23,78 @@ void Protocol::setCommunication(Communication* communication)
            this, SLOT(dataReceived(QByteArray,qint32)));
 }
 
+void Protocol::setLastAckId(quint32 ackId)
+{
+   m_lastAckId = ackId;
+}
+
+quint32 Protocol::getLastAckId() const
+{
+   return m_lastAckId;
+}
+
+void Protocol::handleParameters(const Utils::ParameterSet& parameters)
+{
+   Q_UNUSED(parameters);
+}
+
+void Protocol::handleStateResponse(const QString& stateName,
+                                   const QVariant& stateValue,
+                                   bool available)
+{
+   Q_UNUSED(stateName);
+   Q_UNUSED(stateValue);
+   Q_UNUSED(available);
+}
+
+Utils::SignalAckMessage::Result
+Protocol::handleSignal(const QString& name,
+                       const QStringList& parameters)
+{
+   Q_UNUSED(name);
+   Q_UNUSED(parameters);
+
+   return Utils::SignalAckMessage::SIGNAL_NOT_FOUND;
+}
+
+void Protocol::handleStateChange(const QString& label,
+                                 const QVariant& value)
+{
+   Q_UNUSED(label);
+   Q_UNUSED(value);
+}
+
+void Protocol::handleSignalAck(Utils::SignalAckMessage::Result result,
+                               quint32 ackId)
+{
+   Q_UNUSED(result);
+   Q_UNUSED(ackId);
+}
+
+void Protocol::handleSetStateAck(Utils::SetStateAckMessage::Result result,
+                                 quint32 ackId)
+{
+   Q_UNUSED(result);
+   Q_UNUSED(ackId);
+}
+
+void Protocol::connected(qint32 connectionId)
+{
+   Q_UNUSED(connectionId);
+}
+
+void Protocol::disconnected(qint32 connectionId)
+{
+   Q_UNUSED(connectionId);
+}
+
+void Protocol::dataReceived(QByteArray data,
+                            qint32 connectionId)
+{
+   Q_UNUSED(data);
+   Q_UNUSED(connectionId);
+}
+
 bool Protocol::isConnected(qint32 connectionId) const
 {
    if (m_communication) {
