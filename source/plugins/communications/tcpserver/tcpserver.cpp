@@ -56,11 +56,6 @@ bool TCPServer::isConnected(qint32 connectionId) const
    return false;
 }
 
-void TCPServer::readData(qint32 connectionId)
-{
-   Q_UNUSED(connectionId)
-}
-
 bool TCPServer::sendData(const QByteArray& data,
                          qint32 connectionId)
 {

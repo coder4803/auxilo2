@@ -72,11 +72,6 @@ bool UDP::isConnected(qint32 connectionId) const
    return true;
 }
 
-void UDP::readData(qint32 connectionId)
-{
-   Q_UNUSED(connectionId)
-}
-
 bool UDP::sendData(const QByteArray& data,
                    qint32 connectionId)
 {

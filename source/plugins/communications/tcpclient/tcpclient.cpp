@@ -49,11 +49,6 @@ bool TCPClient::isConnected(qint32 connectionId) const
    return false;
 }
 
-void TCPClient::readData(qint32 connectionId)
-{
-   Q_UNUSED(connectionId)
-}
-
 bool TCPClient::sendData(const QByteArray& data,
                          qint32 connectionId)
 {

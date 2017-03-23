@@ -33,12 +33,6 @@ public:
    bool isConnected(qint32 connectionId = -1) const;
 
    /*!
-    * \brief Empty implementation.
-    * \param connectionId Unused.
-    */
-   void readData(qint32 connectionId = -1);
-
-   /*!
     * \brief Sends data to target "device".
     * \param data Data to send.
     * \param connectionId Connection id. TCPServer communication can handle

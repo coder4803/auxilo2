@@ -38,13 +38,13 @@ public:
    /*!
     * \brief This method should trigger reading if it is possible.
     * This method can be used with connections that require polling (e.g. file
-    * connections). It should only trigger reading. Data is delivered throug
-    * signal (dataReceived).
+    * connections). It should only trigger reading. Data is delivered through
+    * dataReceived signal.
     * \param connectionId Inner connection id. This is used with connections
     * that can have multiple connections. This is common with server
     * connections. Use >= 0. -1 means undefined (or only one connection).
     */
-   virtual void readData(qint32 connectionId = -1) = 0;
+   virtual void readData(qint32 connectionId = -1) { Q_UNUSED(connectionId); }
 
    /*!
     * \brief This method should send data to target "device".
