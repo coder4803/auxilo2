@@ -31,31 +31,6 @@ public:
    ~OrviboSocketS20();
 
    /*!
-    * \brief Empty implementation.
-    * \param parameters Unused.
-    */
-   void handleParameters(const Utils::ParameterSet& parameters);
-
-   /*!
-    * \brief Empty implementation.
-    * \param stateName Unused.
-    * \param stateValue Unused.
-    * \param available Unused.
-    */
-   void handleStateResponse(const QString& stateName,
-                            const QVariant& stateValue,
-                            bool available);
-
-   /*!
-    * \brief Empty implementation.
-    * \param name Unused.
-    * \param parameters Unused.
-    * \return Returns always SIGNAL_NOT_FOUND.
-    */
-   Utils::SignalAckMessage::Result handleSignal(const QString& name,
-                                                const QStringList& parameters);
-
-   /*!
     * \brief Handles device state change (core -> device).
     * \param label Device's state name label.
     * \param value New state value.
@@ -63,35 +38,7 @@ public:
    void handleStateChange(const QString& label,
                           const QVariant& value);
 
-   /*!
-    * \brief Empty implementation.
-    * \param result Unused.
-    * \param ackId Unused.
-    */
-   void handleSignalAck(Utils::SignalAckMessage::Result result,
-                        quint32 ackId);
-
-   /*!
-    * \brief Empty implementation.
-    * \param result Unused.
-    * \param ackId Unused.
-    */
-   void handleSetStateAck(Utils::SetStateAckMessage::Result result,
-                          quint32 ackId);
-
 protected slots:
-   /*!
-    * \brief Subscribes to the device.
-    * \param connectionId Unused.
-    */
-   void connected(qint32 connectionId);
-
-   /*!
-    * \brief Empty implementation.
-    * \param connectionId Unused.
-    */
-   void disconnected(qint32 connectionId);
-
    /*!
     * \brief Handles data received from device.
     * \param data Received data.

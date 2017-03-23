@@ -23,14 +23,9 @@ public:
     */
    explicit WebUI(Utils::ParameterSet parameters,
                      QObject* parent = NULL);
+
    //! Destructor.
    ~WebUI();
-
-   /*!
-    * \brief Empty implementation.
-    * \param parameters Unused.
-    */
-   void handleParameters(const Utils::ParameterSet& parameters);
 
    /*!
     * \brief Empty implementation.
@@ -44,36 +39,11 @@ public:
 
    /*!
     * \brief Empty implementation.
-    * \param name Unused.
-    * \param parameters Unused.
-    * \return Always SIGNAL_NOT_FOUND.
-    */
-   Utils::SignalAckMessage::Result handleSignal(const QString& name,
-                                                const QStringList& parameters);
-
-   /*!
-    * \brief Empty implementation.
     * \param label Unused.
     * \param value Unused.
     */
    void handleStateChange(const QString& label,
                           const QVariant& value);
-
-   /*!
-    * \brief Empty implementation.
-    * \param result Unused.
-    * \param ackId Unused.
-    */
-   void handleSignalAck(Utils::SignalAckMessage::Result result,
-                        quint32 ackId);
-
-   /*!
-    * \brief Empty implementation.
-    * \param result Unused.
-    * \param ackId Unused.
-    */
-   void handleSetStateAck(Utils::SetStateAckMessage::Result result,
-                          quint32 ackId);
 
 protected slots:
    /*!

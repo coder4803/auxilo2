@@ -13,11 +13,6 @@ WebUI::~WebUI()
 {
 }
 
-void WebUI::handleParameters(const Utils::ParameterSet& parameters)
-{
-   Q_UNUSED(parameters)
-}
-
 void WebUI::handleStateResponse(const QString& stateName,
                                 const QVariant& stateValue,
                                 bool available)
@@ -40,35 +35,12 @@ void WebUI::handleStateResponse(const QString& stateName,
    }
 }
 
-Utils::SignalAckMessage::Result
-WebUI::handleSignal(const QString& name,
-                    const QStringList& parameters)
-{
-   Q_UNUSED(name)
-   Q_UNUSED(parameters)
-   return Utils::SignalAckMessage::SIGNAL_NOT_FOUND;
-}
-
 void WebUI::handleStateChange(const QString& label,
                               const QVariant& value)
 {
    handleStateResponse(label, value, true);
    emit acknowledgeStateChange(Utils::StateChangedAckMessage::SUCCEEDED,
                                value);
-}
-
-void WebUI::handleSignalAck(Utils::SignalAckMessage::Result result,
-                            quint32 ackId)
-{
-   Q_UNUSED(result)
-   Q_UNUSED(ackId)
-}
-
-void WebUI::handleSetStateAck(Utils::SetStateAckMessage::Result result,
-                              quint32 ackId)
-{
-   Q_UNUSED(result)
-   Q_UNUSED(ackId)
 }
 
 void WebUI::connected(qint32 connectionId)

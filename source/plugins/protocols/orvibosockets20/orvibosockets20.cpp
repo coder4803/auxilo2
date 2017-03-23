@@ -69,30 +69,6 @@ OrviboSocketS20::~OrviboSocketS20()
 {
 }
 
-void OrviboSocketS20::handleParameters(const Utils::ParameterSet& parameters)
-{
-   Q_UNUSED(parameters)
-}
-
-void OrviboSocketS20::handleStateResponse(const QString& stateName,
-                                          const QVariant& stateValue,
-                                          bool available)
-{
-   Q_UNUSED(stateName)
-   Q_UNUSED(stateValue)
-   Q_UNUSED(available)
-}
-
-Utils::SignalAckMessage::Result
-OrviboSocketS20::handleSignal(const QString& name,
-                              const QStringList& parameters)
-{
-   Q_UNUSED(name)
-   Q_UNUSED(parameters)
-
-   return Utils::SignalAckMessage::SIGNAL_NOT_FOUND;
-}
-
 void OrviboSocketS20::handleStateChange(const QString& label,
                                         const QVariant& value)
 {
@@ -116,31 +92,6 @@ void OrviboSocketS20::handleStateChange(const QString& label,
 
    emit acknowledgeStateChange(Utils::StateChangedAckMessage::INVALID_LABEL,
                                QVariant());
-}
-
-void OrviboSocketS20::handleSignalAck(Utils::SignalAckMessage::Result result,
-                                      quint32 ackId)
-{
-   Q_UNUSED(result)
-   Q_UNUSED(ackId)
-}
-
-void OrviboSocketS20::handleSetStateAck(Utils::SetStateAckMessage::Result result,
-                                        quint32 ackId)
-{
-   Q_UNUSED(result)
-   Q_UNUSED(ackId)
-}
-
-void OrviboSocketS20::connected(qint32 connectionId)
-{
-   Q_UNUSED(connectionId)
-   onSubscribe();
-}
-
-void OrviboSocketS20::disconnected(qint32 connectionId)
-{
-   Q_UNUSED(connectionId)
 }
 
 void OrviboSocketS20::dataReceived(QByteArray data,
