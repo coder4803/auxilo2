@@ -11,6 +11,9 @@ WebUI::WebUI(Utils::ParameterSet parameters,
 
 WebUI::~WebUI()
 {
+    foreach (User* user, m_users) {
+        delete user;
+    }
 }
 
 void WebUI::handleStateResponse(const QString& stateName,
