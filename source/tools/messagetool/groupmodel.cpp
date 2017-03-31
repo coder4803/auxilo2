@@ -116,6 +116,8 @@ void GroupModel::generateGroupTree(QSet<QString>& interfaceNames,
 
    // Signal handler
    QStandardItem* signalHandler = new QStandardItem("Signal handler");
+   signalHandler->appendRow(newGroup(Globals::ConfResponseMessage,
+                                     Utils::SIGNAL_HANDLER_CONF));
    signalHandler->appendRow(newGroup(Globals::SignalMessage,
                                      Utils::SIGNAL_HANDLER_GROUP));
    rootNode->appendRow(signalHandler);
