@@ -190,7 +190,7 @@ signals:
     */
    void setStateValue(QString stateName,
                       QVariant value,
-                      bool ackRequired);
+                      bool ackRequired = false);
 
    /*!
     * \brief This signal is used to send signal to signal handler.
