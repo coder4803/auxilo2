@@ -196,6 +196,12 @@ void Device::sendLog(QString message,
 
 bool Device::createCommunication()
 {
+   // Do not create communication plugin if not specified.
+   if (!m_communicationPlugin) {
+       qDebug("No communication specified for %s", m_name.toLatin1().data());
+       return true;
+   }
+
    m_communication = m_communicationPlugin->create(m_communicationParameters,
                                                    this);
    if (!m_communication) {

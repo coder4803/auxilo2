@@ -11,10 +11,14 @@ Protocol::Protocol(QObject* parent) :
 
 void Protocol::setCommunication(Communication* communication)
 {
+   if (!communication) {
+       return;
+   }
+
    QMutexLocker locker(&m_mutex);
    m_communication = communication;
 
-   // Connect signals from communication to this protocol.S
+   // Connect signals from communication to this protocol
    connect(m_communication, SIGNAL(connected(qint32)),
            this, SLOT(connected(qint32)));
    connect(m_communication, SIGNAL(disconnected(qint32)),

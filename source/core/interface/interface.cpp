@@ -143,6 +143,8 @@ bool Interface::loadCommunicationPlugins()
       qDebug("Unknown plugin interface: %s", file.toLatin1().data());
    }
 
+   m_communicationPlugins.insert("null", NULL);
+
    return true;
 }
 
@@ -252,7 +254,7 @@ bool Interface::initDevices(const Utils::ParameterSet& parameters)
       try {
          // Get connection type.
          tmp = deviceName + ".connection.type";
-         connectionType = parameters.parameter<QString>(tmp).toLower();
+         connectionType = parameters.parameter<QString>(tmp, "null").toLower();
 
          // Get connection parameters
          tmp = deviceName + ".connection.";
@@ -272,7 +274,7 @@ bool Interface::initDevices(const Utils::ParameterSet& parameters)
 
       // Get communication plugin.
       if (!m_communicationPlugins.contains(connectionType)) {
-         qCritical("No plugin for connection type: %s",
+         qCritical("Invalid connection type: %s",
                    connectionType.toLatin1().data());
          return false;
       }
