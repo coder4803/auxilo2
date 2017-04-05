@@ -1,5 +1,4 @@
 QT              -= gui
-QT              += network
 
 TARGET          = orvibosockets20
 TEMPLATE        = lib

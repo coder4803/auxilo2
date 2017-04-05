@@ -1,4 +1,3 @@
-#include <QTimer>
 #include <QTcpSocket>
 
 #include "tcpserver.h"

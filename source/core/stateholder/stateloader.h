@@ -135,7 +135,7 @@ private:
     * \brief Creates new instance of state.
     * \param type State type.
     * \param name State name.
-    * \param persisted Should state valu be persisted or not.
+    * \param persisted Should state value be persisted or not.
     * \return Pointer to state.
     */
    State* createState(QString type,

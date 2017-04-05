@@ -1,5 +1,4 @@
 QT              -= gui
-QT              += network
 
 TARGET          = webui
 TEMPLATE        = lib
