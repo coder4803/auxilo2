@@ -6,7 +6,6 @@ MOC_DIR         = build/moc/
 DESTDIR         = build/bin/
 
 SUBDIRS         = source/utils \
-                  source/examples \
                   source/core \
                   source/plugins \
                   source/tools
