@@ -3,4 +3,5 @@ CONFIG              += ordered
 
 SUBDIRS             += tcpclient \
                        tcpserver \
-                       udp
+                       udp \
+                       wsserver
