@@ -1,4 +1,5 @@
 #include <QTextStream>
+#include <QDataStream>
 
 #include "httpmessage.h"
 
@@ -14,20 +15,20 @@ HTTPMessage::~HTTPMessage()
 
 int HTTPMessage::buildFromData(const QByteArray& data)
 {
-   QTextStream stream(data);
+   QTextStream headerStream(data);
 
    // Read messages first line.
-   m_firstLine = stream.readLine(HEADER_FIELD_MAX_LENGTH);
+   m_firstLine = headerStream.readLine(HEADER_FIELD_MAX_LENGTH);
 
    // Go through header lines.
    bool readingHeader = true;
    while (readingHeader) {
-      QString line = stream.readLine(HEADER_FIELD_MAX_LENGTH);
+      QString line = headerStream.readLine(HEADER_FIELD_MAX_LENGTH);
 
       if (line.isEmpty()) {
          readingHeader = false;
       } else {
-         if (stream.atEnd()) {
+         if (headerStream.atEnd()) {
             qDebug() << "Incomplete header line: " << line;
             return -1;
          }
@@ -47,15 +48,28 @@ int HTTPMessage::buildFromData(const QByteArray& data)
    }
 
    // Read content if exists.
-   if (m_headers.contains("Content-Length:")) {
+   QDataStream contentStream(data);
+   int headerLength = headerStream.pos();
+   if (m_headers.contains("Content-Length")) {
       bool ok = false;
       int contentLength = m_headers.value("Content-Length").toInt(&ok);
-      if (ok) {
-         m_content = stream.read(contentLength).toLatin1().data();
+      if (!ok) {
+         qDebug() << "Invalid Content-Length field:"
+                  << m_headers.value("Content-Length");
+         return -1;
+      }
+
+      m_content.resize(contentLength);
+      contentStream.skipRawData(headerLength);
+      contentStream.readRawData(m_content.data(), contentLength);
+
+      if (contentStream.status() != QDataStream::Ok) {
+         qDebug("Received incomplete message!");
+         return -1;
       }
    }
 
-   return stream.pos();
+   return headerLength + m_content.length();
 }
 
 void HTTPMessage::setFirstLine(const QString& data)
