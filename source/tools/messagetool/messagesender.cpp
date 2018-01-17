@@ -115,6 +115,8 @@ void MessageSender::initWidgets()
    connect(m_sendMessageView->selectionModel(),
            SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
            this, SLOT(onMessageSelected(QModelIndex)));
+   connect(m_sendMessageView, SIGNAL(doubleClicked(QModelIndex)),
+           this, SLOT(onSendMessage()));
 
    m_newMessagePushButton = new QPushButton("New");
    connect(m_newMessagePushButton, SIGNAL(clicked()),
