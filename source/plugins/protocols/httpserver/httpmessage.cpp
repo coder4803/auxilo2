@@ -15,7 +15,10 @@ HTTPMessage::~HTTPMessage()
 
 int HTTPMessage::buildFromData(const QByteArray& data)
 {
-   QTextStream headerStream(data);
+   QByteArray tmp = data;
+   tmp.replace("\n\r", "\n");
+
+   QTextStream headerStream(tmp);
 
    // Read messages first line.
    m_firstLine = headerStream.readLine(HEADER_FIELD_MAX_LENGTH);
@@ -48,7 +51,7 @@ int HTTPMessage::buildFromData(const QByteArray& data)
    }
 
    // Read content if exists.
-   QDataStream contentStream(data);
+   QDataStream contentStream(tmp);
    int headerLength = headerStream.pos();
    if (m_headers.contains("Content-Length")) {
       bool ok = false;
