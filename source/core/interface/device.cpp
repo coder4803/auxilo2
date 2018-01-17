@@ -19,7 +19,6 @@ Device::Device(QString name,
    m_name(name),
    m_communication(NULL),
    m_protocol(NULL),
-   m_lastStateChangedMessage(QString(), QVariant(), QString()),
    m_confResponseGroup(NULL),
    m_stateResponseGroup(NULL),
    m_signalGroup(NULL),
@@ -96,8 +95,20 @@ void Device::handleStateChangedMessage(QByteArray payload)
 
    QString label = message.label();
    QVariant value = message.value();
+   quint32 ackId = message.ackId();
+   QString ackGroup = message.ackGroup();
 
-   m_lastStateChangedMessage = message;
+   // Store latest ackId, ackGroup and stateValue of each stateName.
+   // Information is used when sending ack message.
+   StateChangeAckInfo* ackInfo = NULL;
+   if (!m_stateChangeAckInfos.contains(label)) {
+      ackInfo = new StateChangeAckInfo(ackId, value, ackGroup);
+      m_stateChangeAckInfos.insert(label, ackInfo);
+   } else {
+      ackInfo = m_stateChangeAckInfos.value(label);
+      ackInfo->ackId = ackId;
+      ackInfo->value = value;
+   }
 
    m_protocol->handleStateChange(label, value);
 }
@@ -166,23 +177,24 @@ void Device::sendSignal(QString name,
    }
 }
 
-void Device::acknowledgeStateChange(Utils::StateChangedAckMessage::Result result,
-                                    QVariant stateValue)
+void Device::acknowledgeStateChange(QString stateName,
+                                    Utils::StateChangedAckMessage::Result result,
+                                    QVariant finalValue)
 {
-   if (!m_lastStateChangedMessage.ackGroup().isEmpty()) {
-      if (result == Utils::StateChangedAckMessage::SUCCEEDED &&
-          stateValue != m_lastStateChangedMessage.value())
-      {
-         result = Utils::StateChangedAckMessage::FAILED;
+   // Check if there is ack info for the state change.
+   if (m_stateChangeAckInfos.contains(stateName)) {
+      StateChangeAckInfo* ackInfo = m_stateChangeAckInfos.value(stateName);
+
+      // There is no use of sending ack message if state value is not correct.
+      if (finalValue == ackInfo->value) {
+         // Send ack message.
+         Utils::StateChangedAckMessage ackMessage(ackInfo->ackId, result);
+         emit publish(ackMessage.data(), ackInfo->ackGroup);
+
+         // Remove ack info from table.
+         m_stateChangeAckInfos.remove(stateName);
+         delete ackInfo;
       }
-
-      Utils::StateChangedAckMessage ackMessage =
-            m_lastStateChangedMessage.createAckMessage(result);
-
-      emit publish(ackMessage.data(), m_lastStateChangedMessage.ackGroup());
-
-      m_lastStateChangedMessage =
-            Utils::StateChangedMessage(QString(), QVariant(), QString());
    }
 }
 
@@ -234,9 +246,9 @@ bool Device::createProtocol()
    connect(m_protocol, SIGNAL(sendSignal(QString,QStringList,bool)),
            this, SLOT(sendSignal(QString,QStringList,bool)));
    connect(m_protocol, SIGNAL(acknowledgeStateChange(
-           Utils::StateChangedAckMessage::Result,QVariant)),
+           QString,Utils::StateChangedAckMessage::Result,QVariant)),
            this, SLOT(acknowledgeStateChange(
-           Utils::StateChangedAckMessage::Result,QVariant)));
+           QString,Utils::StateChangedAckMessage::Result,QVariant)));
    connect(m_protocol, SIGNAL(sendLog(QString,Utils::LogMessage::LogType)),
            this, SLOT(sendLog(QString,Utils::LogMessage::LogType)));
 

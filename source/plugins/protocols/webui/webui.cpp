@@ -42,7 +42,7 @@ void WebUI::handleStateChange(const QString& label,
                               const QVariant& value)
 {
    handleStateResponse(label, value, true);
-   emit acknowledgeStateChange(Utils::StateChangedAckMessage::SUCCEEDED,
+   emit acknowledgeStateChange(label, Utils::StateChangedAckMessage::SUCCEEDED,
                                value);
 }
 

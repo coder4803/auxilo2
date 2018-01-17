@@ -204,11 +204,13 @@ signals:
 
    /*!
     * \brief This signal is used to send acknowledge to state change message.
+    * \param stateName Name of state.
     * \param result Result of handling state change message
-    * \param value Current state value on device.
+    * \param finalValue Current state value on device.
     */
-   void acknowledgeStateChange(Utils::StateChangedAckMessage::Result result,
-                               QVariant value);
+   void acknowledgeStateChange(QString stateName,
+                               Utils::StateChangedAckMessage::Result result,
+                               QVariant finalValue = QVariant());
 
    /*!
     * \brief This signal is used to send log message.

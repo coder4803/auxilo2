@@ -138,11 +138,13 @@ private slots:
 
    /*!
     * \brief Sends acknowledge message for StateChanged message if required.
+    * \param stateName Name of state.
     * \param result Result of handling StateChanged message.
-    * \param stateValue Current state value.
+    * \param finalValue Current state value.
     */
-   void acknowledgeStateChange(Utils::StateChangedAckMessage::Result result,
-                               QVariant stateValue);
+   void acknowledgeStateChange(QString stateName,
+                               Utils::StateChangedAckMessage::Result result,
+                               QVariant finalValue = QVariant());
 
    /*!
     * \brief Sends log message.
@@ -153,6 +155,27 @@ private slots:
                 Utils::LogMessage::LogType type);
 
 private:
+   //! Stores latest ack information for a state change.
+   struct StateChangeAckInfo
+   {
+       StateChangeAckInfo(quint32 ackId_,
+                          QVariant value_,
+                          QString ackGroup_) :
+           ackId(ackId_),
+           value(value_),
+           ackGroup(ackGroup_)
+       {}
+
+       //! Latest received ack id.
+       quint32 ackId;
+
+       //! Latest received value.
+       QVariant value;
+
+       //! Ack group name
+       QString ackGroup;
+   };
+
    /*!
     * \brief Creates communication based on parameters given in constructor.
     * \return True if creation succeeded, otherwise false.
@@ -194,8 +217,8 @@ private:
    //! Protocol used by this device.
    Plugins::Protocol* m_protocol;
 
-   //! Last received StateChangeMessage (for ack purposes).
-   Utils::StateChangedMessage m_lastStateChangedMessage;
+   //! Required info to route state change ack message.
+   QHash<QString, StateChangeAckInfo*> m_stateChangeAckInfos;
 
    // Message groups.
    Utils::MessageGroup* m_confResponseGroup;

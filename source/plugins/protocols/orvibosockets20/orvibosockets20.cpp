@@ -79,19 +79,22 @@ void OrviboSocketS20::handleStateChange(const QString& label,
          if (m_deviceState != m_targetState) {
             sendStateToDevice();
          } else {
-            emit acknowledgeStateChange(Utils::StateChangedAckMessage::SUCCEEDED,
-                                        m_deviceState);
+            emit acknowledgeStateChange(label,
+                         Utils::StateChangedAckMessage::SUCCEEDED,
+                         m_deviceState);
          }
 
          return;
       }
 
-      emit acknowledgeStateChange(Utils::StateChangedAckMessage::INVALID_VALUE,
-                                  QVariant());
+      emit acknowledgeStateChange(label,
+                  Utils::StateChangedAckMessage::INVALID_VALUE,
+                  value);
    }
 
-   emit acknowledgeStateChange(Utils::StateChangedAckMessage::INVALID_LABEL,
-                               QVariant());
+   emit acknowledgeStateChange(label,
+               Utils::StateChangedAckMessage::INVALID_LABEL,
+               value);
 }
 
 void OrviboSocketS20::dataReceived(QByteArray data,
@@ -117,7 +120,8 @@ void OrviboSocketS20::dataReceived(QByteArray data,
 
       if (m_deviceState == m_targetState && m_resendTimer.isActive()) {
          m_resendTimer.stop();
-         emit acknowledgeStateChange(Utils::StateChangedAckMessage::SUCCEEDED,
+         emit acknowledgeStateChange(POWER_LABEL,
+                                     Utils::StateChangedAckMessage::SUCCEEDED,
                                      m_deviceState);
          return;
       }
