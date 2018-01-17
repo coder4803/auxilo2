@@ -126,7 +126,9 @@ bool Interface::loadCommunicationPlugins()
 
       QObject* plugin = loader.instance();
       if (!plugin) {
-         qDebug("Couldn't load plugin: %s", file.toLatin1().data());
+         qDebug("Couldn't load plugin %s: %s",
+                file.toLatin1().data(),
+                loader.errorString().toLatin1().data());
          continue;
       }
 
