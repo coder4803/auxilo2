@@ -6,7 +6,6 @@
 namespace Plugins {
 
 const QString UDP::PARAMETER_LOCAL_PORT("localport");
-const QString UDP::PARAMETER_LOCAL_IP_ADDRESS("localipaddress");
 const QString UDP::PARAMETER_REMOTE_PORT("remoteport");
 const QString UDP::PARAMETER_REMOTE_IP_ADDRESS("remoteipaddress");
 
@@ -14,7 +13,6 @@ UDP::UDP(const Utils::ParameterSet& parameters,
          QObject* parent) :
    Communication(parent),
    m_localPort(0),
-   m_localIpAddress(QHostAddress::Any),
    m_remotePort(0),
    m_remoteIpAddress(QHostAddress::Null)
 {
@@ -22,11 +20,6 @@ UDP::UDP(const Utils::ParameterSet& parameters,
    try {
       // Convert local port.
       m_localPort = parameters.parameter<quint16>(PARAMETER_LOCAL_PORT);
-
-      // Convert local ip address.
-      m_localIpAddress = QHostAddress(
-               parameters.parameter<QString>(PARAMETER_LOCAL_IP_ADDRESS,
-                                             QString("0.0.0.0")));
 
       // Convert remote port.
       m_remotePort = parameters.parameter<quint16>(PARAMETER_REMOTE_PORT, 0);
@@ -38,8 +31,6 @@ UDP::UDP(const Utils::ParameterSet& parameters,
       }
 
       qCritical("-Local port: %i", m_localPort);
-      qCritical("-Local ip address: %s",
-                m_localIpAddress.toString().toLatin1().data());
       qCritical("-Remote port: %i", m_remotePort);
       qCritical("-Remote ip address: %s",
                 m_remoteIpAddress.toString().toLatin1().data());

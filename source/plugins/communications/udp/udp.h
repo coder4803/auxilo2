@@ -51,9 +51,6 @@ private:
    //! Constant for local port parameter name.
    static const QString PARAMETER_LOCAL_PORT;
 
-   //! Constant for local ip address parameter name.
-   static const QString PARAMETER_LOCAL_IP_ADDRESS;
-
    //! Constant for remote port parameter name.
    static const QString PARAMETER_REMOTE_PORT;
 
@@ -69,17 +66,11 @@ private:
    //! Local port.
    quint16 m_localPort;
 
-   //! Local interface to listen.
-   QHostAddress m_localIpAddress;
-
    //! Remote port.
    quint16 m_remotePort;
 
    //! Remote ip address.
    QHostAddress m_remoteIpAddress;
-
-   //! Buffer for received datagram
-   QByteArray m_buffer;
 };
 
 } // Plugins
