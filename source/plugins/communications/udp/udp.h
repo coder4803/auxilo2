@@ -84,6 +84,6 @@ private:
 
 } // Plugins
 
-DEFINE_COMMUNICATION_PLUGIN(UDP)
+DEFINE_SHARED_COMMUNICATION_PLUGIN(UDP, localport)
 
 #endif
