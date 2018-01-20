@@ -108,14 +108,6 @@ bool Protocol::isConnected(qint32 connectionId) const
    return false;
 }
 
-void Protocol::readData(qint32 connectionId)
-{
-   QMutexLocker locker(&m_mutex);
-   if (m_communication) {
-      m_communication->readData(connectionId);
-   }
-}
-
 bool Protocol::sendData(const QByteArray& data,
                         qint32 connectionId)
 {

@@ -125,14 +125,6 @@ protected:
    bool isConnected(qint32 connectionId = -1) const;
 
    /*!
-    * \brief Tells connection to trigger reading.
-    * \param connectionId Inner connection id. This is used with connections
-    * that can have multiple connections. This is common with server
-    * connections. Use >= 0. -1 means undefined (or only one connection).
-    */
-   void readData(qint32 connectionId = -1);
-
-   /*!
     * \brief Sends data through connection.
     * \param data Data to send.
     * \param connectionId Inner connection id. This is used with connections
