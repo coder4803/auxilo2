@@ -33,7 +33,7 @@ void Connection::onConnected()
 
 void Connection::onDisconnected()
 {
-   delete m_socket;
+   m_socket->deleteLater();
    emit disconnected();
 }
 
