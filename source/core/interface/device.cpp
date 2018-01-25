@@ -301,6 +301,6 @@ void Device::initMessageGroups()
                                                 Utils::SET_STATE_ACK_POST_FIX,
                                                 Utils::MessageGroup::Subscriber,
                                                 this);
-   connect(m_signalAckGroup, SIGNAL(messageReceived(QByteArray,QString)),
+   connect(m_setStateAckGroup, SIGNAL(messageReceived(QByteArray,QString)),
            this, SLOT(handleSetStateAckMessage(QByteArray)));
 }
