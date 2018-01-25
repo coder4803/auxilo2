@@ -232,10 +232,10 @@ bool Interface::initDevices(const Utils::ParameterSet& parameters)
 
    // Get list of devices.
    QStringList devices;
-   foreach (QString parameter, parameters.parameterList()) {
-      int index = parameter.indexOf(".");
+   foreach (QString key, parameters.keys()) {
+      int index = key.indexOf(".");
       if (index != -1) {
-         QString deviceName = parameter.mid(0, index);
+         QString deviceName = key.mid(0, index);
          if (!deviceName.isEmpty() && !devices.contains(deviceName)) {
             devices.append(deviceName);
          }

@@ -107,8 +107,8 @@ public:
     * startsWith string.
     * \return List of parameter names.
     */
-   QStringList parameterList(QString startsWith = QString(),
-                             bool returnShortPath = true) const;
+   QStringList keys(QString startsWith = QString(),
+                    bool returnShortPath = true) const;
 
    /*!
     * \brief Returns hash of parameters.

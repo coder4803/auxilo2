@@ -74,8 +74,8 @@ bool ParameterSet::contains(QString name) const
    return m_parameters.contains(name.toLower());
 }
 
-QStringList ParameterSet::parameterList(QString startsWith,
-                                        bool returnShortPath) const
+QStringList ParameterSet::keys(QString startsWith,
+                               bool returnShortPath) const
 {
    if (startsWith == QString()) {
       return m_parameters.keys();
