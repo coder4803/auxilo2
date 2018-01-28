@@ -11,9 +11,11 @@ INCLUDEPATH     += ../ \
                    ../../../core/plugininterfaces \
                    ../../../core/plugininterfaces/communication
 
-SOURCES         += udp.cpp
+SOURCES         += udp.cpp \
+                   sharedudpsocket.cpp
 
-HEADERS         += udp.h
+HEADERS         += udp.h \
+                   sharedudpsocket.h
 
 LIBS            += -L../../../../build/lib/ -lcommunication \
                    -L../../../../build/lib/ -lmessages
