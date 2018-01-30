@@ -17,7 +17,8 @@ HTTPServer::HTTPServer(Utils::ParameterSet parameters,
 {
     try {
        // Content path.
-       m_contentPath = parameters.parameter<QString>(PARAMETER_CONTENT_PATH);
+       QString path = parameters.parameter<QString>(PARAMETER_CONTENT_PATH);
+       m_contentPath = QFileInfo(path).absoluteFilePath();
        qCritical() << "Content path:" << m_contentPath;
     } catch (QException& e) {
        qCritical() << "Failed to initialize protocol.";
