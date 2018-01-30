@@ -234,11 +234,7 @@ T ParameterSet::parameter(QString name) const
    }
 
    // Convert value
-   T returnValue = value.value<T>();
-   qDebug("%s", QString("%1: %2").arg(name)
-          .arg(returnValue).toLatin1().data());
-
-   return returnValue;
+   return value.value<T>();
 }
 
 } // Utils
